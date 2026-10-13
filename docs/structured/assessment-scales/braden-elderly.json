@@ -1,0 +1,96 @@
+{
+  "id": "braden_elderly",
+  "title": "压力性损伤风险评估量表（Braden量表）",
+  "source_file": "量表统计(1).md 表B.16",
+  "status": "published",
+  "form_type": "risk_scale",
+  "patient_fields": ["patient_name", "sex", "age"],
+  "sections": [
+    {
+      "id": "braden_items",
+      "title": "压疮风险条目",
+      "fields": [
+        {
+          "id": "sensory_perception",
+          "label": "感觉（对压迫相关不适的反应能力）",
+          "patient_text": "咱们聊聊皮肤和身体的感觉。您对身体不舒服、比如哪里硌着了、压着了，能及时感觉到吗？是完全感觉不到，还是感觉不太灵敏，还是基本都感觉得到？",
+          "type": "single_choice",
+          "options": [
+            {"id": "completely_limited", "score": 1, "label": "完全受限"},
+            {"id": "very_limited", "score": 2, "label": "非常受限"},
+            {"id": "slightly_limited", "score": 3, "label": "轻度受限"},
+            {"id": "no_impairment", "score": 4, "label": "未受损害"}
+          ]
+        },
+        {
+          "id": "moisture",
+          "label": "潮湿（皮肤暴露于潮湿的程度）",
+          "patient_text": "皮肤经常是湿的吗？比如出汗多、尿湿了来不及换，皮肤一直泡在湿气里？",
+          "type": "single_choice",
+          "options": [
+            {"id": "constantly_moist", "score": 1, "label": "持久潮湿"},
+            {"id": "very_moist", "score": 2, "label": "非常潮湿"},
+            {"id": "occasionally_moist", "score": 3, "label": "偶尔潮湿"},
+            {"id": "rarely_moist", "score": 4, "label": "很少潮湿"}
+          ]
+        },
+        {
+          "id": "activity",
+          "label": "活动（身体活动程度）",
+          "patient_text": "您平时活动得多吗？是天天卧床，还是只能坐着、偶尔走走，或者每天都能出去遛弯？",
+          "type": "single_choice",
+          "options": [
+            {"id": "bedfast", "score": 1, "label": "卧床不起"},
+            {"id": "chairfast", "score": 2, "label": "局限于椅"},
+            {"id": "occasional_walk", "score": 3, "label": "偶尔步行"},
+            {"id": "frequent_walk", "score": 4, "label": "经常步行"}
+          ]
+        },
+        {
+          "id": "mobility",
+          "label": "移动（改变和控制体位的能力）",
+          "patient_text": "在床上翻身、挪动身子，您自己能动吗？是完全动不了，还是要人帮着才能翻身？",
+          "type": "single_choice",
+          "options": [
+            {"id": "completely_immobile", "score": 1, "label": "完全不能"},
+            {"id": "very_limited", "score": 2, "label": "严重受限"},
+            {"id": "slightly_limited", "score": 3, "label": "轻度受限"},
+            {"id": "no_limitation", "score": 4, "label": "不受限"}
+          ]
+        },
+        {
+          "id": "nutrition",
+          "label": "营养（通常进食状况）",
+          "patient_text": "吃饭营养跟得上吗？平时吃得香、吃得够吗？",
+          "type": "single_choice",
+          "options": [
+            {"id": "very_poor", "score": 1, "label": "非常差"},
+            {"id": "probably_inadequate", "score": 2, "label": "可能不足"},
+            {"id": "adequate", "score": 3, "label": "适当"},
+            {"id": "excellent", "score": 4, "label": "良好"}
+          ]
+        },
+        {
+          "id": "friction_shear",
+          "label": "摩擦和剪切力",
+          "patient_text": "在床上挪动的时候，皮肤会不会蹭着床单拖来拖去？要人帮忙抬着挪，还是自己往下出溜？",
+          "type": "single_choice",
+          "options": [
+            {"id": "problem", "score": 1, "label": "有问题"},
+            {"id": "potential_problem", "score": 2, "label": "有潜在问题"},
+            {"id": "no_apparent_problem", "score": 3, "label": "无明显问题"}
+          ]
+        }
+      ]
+    }
+  ],
+  "interpretation": [
+    {"condition": "total_score >= 15 and total_score <= 18", "result": "低度危险"},
+    {"condition": "total_score >= 13 and total_score <= 14", "result": "中度危险"},
+    {"condition": "total_score >= 10 and total_score <= 12", "result": "高度危险"},
+    {"condition": "total_score <= 9", "result": "极高度危险"}
+  ],
+  "review_notes": [
+    "依据量表统计(1).md表B.16结构化；条目1～5为1～4分，摩擦和剪切力为1～3分，总分6～23分。"
+  ]
+}

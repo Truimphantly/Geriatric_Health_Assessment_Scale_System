@@ -1,0 +1,39 @@
+{
+  "id": "hearing_screening",
+  "title": "听力简易评估表",
+  "source_file": "量表统计(1).md 表B.6",
+  "status": "published",
+  "form_type": "ability_scale",
+  "patient_fields": ["patient_name", "sex", "age"],
+  "sections": [
+    {
+      "id": "hearing_level",
+      "title": "听力状况",
+      "fields": [
+        {
+          "id": "hearing_level",
+          "label": "听力状况分级（平日佩戴助听器的在佩戴情况下评估）",
+          "patient_text": "咱们再说说耳朵。平时戴助听器的话，现在就戴着咱们聊。您跟人聊天、看电视、家里电话门铃响，这些听得清吗？咱们从下面几个情况里挑个最像您的。",
+          "type": "single_choice",
+          "options": [
+            {"id": "normal", "score": 4, "label": "可正常交谈，能听到电视、电话、门铃的声音"},
+            {"id": "slight_loss", "score": 3, "label": "在轻声说话或说话距离超过2米时听不清"},
+            {"id": "moderate_loss", "score": 2, "label": "正常交流有些困难，需在安静的环境或大声说话才能听到"},
+            {"id": "severe_loss", "score": 1, "label": "讲话者大声说话或说话很慢，才能部分听见"},
+            {"id": "deaf", "score": 0, "label": "完全听不见"}
+          ]
+        }
+      ]
+    }
+  ],
+  "interpretation": [
+    {"condition": "total_score == 4", "result": "正常"},
+    {"condition": "total_score == 3", "result": "听力下降"},
+    {"condition": "total_score >= 1 and total_score <= 2", "result": "听力障碍"},
+    {"condition": "total_score == 0", "result": "完全失聪"}
+  ],
+  "review_notes": [
+    "依据量表统计(1).md表B.6结构化；原表5个递进式条目合并为1道分级单选题，语义与分值一一对应。",
+    "指导语“若平日佩戴助听器，请在佩戴情况下评估”已并入患者话术。"
+  ]
+}

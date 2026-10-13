@@ -1,0 +1,39 @@
+{
+  "id": "vision_screening",
+  "title": "视力简易评估表",
+  "source_file": "量表统计(1).md 表B.4",
+  "status": "published",
+  "form_type": "ability_scale",
+  "patient_fields": ["patient_name", "sex", "age"],
+  "sections": [
+    {
+      "id": "vision_item",
+      "title": "视力状况",
+      "fields": [
+        {
+          "id": "vision_level",
+          "label": "视力状况分级（平日戴眼镜者在佩戴情况下评估）",
+          "patient_text": "聊聊眼睛。平时戴眼镜的话，您现在就戴着。您看报纸上、药盒上的小字，能看清楚吗？咱们从这几个情况里挑一个最像您的。",
+          "type": "single_choice",
+          "options": [
+            {"id": "normal", "score": 4, "label": "能看清书报上的标准字体"},
+            {"id": "low_medium", "score": 3, "label": "能看清楚大字体，但看不清书报上的标准字体"},
+            {"id": "low", "score": 2, "label": "视力有限，看不清报纸大标题，但能辨认物体"},
+            {"id": "light_only", "score": 1, "label": "辨认物体有困难，但眼睛能跟随物体移动，只能看到光、颜色和形状"},
+            {"id": "blind", "score": 0, "label": "没有视力，眼睛不能跟随物体移动"}
+          ]
+        }
+      ]
+    }
+  ],
+  "interpretation": [
+    {"condition": "total_score == 4", "result": "正常"},
+    {"condition": "total_score == 3", "result": "低视力"},
+    {"condition": "total_score >= 1 and total_score <= 2", "result": "盲"},
+    {"condition": "total_score == 0", "result": "完全失明"}
+  ],
+  "review_notes": [
+    "依据量表统计(1).md表B.4结构化；原表5个递进式条目合并为1道分级单选题，语义与分值一一对应。",
+    "指导语“若平日佩戴眼镜，请在佩戴情况下评估”已并入患者话术。"
+  ]
+}

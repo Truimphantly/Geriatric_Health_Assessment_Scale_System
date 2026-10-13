@@ -1,0 +1,125 @@
+{
+  "id": "basic_info",
+  "title": "基本情况信息表",
+  "source_file": "量表统计(1).md 表A.1",
+  "status": "published",
+  "form_type": "assessment_form",
+  "patient_fields": [],
+  "sections": [
+    {
+      "id": "basic_identity",
+      "title": "基本信息",
+      "fields": [
+        {
+          "id": "full_name",
+          "label": "姓名",
+          "patient_text": "先认识一下，您贵姓？大名怎么称呼？",
+          "type": "text",
+          "options": []
+        },
+        {
+          "id": "birth_date",
+          "label": "出生日期",
+          "patient_text": "您是哪一年出生的？生日是几月几号？",
+          "type": "date",
+          "options": []
+        },
+        {
+          "id": "contact_phone",
+          "label": "联系电话",
+          "patient_text": "您平时用的手机或家里电话号码是多少？",
+          "type": "text",
+          "options": []
+        },
+        {
+          "id": "residence_address",
+          "label": "居住地址",
+          "patient_text": "您现在住在哪个小区、哪栋楼？方便的话说个详细地址。",
+          "type": "text",
+          "options": []
+        },
+        {
+          "id": "medical_insurance_type",
+          "label": "医保类型",
+          "patient_text": "您平时看病用的是什么医保？",
+          "type": "single_choice",
+          "options": [
+            {"id": "urban_employee", "label": "城镇职工医保"},
+            {"id": "urban_rural_resident", "label": "城乡居民医保"},
+            {"id": "commercial", "label": "商业保险"},
+            {"id": "self_pay", "label": "自费"}
+          ]
+        },
+        {
+          "id": "marital_status",
+          "label": "婚姻状况",
+          "patient_text": "您现在的婚姻状况是怎样的？",
+          "type": "single_choice",
+          "options": [
+            {"id": "unmarried", "label": "未婚"},
+            {"id": "married", "label": "已婚"},
+            {"id": "widowed", "label": "丧偶"},
+            {"id": "divorced", "label": "离婚"},
+            {"id": "remarried", "label": "再婚"}
+          ]
+        },
+        {
+          "id": "education_level",
+          "label": "受教育程度",
+          "patient_text": "您年轻时念书念到什么程度？",
+          "type": "single_choice",
+          "options": [
+            {"id": "primary_or_below", "label": "小学及以下"},
+            {"id": "junior_high", "label": "初中"},
+            {"id": "senior_high", "label": "高中或中专"},
+            {"id": "college_or_above", "label": "大专及以上"}
+          ]
+        },
+        {
+          "id": "occupation_background",
+          "label": "职业背景",
+          "patient_text": "您退休前是做什么工作的？",
+          "type": "text",
+          "options": []
+        },
+        {
+          "id": "caregiver_info",
+          "label": "主要照护人及联系方式",
+          "patient_text": "平时主要是谁照顾您？是家里人吗？怎么联系他/她？",
+          "type": "text",
+          "options": []
+        }
+      ]
+    },
+    {
+      "id": "health_background",
+      "title": "健康背景",
+      "fields": [
+        {
+          "id": "medical_history",
+          "label": "既往病史简述（高血压/糖尿病等）",
+          "patient_text": "您以前都查出过哪些病？比如高血压、糖尿病这些，跟我说说。",
+          "type": "text",
+          "options": []
+        },
+        {
+          "id": "long_term_medications",
+          "label": "目前长期服用药物清单",
+          "patient_text": "现在每天都要吃的药有哪些？记得药名的话都告诉我。",
+          "type": "text",
+          "options": []
+        },
+        {
+          "id": "allergy_history",
+          "label": "过敏史（药物/食物）",
+          "patient_text": "您有没有对什么药或者什么食物过敏？过敏的时候是什么反应？",
+          "type": "text",
+          "options": []
+        }
+      ]
+    }
+  ],
+  "review_notes": [
+    "依据量表统计(1).md表A.1结构化；性别、年龄不在本表重复采集，由患者主档自动带入。"
+  ]
+}

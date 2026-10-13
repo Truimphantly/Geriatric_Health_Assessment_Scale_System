@@ -1,0 +1,75 @@
+{
+  "id": "frail",
+  "title": "FRAIL老年人衰弱评估量表",
+  "source_file": "量表统计(1).md 表B.10",
+  "status": "published",
+  "form_type": "risk_scale",
+  "patient_fields": ["patient_name", "sex", "age"],
+  "sections": [
+    {
+      "id": "frail_items",
+      "title": "衰弱评估条目",
+      "fields": [
+        {
+          "id": "fatigue",
+          "label": "疲乏：过去4周内大部分时间或者所有时间感到疲乏",
+          "patient_text": "最近一个月，您是不是经常觉得累、浑身没力气？大部分时间都这样吗？",
+          "type": "single_choice",
+          "options": [
+            {"id": "yes", "score": 1, "label": "是，大部分或所有时间感到疲乏"},
+            {"id": "no", "score": 0, "label": "否"}
+          ]
+        },
+        {
+          "id": "resistance",
+          "label": "阻力：在不用辅助工具及他人帮助下，中途不休息爬1层楼梯有困难",
+          "patient_text": "咱们聊聊平时的活动。爬楼梯的时候，比如就上一层楼，您不扶栏杆、中途不歇，能一口气上去吗？还是觉得挺吃力的？",
+          "type": "single_choice",
+          "options": [
+            {"id": "yes", "score": 1, "label": "是，爬1层楼梯有困难"},
+            {"id": "no", "score": 0, "label": "否"}
+          ]
+        },
+        {
+          "id": "ambulation",
+          "label": "自由活动：在不用辅助工具及他人帮助下，走完1个街区（100米）较困难",
+          "patient_text": "那出门走路呢？不拄拐、不用人扶，走上一百来米，大概绕小区一小圈，费劲吗？",
+          "type": "single_choice",
+          "options": [
+            {"id": "yes", "score": 1, "label": "是，走完100米较困难"},
+            {"id": "no", "score": 0, "label": "否"}
+          ]
+        },
+        {
+          "id": "illnesses",
+          "label": "疾病：医生曾告知患有5种以上疾病（高血压、糖尿病、心脏病、卒中、肿瘤、心衰、哮喘、关节炎、肺病、肾病、心绞痛等）",
+          "patient_text": "咱们说说身体的老毛病。医生确诊过的慢性病，比如高血压、糖尿病、心脏病、关节炎这些，您一共有几种？有五种或者更多吗？",
+          "type": "single_choice",
+          "options": [
+            {"id": "yes", "score": 1, "label": "是，患有5种以上疾病"},
+            {"id": "no", "score": 0, "label": "否"}
+          ]
+        },
+        {
+          "id": "weight_loss",
+          "label": "体重下降：1年或更短时间内体重下降≥5%",
+          "patient_text": "最近这一年，您体重掉了多少？有没有在自己没刻意减肥的情况下，明显瘦了一大圈？",
+          "type": "single_choice",
+          "options": [
+            {"id": "yes", "score": 1, "label": "是，体重下降≥5%"},
+            {"id": "no", "score": 0, "label": "否"}
+          ]
+        }
+      ]
+    }
+  ],
+  "interpretation": [
+    {"condition": "total_score >= 3", "result": "衰弱"},
+    {"condition": "total_score >= 1 and total_score <= 2", "result": "衰弱前期"},
+    {"condition": "total_score == 0", "result": "无衰弱"}
+  ],
+  "review_notes": [
+    "依据量表统计(1).md表B.10结构化；每条符合计1条，统计符合条数判定。",
+    "第4条原文列举的疾病清单已在患者话术中简化为常见病举例，判定仍以“5种以上”为准。"
+  ]
+}

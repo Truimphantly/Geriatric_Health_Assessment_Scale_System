@@ -1,0 +1,56 @@
+{
+  "id": "constipation_symptom",
+  "title": "便秘症状评估表",
+  "source_file": "量表统计(1).md 表B.12",
+  "status": "published",
+  "form_type": "symptom_scale",
+  "patient_fields": ["patient_name", "sex", "age"],
+  "sections": [
+    {
+      "id": "constipation_items",
+      "title": "排便情况",
+      "fields": [
+        {
+          "id": "disease_duration",
+          "label": "病程（症状开始到现在持续时间）",
+          "patient_text": "咱们聊聊排便的事。您这个排便不痛快的情况有多久了？几年了还是最近几个月才开始的？",
+          "type": "text",
+          "options": []
+        },
+        {
+          "id": "symptoms",
+          "label": "便秘症状（可多选）",
+          "patient_text": "具体是哪种不舒服？比如好几天才解一次、解不干净、堵得慌、蹲半天、要用手帮忙揉肚子，还是肚子疼、解完就舒服了？有几种说几种。",
+          "type": "multiple_choice",
+          "options": [
+            {"id": "reduced_frequency", "label": "排便次数减少（少于每周3次）"},
+            {"id": "incomplete_evacuation", "label": "排便不尽感"},
+            {"id": "anorectal_obstruction", "label": "肛门直肠堵塞感"},
+            {"id": "prolonged_defecation", "label": "排便费时"},
+            {"id": "manual_assistance", "label": "需要手法辅助"},
+            {"id": "abdominal_pain_relief", "label": "腹痛或不适，排便后缓解"}
+          ]
+        },
+        {
+          "id": "stool_form",
+          "label": "粪便性状",
+          "patient_text": "解出来的大便最像下面哪一种？像羊粪蛋一样一颗一颗的，还是像香肠但很硬，还是软的成形的，或者快成水了？",
+          "type": "single_choice",
+          "options": [
+            {"id": "type1", "label": "干球状（坚果样）"},
+            {"id": "type2", "label": "腊肠样，很硬"},
+            {"id": "type3", "label": "腊肠样，有裂缝"},
+            {"id": "type4", "label": "腊肠或蛇状，光滑柔软"},
+            {"id": "type5", "label": "柔软团块，边缘清楚"},
+            {"id": "type6", "label": "松散碎片或糊状"},
+            {"id": "type7", "label": "水样便"}
+          ]
+        }
+      ]
+    }
+  ],
+  "review_notes": [
+    "依据量表统计(1).md表B.12结构化；结果由医务人员根据上述症状判断是否存在便秘及类型，本表不计分。",
+    "其中“有症状的时间”作为开放信息在病程追问中一并了解，未单列字段。"
+  ]
+}

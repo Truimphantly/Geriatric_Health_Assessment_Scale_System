@@ -1,0 +1,41 @@
+{
+  "id": "chronic_pain_nrs",
+  "title": "慢性疼痛数字评定量表（NRS）",
+  "source_file": "量表统计(1).md 表B.14",
+  "status": "published",
+  "form_type": "symptom_scale",
+  "patient_fields": ["patient_name", "sex", "age"],
+  "sections": [
+    {
+      "id": "pain_items",
+      "title": "疼痛评估",
+      "fields": [
+        {
+          "id": "pain_location",
+          "label": "疼痛部位",
+          "patient_text": "您身上有没有哪儿总觉得疼？比如腰、腿、膝盖这些，是哪个部位？",
+          "type": "text",
+          "options": []
+        },
+        {
+          "id": "pain_nrs_score",
+          "label": "当前疼痛评分",
+          "patient_text": "如果咱们给疼痛打个分：0分就是一点儿都不疼，10分就是疼得受不了。您觉得自己现在这个疼，大概是几分？",
+          "type": "number",
+          "unit": "分",
+          "options": []
+        }
+      ]
+    }
+  ],
+  "interpretation": [
+    {"condition": "total_score == 0", "result": "无疼痛"},
+    {"condition": "total_score >= 1 and total_score <= 3", "result": "轻度疼痛"},
+    {"condition": "total_score >= 4 and total_score <= 6", "result": "中度疼痛"},
+    {"condition": "total_score >= 7 and total_score <= 10", "result": "重度疼痛"}
+  ],
+  "review_notes": [
+    "依据量表统计(1).md表B.14结构化；0～10分各级描述已转化为患者话术中的打分说明。",
+    "疼痛部位为选填补充项，便于护理了解疼痛背景，不影响NRS计分。"
+  ]
+}

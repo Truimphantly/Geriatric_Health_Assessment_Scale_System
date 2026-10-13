@@ -1,0 +1,170 @@
+{
+  "id": "home_environment",
+  "title": "居家环境筛查表",
+  "source_file": "量表统计(1).md 表B.9",
+  "status": "published",
+  "form_type": "risk_scale",
+  "patient_fields": ["patient_name", "sex", "age"],
+  "sections": [
+    {
+      "id": "indoor_environment",
+      "title": "室内环境",
+      "fields": [
+        {
+          "id": "clear_pathways",
+          "label": "通道是否无杂乱物品",
+          "patient_text": "咱们聊聊家里的环境，看看住得安不安全。您家里过道上堆东西吗？走路的地方都是通畅通的吗？",
+          "type": "single_choice",
+          "options": [
+            {"id": "yes", "score": 1, "label": "是，通道无杂乱物品"},
+            {"id": "no", "score": 0, "label": "否"}
+          ]
+        },
+        {
+          "id": "floor_condition",
+          "label": "地板状况是否良好",
+          "patient_text": "家里的地板怎么样？有没有破的、翘起来的、坑坑洼洼的地方？",
+          "type": "single_choice",
+          "options": [
+            {"id": "yes", "score": 1, "label": "是，状况良好"},
+            {"id": "no", "score": 0, "label": "否"}
+          ]
+        },
+        {
+          "id": "floor_antislip",
+          "label": "地板是否防滑",
+          "patient_text": "地板滑不滑？是防滑的地面吗？",
+          "type": "single_choice",
+          "options": [
+            {"id": "yes", "score": 1, "label": "是，地板防滑"},
+            {"id": "no", "score": 0, "label": "否"}
+          ]
+        },
+        {
+          "id": "fixed_antislip_mat",
+          "label": "地板上是否有固定的防滑垫",
+          "patient_text": "厨房、卫生间门口这些容易湿的地方，铺了那种钉得住不会动的防滑垫吗？",
+          "type": "single_choice",
+          "options": [
+            {"id": "yes", "score": 1, "label": "是，有固定的防滑垫"},
+            {"id": "no", "score": 0, "label": "否"}
+          ]
+        },
+        {
+          "id": "lighting_sufficient",
+          "label": "灯的亮度是否能够让您看清东西",
+          "patient_text": "屋里的灯够亮吗？晚上起夜不开灯都看不清路？",
+          "type": "single_choice",
+          "options": [
+            {"id": "yes", "score": 1, "label": "是，亮度足够看清东西"},
+            {"id": "no", "score": 0, "label": "否"}
+          ]
+        },
+        {
+          "id": "bedside_light_convenient",
+          "label": "在床上开关灯是否方便",
+          "patient_text": "躺在床上，伸手就能够着开灯关灯吗？",
+          "type": "single_choice",
+          "options": [
+            {"id": "yes", "score": 1, "label": "是，方便"},
+            {"id": "no", "score": 0, "label": "否"}
+          ]
+        },
+        {
+          "id": "outdoor_night_lighting",
+          "label": "晚上外边的路灯、楼道的灯照明是否良好",
+          "patient_text": "晚上楼道里、外面路上的路灯亮不亮？",
+          "type": "single_choice",
+          "options": [
+            {"id": "yes", "score": 1, "label": "是，照明良好"},
+            {"id": "no", "score": 0, "label": "否"}
+          ]
+        },
+        {
+          "id": "bathroom_grab_bars",
+          "label": "淋浴室和浴池旁是否有扶手",
+          "patient_text": "洗澡的地方、浴池旁边装扶手了吗？",
+          "type": "single_choice",
+          "options": [
+            {"id": "yes", "score": 1, "label": "是，有扶手"},
+            {"id": "no", "score": 0, "label": "否"}
+          ]
+        },
+        {
+          "id": "bathroom_antislip_mat",
+          "label": "在浴池和浴室是否有固定的防滑垫",
+          "patient_text": "浴室里面铺了固定的防滑垫吗？",
+          "type": "single_choice",
+          "options": [
+            {"id": "yes", "score": 1, "label": "是，有固定防滑垫"},
+            {"id": "no", "score": 0, "label": "否"}
+          ]
+        },
+        {
+          "id": "toilet_near_bathroom",
+          "label": "厕所是否接近浴室",
+          "patient_text": "厕所离浴室近吗？洗完澡过去方便吗？",
+          "type": "single_choice",
+          "options": [
+            {"id": "yes", "score": 1, "label": "是，接近"},
+            {"id": "no", "score": 0, "label": "否"}
+          ]
+        }
+      ]
+    },
+    {
+      "id": "stairs_and_outdoor",
+      "title": "楼梯与室外",
+      "fields": [
+        {
+          "id": "indoor_stair_rails",
+          "label": "室内的楼梯旁是否都有可用的扶手",
+          "patient_text": "家里要是楼房，屋里楼梯边上是不是都有能扶的扶手？",
+          "type": "single_choice",
+          "options": [
+            {"id": "yes", "score": 1, "label": "是，都有扶手"},
+            {"id": "no", "score": 0, "label": "否"}
+          ]
+        },
+        {
+          "id": "outdoor_stair_rails",
+          "label": "室外的楼梯旁是否都有可用的扶手",
+          "patient_text": "屋外的楼梯、门口的台阶边上，也都有扶手吗？",
+          "type": "single_choice",
+          "options": [
+            {"id": "yes", "score": 1, "label": "是，都有扶手"},
+            {"id": "no", "score": 0, "label": "否"}
+          ]
+        },
+        {
+          "id": "stair_edge_visible",
+          "label": "楼梯的边缘是否清晰",
+          "patient_text": "楼梯的每一级边缘看得清楚吗？有没有贴那种防滑条，一眼能看出台阶边儿在哪？",
+          "type": "single_choice",
+          "options": [
+            {"id": "yes", "score": 1, "label": "是，边缘清晰"},
+            {"id": "no", "score": 0, "label": "否"}
+          ]
+        },
+        {
+          "id": "surrounding_road_condition",
+          "label": "房屋周围的路况是否良好",
+          "patient_text": "房子周围的路面怎么样？平整吗？",
+          "type": "single_choice",
+          "options": [
+            {"id": "yes", "score": 1, "label": "是，路况良好"},
+            {"id": "no", "score": 0, "label": "否"}
+          ]
+        }
+      ]
+    }
+  ],
+  "interpretation": [
+    {"condition": "total_score >= 14", "result": "居家环境筛查全部通过，暂无明显风险项"},
+    {"condition": "total_score <= 13", "result": "存在居家环境风险项，得分越低风险越大，建议对照未通过项进行针对性改造"}
+  ],
+  "review_notes": [
+    "依据量表统计(1).md表B.9结构化；“是”计1分、“否”计0分，共14项。",
+    "原表未给出分级阈值，未编造分档，仅按“得分越低风险越大”原样保留。"
+  ]
+}

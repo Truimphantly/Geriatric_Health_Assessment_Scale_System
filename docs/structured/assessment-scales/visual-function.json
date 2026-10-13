@@ -1,0 +1,55 @@
+{
+  "id": "visual_function",
+  "title": "视觉功能简易评估表",
+  "source_file": "量表统计(1).md 表B.5",
+  "status": "published",
+  "form_type": "ability_scale",
+  "patient_fields": ["patient_name", "sex", "age"],
+  "sections": [
+    {
+      "id": "visual_function_items",
+      "title": "视觉功能条目",
+      "fields": [
+        {
+          "id": "effort_in_daily_seeing",
+          "label": "阅读、行走和看电视时，觉得吃力吗",
+          "patient_text": "接着聊眼睛。您看书看报、走路、看电视的时候，眼睛会觉得费劲吗？",
+          "type": "single_choice",
+          "options": [
+            {"id": "yes", "score": 0, "label": "是，觉得吃力"},
+            {"id": "no", "score": 1, "label": "否"}
+          ]
+        },
+        {
+          "id": "visual_block_or_defect",
+          "label": "看东西时觉得有东西遮挡或视物有缺损吗",
+          "patient_text": "看东西的时候，有没有觉得眼前有块黑影挡着，或者哪个角落看不见？",
+          "type": "single_choice",
+          "options": [
+            {"id": "yes", "score": 0, "label": "是，有遮挡或缺损"},
+            {"id": "no", "score": 1, "label": "否"}
+          ]
+        },
+        {
+          "id": "distortion",
+          "label": "看东西时实物变形、扭曲吗",
+          "patient_text": "看东西会不会觉得东西变形了？比如看窗框、门框，本来是直的，看起来是弯的？",
+          "type": "single_choice",
+          "options": [
+            {"id": "yes", "score": 0, "label": "是，实物变形扭曲"},
+            {"id": "no", "score": 1, "label": "否"}
+          ]
+        }
+      ]
+    }
+  ],
+  "interpretation": [
+    {"condition": "total_score == 3", "result": "良好"},
+    {"condition": "total_score == 2", "result": "较差"},
+    {"condition": "total_score <= 1", "result": "差"}
+  ],
+  "review_notes": [
+    "依据量表统计(1).md表B.5结构化；回答“是”得0分、回答“否”得1分。",
+    "第1项“是”考虑白内障等；第2项“是”考虑白内障、青光眼等；第3项“是”考虑黄斑变性等，由护士复核时结合临床判断。"
+  ]
+}

@@ -1,0 +1,162 @@
+{
+  "schema_version": "draft-2026-08-13",
+  "status": "pending_review",
+  "source_directory": "docs/文档/评估表",
+  "generated_at": "2026-08-13",
+  "forms": [
+    {
+      "id": "nrs2002",
+      "title": "住院患者营养风险筛查表",
+      "source_file": "10.1和2营养风险筛查表（NRS2002）.pdf",
+      "structured_file": "nrs2002.json",
+      "form_type": "risk_scale"
+    },
+    {
+      "id": "braden_pressure_injury",
+      "title": "Braden压疮评估量表（GDSY）",
+      "source_file": "Braden压疮评估量表.pdf",
+      "structured_file": "braden-pressure-injury.json",
+      "form_type": "risk_scale"
+    },
+    {
+      "id": "admission_assessment",
+      "title": "入院评估单",
+      "source_file": "入院评估单.pdf",
+      "structured_file": "admission-assessment.json",
+      "form_type": "assessment_form"
+    },
+    {
+      "id": "fall_risk",
+      "title": "广东省人民医院患者跌倒/坠床风险评估单",
+      "source_file": "广东省人民医院患者跌倒坠床风险评估单.pdf",
+      "structured_file": "fall-risk.json",
+      "form_type": "risk_scale"
+    },
+    {
+      "id": "adl",
+      "title": "日常生活能力(ADL)评价表",
+      "source_file": "日常生活能力(ADL)评价表GD(1.0).pdf",
+      "structured_file": "adl.json",
+      "form_type": "ability_scale"
+    },
+    {
+      "id": "frail",
+      "title": "FRAIL老年人衰弱评估量表",
+      "source_file": "量表统计(1).md 表B.10",
+      "structured_file": "frail.json",
+      "form_type": "risk_scale"
+    },
+    {
+      "id": "barthel_index",
+      "title": "基本日常生活活动能力评估量表（Barthel指数）",
+      "source_file": "量表统计(1).md 表B.1",
+      "structured_file": "barthel-index.json",
+      "form_type": "ability_scale"
+    },
+    {
+      "id": "athens_insomnia",
+      "title": "阿森斯失眠量表（AIS）",
+      "source_file": "量表统计(1).md 表B.13",
+      "structured_file": "athens-insomnia.json",
+      "form_type": "risk_scale"
+    },
+    {
+      "id": "chronic_pain_nrs",
+      "title": "慢性疼痛数字评定量表（NRS）",
+      "source_file": "量表统计(1).md 表B.14",
+      "structured_file": "chronic-pain-nrs.json",
+      "form_type": "symptom_scale"
+    },
+    {
+      "id": "vision_screening",
+      "title": "视力简易评估表",
+      "source_file": "量表统计(1).md 表B.4",
+      "structured_file": "vision-screening.json",
+      "form_type": "ability_scale"
+    },
+    {
+      "id": "basic_info",
+      "title": "基本情况信息表",
+      "source_file": "量表统计(1).md 表A.1",
+      "structured_file": "basic-info.json",
+      "form_type": "assessment_form"
+    },
+    {
+      "id": "lawton_brody_iadl",
+      "title": "工具性日常生活活动能力量表（Lawton-Brody）",
+      "source_file": "量表统计(1).md 表B.2",
+      "structured_file": "lawton-brody-iadl.json",
+      "form_type": "ability_scale"
+    },
+    {
+      "id": "visual_function",
+      "title": "视觉功能简易评估表",
+      "source_file": "量表统计(1).md 表B.5",
+      "structured_file": "visual-function.json",
+      "form_type": "ability_scale"
+    },
+    {
+      "id": "hearing_screening",
+      "title": "听力简易评估表",
+      "source_file": "量表统计(1).md 表B.6",
+      "structured_file": "hearing-screening.json",
+      "form_type": "ability_scale"
+    },
+    {
+      "id": "home_environment",
+      "title": "居家环境筛查表",
+      "source_file": "量表统计(1).md 表B.9",
+      "structured_file": "home-environment.json",
+      "form_type": "risk_scale"
+    },
+    {
+      "id": "iciq_sf",
+      "title": "国际尿失禁咨询委员会尿失禁问卷表简表（ICIQ-SF）",
+      "source_file": "量表统计(1).md 表B.11",
+      "structured_file": "iciq-sf.json",
+      "form_type": "symptom_scale"
+    },
+    {
+      "id": "constipation_symptom",
+      "title": "便秘症状评估表",
+      "source_file": "量表统计(1).md 表B.12",
+      "structured_file": "constipation.json",
+      "form_type": "symptom_scale"
+    },
+    {
+      "id": "pain_behavior",
+      "title": "慢性疼痛行为评估量表",
+      "source_file": "量表统计(1).md 表B.15",
+      "structured_file": "pain-behavior.json",
+      "form_type": "symptom_scale"
+    },
+    {
+      "id": "braden_elderly",
+      "title": "压力性损伤风险评估量表（Braden量表）",
+      "source_file": "量表统计(1).md 表B.16",
+      "structured_file": "braden-elderly.json",
+      "form_type": "risk_scale"
+    },
+    {
+      "id": "water_swallow_test",
+      "title": "洼田饮水试验（吞咽障碍评估）",
+      "source_file": "量表统计(1).md 表B.17",
+      "structured_file": "water-swallow-test.json",
+      "form_type": "symptom_scale"
+    },
+    {
+      "id": "nrs2002_elderly",
+      "title": "2002营养风险筛查量表（NRS-2002）",
+      "source_file": "量表统计(1).md 表B.18",
+      "structured_file": "nrs2002-elderly.json",
+      "form_type": "risk_scale"
+    },
+    {
+      "id": "mna_sf",
+      "title": "微营养评定法简表（MNA-SF）",
+      "source_file": "量表统计(1).md 表B.19",
+      "structured_file": "mna-sf.json",
+      "form_type": "risk_scale"
+    }
+  ]
+}

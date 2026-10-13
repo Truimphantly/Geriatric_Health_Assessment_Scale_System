@@ -1,0 +1,64 @@
+{
+  "id": "pain_behavior",
+  "title": "慢性疼痛行为评估量表",
+  "source_file": "量表统计(1).md 表B.15",
+  "status": "published",
+  "form_type": "symptom_scale",
+  "patient_fields": ["patient_name", "sex", "age"],
+  "sections": [
+    {
+      "id": "pain_behavior_items",
+      "title": "疼痛行为观察条目",
+      "fields": [
+        {
+          "id": "facial_expression",
+          "label": "面部表情",
+          "patient_text": "咱们再从旁观察一下疼痛时的表现。疼起来的时候，脸上的表情是什么样的？是放松的，还是会皱眉、脸绷着？",
+          "type": "single_choice",
+          "options": [
+            {"id": "relaxed", "score": 1, "label": "表情放松"},
+            {"id": "partly_tense", "score": 2, "label": "部分紧绷（如皱眉）"}
+          ]
+        },
+        {
+          "id": "upper_limb_movement",
+          "label": "上肢运动",
+          "patient_text": "疼的时候，胳膊会不自觉地动吗？会抱着疼的地方、胳膊弯起来吗？",
+          "type": "single_choice",
+          "options": [
+            {"id": "no_movement", "score": 1, "label": "没有活动"},
+            {"id": "partly_bent", "score": 2, "label": "部分弯曲"}
+          ]
+        },
+        {
+          "id": "vocalization",
+          "label": "发声（非插管）",
+          "patient_text": "疼的时候会哼哼、呻吟吗？大概多久哼一次？",
+          "type": "single_choice",
+          "options": [
+            {"id": "none", "score": 1, "label": "无疼痛相关发声"},
+            {"id": "occasional", "score": 2, "label": "呻吟不超过每分钟3次，且每次不超过3秒"}
+          ]
+        },
+        {
+          "id": "ventilator_compliance",
+          "label": "机械通气顺应性（仅插管患者）",
+          "patient_text": "这一项只针对插了管、上呼吸机的患者，您要是不属于这种情况就说“不适用”。对呼吸机耐受得怎么样？会不会呛咳？",
+          "type": "single_choice",
+          "options": [
+            {"id": "tolerant", "score": 1, "label": "完全能耐受"},
+            {"id": "cough", "score": 2, "label": "呛咳，但大部分时间能耐受"},
+            {"id": "not_applicable", "score": 0, "label": "不适用（未插管）"}
+          ]
+        }
+      ]
+    }
+  ],
+  "interpretation": [
+    {"condition": "total_score >= 3", "result": "疼痛行为评估总分越高，说明疼痛程度越高"}
+  ],
+  "review_notes": [
+    "依据量表统计(1).md表B.15结构化；按条目1、2、4（非插管）或条目1、2、3（插管）得分求和，总分3～12分，越高疼痛程度越高。",
+    "本表为观察型量表，建议由照护者协助观察作答；插管条目仅适用于插管患者。"
+  ]
+}

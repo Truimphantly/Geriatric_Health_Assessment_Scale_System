@@ -1,0 +1,121 @@
+{
+  "id": "athens_insomnia",
+  "title": "阿森斯失眠量表（AIS）",
+  "source_file": "量表统计(1).md 表B.13",
+  "status": "published",
+  "form_type": "risk_scale",
+  "patient_fields": ["patient_name", "sex", "age"],
+  "sections": [
+    {
+      "id": "ais_items",
+      "title": "睡眠情况条目",
+      "fields": [
+        {
+          "id": "sleep_latency",
+          "label": "入睡时间（关灯到睡着）",
+          "patient_text": "咱们聊聊睡觉。您晚上关了灯躺下，一般多长时间能睡着？挺快就睡着，还是要在床上翻来覆去躺好久？",
+          "type": "single_choice",
+          "options": [
+            {"id": "none", "score": 0, "label": "没问题"},
+            {"id": "mild", "score": 1, "label": "轻微延迟"},
+            {"id": "moderate", "score": 2, "label": "显著延迟"},
+            {"id": "severe", "score": 3, "label": "严重延迟或没有睡觉"}
+          ]
+        },
+        {
+          "id": "night_awakening",
+          "label": "夜间苏醒",
+          "patient_text": "睡着了以后，半夜会不会醒过来？是偶尔醒一次接着就能睡，还是老醒、醒了就半天睡不着？",
+          "type": "single_choice",
+          "options": [
+            {"id": "none", "score": 0, "label": "没问题"},
+            {"id": "mild", "score": 1, "label": "轻微影响"},
+            {"id": "moderate", "score": 2, "label": "显著影响"},
+            {"id": "severe", "score": 3, "label": "严重影响或没有睡觉"}
+          ]
+        },
+        {
+          "id": "early_waking",
+          "label": "早醒（比期望早）",
+          "patient_text": "早上醒的时候，会不会比您自己想要的时间早醒好几个小时，醒了就再也睡不着？",
+          "type": "single_choice",
+          "options": [
+            {"id": "none", "score": 0, "label": "没问题"},
+            {"id": "mild", "score": 1, "label": "轻微提早"},
+            {"id": "moderate", "score": 2, "label": "显著提早"},
+            {"id": "severe", "score": 3, "label": "严重提早或没有睡觉"}
+          ]
+        },
+        {
+          "id": "total_sleep_time",
+          "label": "总睡眠时间",
+          "patient_text": "算下来，一晚上总共能睡几个小时？您觉得够不够？",
+          "type": "single_choice",
+          "options": [
+            {"id": "none", "score": 0, "label": "没问题"},
+            {"id": "mild", "score": 1, "label": "轻微不足"},
+            {"id": "moderate", "score": 2, "label": "显著不足"},
+            {"id": "severe", "score": 3, "label": "严重不足或没有睡觉"}
+          ]
+        },
+        {
+          "id": "sleep_quality",
+          "label": "总睡眠质量",
+          "patient_text": "总体来说，您对自己的睡眠满意吗？醒来以后觉得解乏吗？",
+          "type": "single_choice",
+          "options": [
+            {"id": "none", "score": 0, "label": "满意"},
+            {"id": "mild", "score": 1, "label": "轻微不满"},
+            {"id": "moderate", "score": 2, "label": "显著不满"},
+            {"id": "severe", "score": 3, "label": "严重不满或没有睡觉"}
+          ]
+        },
+        {
+          "id": "daytime_mood",
+          "label": "白天情绪",
+          "patient_text": "白天的心情怎么样？有没有因为没睡好，总觉得烦、高兴不起来？",
+          "type": "single_choice",
+          "options": [
+            {"id": "none", "score": 0, "label": "正常"},
+            {"id": "mild", "score": 1, "label": "轻微低落"},
+            {"id": "moderate", "score": 2, "label": "显著低落"},
+            {"id": "severe", "score": 3, "label": "严重低落"}
+          ]
+        },
+        {
+          "id": "daytime_function",
+          "label": "白天身体功能（体力/精神）",
+          "patient_text": "白天的体力和精神头怎么样？够不够您买菜、做饭、遛弯这些日常活动？",
+          "type": "single_choice",
+          "options": [
+            {"id": "none", "score": 0, "label": "足够"},
+            {"id": "mild", "score": 1, "label": "轻微影响"},
+            {"id": "moderate", "score": 2, "label": "显著影响"},
+            {"id": "severe", "score": 3, "label": "严重影响"}
+          ]
+        },
+        {
+          "id": "daytime_sleepiness",
+          "label": "白天思睡",
+          "patient_text": "白天坐着的时候，会不会困得不行、总想打盹？",
+          "type": "single_choice",
+          "options": [
+            {"id": "none", "score": 0, "label": "无思睡"},
+            {"id": "mild", "score": 1, "label": "轻微思睡"},
+            {"id": "moderate", "score": 2, "label": "显著思睡"},
+            {"id": "severe", "score": 3, "label": "严重思睡"}
+          ]
+        }
+      ]
+    }
+  ],
+  "interpretation": [
+    {"condition": "total_score >= 6", "result": "存在睡眠障碍"},
+    {"condition": "total_score >= 4 and total_score <= 6", "result": "可能有睡眠障碍"},
+    {"condition": "total_score <= 3", "result": "无睡眠障碍"}
+  ],
+  "review_notes": [
+    "依据量表统计(1).md表B.13结构化；指导语为“过去1个月内，每周至少发生3次以上”，由对话引导语说明。",
+    "原表评判标准“4～6分可能有、≥6分存在”在6分处重叠，按规则优先级以高分档（≥6存在）为准。"
+  ]
+}

@@ -1,0 +1,135 @@
+{
+  "id": "barthel_index",
+  "title": "基本日常生活活动能力评估量表（Barthel指数）",
+  "source_file": "量表统计(1).md 表B.1",
+  "status": "published",
+  "form_type": "ability_scale",
+  "patient_fields": ["patient_name", "sex", "age"],
+  "sections": [
+    {
+      "id": "badl_items",
+      "title": "日常生活活动能力条目",
+      "fields": [
+        {
+          "id": "feeding",
+          "label": "进食（用合适的餐具将食物送到口中，包括咀嚼、吞咽）",
+          "patient_text": "咱们从吃饭聊起。您平时吃饭，自己拿筷子夹菜、端碗喝汤，都能自己来吗？还是需要别人帮衬着？",
+          "type": "single_choice",
+          "options": [
+            {"id": "independent", "score": 10, "label": "可独立进食"},
+            {"id": "partial", "score": 5, "label": "需部分帮助"},
+            {"id": "dependent", "score": 0, "label": "需极大帮助或完全依赖"}
+          ]
+        },
+        {
+          "id": "bathing",
+          "label": "洗澡（包括进出浴室、穿脱衣裤、洗浴全身）",
+          "patient_text": "那洗澡呢？放好水之后，进出浴室、自己搓洗全身这些，能自己完成吗？",
+          "type": "single_choice",
+          "options": [
+            {"id": "independent", "score": 5, "label": "准备好水后，可独立完成"},
+            {"id": "dependent", "score": 0, "label": "需要他人帮助"}
+          ]
+        },
+        {
+          "id": "grooming",
+          "label": "修饰（洗脸、刷牙、梳头、刮脸等）",
+          "patient_text": "每天早上洗脸、刷牙、梳梳头，这些您都是自己来的吧？",
+          "type": "single_choice",
+          "options": [
+            {"id": "independent", "score": 5, "label": "可独立完成"},
+            {"id": "dependent", "score": 0, "label": "需他人帮助"}
+          ]
+        },
+        {
+          "id": "dressing",
+          "label": "穿（脱）衣（包括系扣子、拉拉链、穿鞋袜、系鞋带）",
+          "patient_text": "穿衣服、系扣子，还有穿鞋袜，这些您自己能利利索索地搞定吗？",
+          "type": "single_choice",
+          "options": [
+            {"id": "independent", "score": 10, "label": "可独立完成"},
+            {"id": "partial", "score": 5, "label": "需部分帮助"},
+            {"id": "dependent", "score": 0, "label": "需极大帮助或完全依赖"}
+          ]
+        },
+        {
+          "id": "bowel_control",
+          "label": "控制大便",
+          "patient_text": "有个问题可能有点私密，但对我们了解身体情况很重要：大便能控制得住吗？会不会偶尔来不及、弄脏裤子？",
+          "type": "single_choice",
+          "options": [
+            {"id": "controlled", "score": 10, "label": "可控制"},
+            {"id": "occasional", "score": 5, "label": "偶尔失控或需提示"},
+            {"id": "incontinent", "score": 0, "label": "完全失控"}
+          ]
+        },
+        {
+          "id": "bladder_control",
+          "label": "控制小便",
+          "patient_text": "那小便呢？能控制得住吗？会不会偶尔憋不住？",
+          "type": "single_choice",
+          "options": [
+            {"id": "controlled", "score": 10, "label": "可控制"},
+            {"id": "occasional", "score": 5, "label": "偶尔失控或需提示"},
+            {"id": "incontinent", "score": 0, "label": "完全失控"}
+          ]
+        },
+        {
+          "id": "toilet_use",
+          "label": "如厕（去厕所、解衣裤、擦净、整理、冲水）",
+          "patient_text": "上厕所的整套事情，去厕所、脱裤子、擦干净、冲水，您都能自己完成吗？",
+          "type": "single_choice",
+          "options": [
+            {"id": "independent", "score": 10, "label": "可独立完成"},
+            {"id": "partial", "score": 5, "label": "需部分帮助"},
+            {"id": "dependent", "score": 0, "label": "需极大帮助或完全依赖"}
+          ]
+        },
+        {
+          "id": "bed_chair_transfer",
+          "label": "床椅转移（从床到椅子及反之）",
+          "patient_text": "从床上起身，挪到椅子上坐；坐累了再从椅子回到床上，这样的来回挪动，您需要人扶吗？",
+          "type": "single_choice",
+          "options": [
+            {"id": "independent", "score": 15, "label": "可独立完成"},
+            {"id": "partial", "score": 10, "label": "需部分帮助"},
+            {"id": "major", "score": 5, "label": "需极大帮助"},
+            {"id": "dependent", "score": 0, "label": "完全依赖他人"}
+          ]
+        },
+        {
+          "id": "walking",
+          "label": "平地行走（在平地行走45米）",
+          "patient_text": "在平地上走路，走个四五十米，大概从客厅到楼门口那么远，您能自己走稳吗？还是得拄拐或者有人扶？",
+          "type": "single_choice",
+          "options": [
+            {"id": "independent", "score": 15, "label": "可独立行走45米"},
+            {"id": "partial", "score": 10, "label": "需部分帮助"},
+            {"id": "major", "score": 5, "label": "需极大帮助"},
+            {"id": "dependent", "score": 0, "label": "完全依赖他人"}
+          ]
+        },
+        {
+          "id": "stairs",
+          "label": "上下楼梯（连续上、下10～15个台阶）",
+          "patient_text": "住楼房的话，上下楼梯，一口气上下一层楼十来个台阶，您还行吗？",
+          "type": "single_choice",
+          "options": [
+            {"id": "independent", "score": 10, "label": "可独立上下"},
+            {"id": "partial", "score": 5, "label": "需部分帮助"},
+            {"id": "dependent", "score": 0, "label": "需极大帮助或完全依赖"}
+          ]
+        }
+      ]
+    }
+  ],
+  "interpretation": [
+    {"condition": "total_score <= 40", "result": "重度依赖"},
+    {"condition": "total_score >= 41 and total_score <= 60", "result": "中度依赖"},
+    {"condition": "total_score >= 61 and total_score <= 99", "result": "轻度依赖"},
+    {"condition": "total_score == 100", "result": "无依赖"}
+  ],
+  "review_notes": [
+    "依据量表统计(1).md表B.1结构化，总分100分，选项分值与原表一致。"
+  ]
+}

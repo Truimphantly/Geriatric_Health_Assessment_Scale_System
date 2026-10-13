@@ -1,0 +1,91 @@
+{
+  "id": "mna_sf",
+  "title": "微营养评定法简表（MNA-SF）",
+  "source_file": "量表统计(1).md 表B.19",
+  "status": "published",
+  "form_type": "risk_scale",
+  "patient_fields": ["patient_name", "sex", "age"],
+  "sections": [
+    {
+      "id": "mna_items",
+      "title": "营养评定条目",
+      "fields": [
+        {
+          "id": "food_intake_decline",
+          "label": "食量减少",
+          "patient_text": "跟以前比，最近三个月饭量怎么样？是少了很多、少了一点，还是跟平常一样？",
+          "type": "single_choice",
+          "options": [
+            {"id": "severe", "score": 0, "label": "严重减少"},
+            {"id": "moderate", "score": 1, "label": "中度减少"},
+            {"id": "no_change", "score": 2, "label": "无改变"}
+          ]
+        },
+        {
+          "id": "weight_loss",
+          "label": "体重丢失",
+          "patient_text": "最近三个月体重掉了吗？掉了多少？",
+          "type": "single_choice",
+          "options": [
+            {"id": "gt_3kg", "score": 0, "label": "体重下降超过3公斤"},
+            {"id": "unknown", "score": 1, "label": "不知道"},
+            {"id": "1_3kg", "score": 2, "label": "体重下降1～3公斤"},
+            {"id": "none", "score": 3, "label": "体重无下降"}
+          ]
+        },
+        {
+          "id": "mobility",
+          "label": "活动能力",
+          "patient_text": "您平时能下床活动吗？能自己出门遛弯，还是只能在家待着，或者下不了床？",
+          "type": "single_choice",
+          "options": [
+            {"id": "bedridden", "score": 0, "label": "卧床或轮椅"},
+            {"id": "indoor_only", "score": 1, "label": "能下床但不外出"},
+            {"id": "outgoing", "score": 2, "label": "能外出"}
+          ]
+        },
+        {
+          "id": "psychological_stress",
+          "label": "心理创伤或急性疾病",
+          "patient_text": "最近三个月，有没有遇上大的打击或者生过急病？",
+          "type": "single_choice",
+          "options": [
+            {"id": "yes", "score": 0, "label": "有"},
+            {"id": "no", "score": 2, "label": "无"}
+          ]
+        },
+        {
+          "id": "neuropsychological_problems",
+          "label": "精神心理问题",
+          "patient_text": "脑子清楚吗？有没有医生说过的痴呆，或者这段时间情绪低落、抑郁？",
+          "type": "single_choice",
+          "options": [
+            {"id": "severe", "score": 0, "label": "严重痴呆或抑郁"},
+            {"id": "mild", "score": 1, "label": "轻度痴呆"},
+            {"id": "none", "score": 2, "label": "无问题"}
+          ]
+        },
+        {
+          "id": "bmi_band",
+          "label": "体质指数BMI分档",
+          "patient_text": "您身高多少、体重多少？我帮您算算胖瘦合不合适。",
+          "type": "single_choice",
+          "options": [
+            {"id": "lt_19", "score": 0, "label": "BMI<19"},
+            {"id": "19_21", "score": 1, "label": "BMI 19～21"},
+            {"id": "21_23", "score": 2, "label": "BMI 21～23"},
+            {"id": "ge_23", "score": 3, "label": "BMI≥23"}
+          ]
+        }
+      ]
+    }
+  ],
+  "interpretation": [
+    {"condition": "total_score <= 11", "result": "提示有营养不良风险"},
+    {"condition": "total_score >= 12", "result": "暂无明显营养不良风险"}
+  ],
+  "review_notes": [
+    "依据量表统计(1).md表B.19结构化；总分≤11分提示有营养不良风险。",
+    "若无法获得BMI，可用小腿围替代：CC<31cm计0分、CC≥31cm计2分，由护士复核时测量。"
+  ]
+}

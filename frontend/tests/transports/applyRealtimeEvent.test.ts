@@ -1,0 +1,602 @@
+import { afterEach, describe, expect, it, vi } from 'vitest';
+
+describe('实时事件进度口径', () => {
+  afterEach(() => {
+    vi.resetModules();
+    vi.unstubAllGlobals();
+  });
+
+  it('把患者和AI音频索引绑定到同一条历史消息', async () => {
+    const values = new Map<string, string>();
+    vi.stubGlobal('sessionStorage', {
+      getItem: (key: string) => values.get(key) ?? null,
+      setItem: (key: string, value: string) => values.set(key, value),
+      removeItem: (key: string) => values.delete(key),
+    });
+    const { useChatStore } = await import('@/lib/stores/useChatStore');
+    const { applyRealtimeEvent } = await import(
+      '@/lib/transports/applyRealtimeEvent'
+    );
+    useChatStore.setState({
+      sessions: {
+        voice: {
+          id: 'SESS-VOICE',
+          sessionNo: 'SESS-VOICE',
+          taskId: 'voice',
+          patientId: '1',
+          encounterId: '1',
+          interactionType: 'assessment',
+          channelType: 'voice',
+          sessionStatus: 'active',
+          currentCicareStage: 'ask',
+          messages: [],
+        },
+      },
+    });
+
+    applyRealtimeEvent({
+      event_id: 'audio-patient-1',
+      event_type: 'patient_audio_delta',
+      task_id: 'voice',
+      session_id: 'SESS-VOICE',
+      message_id: 'MSG-PATIENT-1',
+      occurred_at: '2026-08-19T10:00:00Z',
+      payload: {
+        role: 'patient',
+        audio_url: '/api/dialog/SESS-VOICE/audio/MSG-PATIENT-1/patient.wav',
+        turn_no: 2,
+      },
+    });
+    applyRealtimeEvent({
+      event_id: 'audio-ai-1',
+      event_type: 'assistant_audio_delta',
+      task_id: 'voice',
+      session_id: 'SESS-VOICE',
+      message_id: 'MSG-AI-1',
+      occurred_at: '2026-08-19T10:00:01Z',
+      payload: {
+        role: 'assistant',
+        audio_url: '/api/dialog/SESS-VOICE/audio/GEN-1/assistant.wav',
+        turn_no: 3,
+      },
+    });
+    applyRealtimeEvent({
+      event_id: 'transcript-1',
+      event_type: 'user_transcript_completed',
+      task_id: 'voice',
+      session_id: 'SESS-VOICE',
+      message_id: 'MSG-PATIENT-1',
+      occurred_at: '2026-08-19T10:00:00Z',
+      payload: { content_text: '我有一点头晕', turn_no: 2 },
+    });
+    applyRealtimeEvent({
+      event_id: 'message-ai-1',
+      event_type: 'assistant_message_completed',
+      task_id: 'voice',
+      session_id: 'SESS-VOICE',
+      message_id: 'MSG-AI-1',
+      occurred_at: '2026-08-19T10:00:02Z',
+      payload: { content_text: '请先坐下休息', turn_no: 3 },
+    });
+
+    const messages = useChatStore.getState().sessions.voice.messages;
+    expect(messages).toHaveLength(2);
+    expect(messages[0]?.role).toBe('patient');
+    expect(messages[0]?.contentText).toBe('我有一点头晕');
+    expect(messages[0]?.audioUrl).toContain('patient.wav');
+    expect(messages[1]?.role).toBe('ai');
+    expect(messages[1]?.contentText).toBe('请先坐下休息');
+    expect(messages[1]?.audioUrl).toContain('assistant.wav');
+  });
+
+  it('AI音频索引先于文本增量到达时仍保留可播放地址', async () => {
+    const values = new Map<string, string>();
+    vi.stubGlobal('sessionStorage', {
+      getItem: (key: string) => values.get(key) ?? null,
+      setItem: (key: string, value: string) => values.set(key, value),
+      removeItem: (key: string) => values.delete(key),
+    });
+    const { useChatStore } = await import('@/lib/stores/useChatStore');
+    const { applyRealtimeEvent } = await import(
+      '@/lib/transports/applyRealtimeEvent'
+    );
+    useChatStore.setState({
+      sessions: {
+        voice: {
+          id: 'SESS-VOICE',
+          sessionNo: 'SESS-VOICE',
+          taskId: 'voice',
+          patientId: '1',
+          encounterId: '1',
+          interactionType: 'assessment',
+          channelType: 'voice',
+          sessionStatus: 'active',
+          currentCicareStage: 'ask',
+          messages: [],
+        },
+      },
+    });
+
+    applyRealtimeEvent({
+      event_id: 'started-ai-2',
+      event_type: 'assistant_message_started',
+      task_id: 'voice',
+      session_id: 'SESS-VOICE',
+      message_id: 'MSG-AI-2',
+      occurred_at: '2026-08-20T10:00:00Z',
+      payload: { turn_no: 3, generation_id: 'GEN-2' },
+    });
+    applyRealtimeEvent({
+      event_id: 'audio-ai-2',
+      event_type: 'assistant_audio_delta',
+      task_id: 'voice',
+      session_id: 'SESS-VOICE',
+      message_id: 'MSG-AI-2',
+      occurred_at: '2026-08-20T10:00:01Z',
+      payload: {
+        role: 'assistant',
+        audio_url: '/api/dialog/SESS-VOICE/audio/GEN-2/segment-000000.wav',
+        turn_no: 3,
+      },
+    });
+    applyRealtimeEvent({
+      event_id: 'text-ai-2',
+      event_type: 'assistant_text_delta',
+      task_id: 'voice',
+      session_id: 'SESS-VOICE',
+      message_id: 'MSG-AI-2',
+      occurred_at: '2026-08-20T10:00:01Z',
+      payload: { delta: '请继续说。', turn_no: 3 },
+    });
+
+    const message = useChatStore.getState().sessions.voice.messages[0];
+    expect(message.contentText).toBe('请继续说。');
+    expect(message.audioUrl).toContain('segment-000000.wav');
+  });
+
+  it('患者发言不推进评估进度，只有progress_updated可以推进', async () => {
+    const values = new Map<string, string>();
+    vi.stubGlobal('sessionStorage', {
+      getItem: (key: string) => values.get(key) ?? null,
+      setItem: (key: string, value: string) => values.set(key, value),
+      removeItem: (key: string) => values.delete(key),
+    });
+    const { useChatStore } = await import('@/lib/stores/useChatStore');
+    const { useTaskStore } = await import('@/lib/stores/useTaskStore');
+    const { applyRealtimeEvent } = await import(
+      '@/lib/transports/applyRealtimeEvent'
+    );
+    const task = useTaskStore.getState().tasks[0];
+    useTaskStore.setState({
+      tasks: [{ ...task, id: '68', progress: { current: 2, total: 10 } }],
+    });
+    useChatStore.setState({
+      sessions: {
+        '68': {
+          id: 'SESS-68',
+          sessionNo: 'SESS-68',
+          taskId: '68',
+          patientId: '1',
+          encounterId: '1',
+          interactionType: 'assessment',
+          channelType: 'text',
+          sessionStatus: 'active',
+          currentCicareStage: 'ask',
+          answeredQuestionCount: 2,
+          totalQuestionCount: 10,
+          messages: [],
+        },
+      },
+    });
+
+    applyRealtimeEvent({
+      event_id: '1-0',
+      event_type: 'user_transcript_completed',
+      task_id: '68',
+      session_id: 'SESS-68',
+      message_id: 'PATIENT-1',
+      occurred_at: new Date().toISOString(),
+      payload: { content_text: '我的回答', turn_no: 3 },
+    });
+
+    expect(
+      useChatStore.getState().sessions['68'].answeredQuestionCount
+    ).toBe(2);
+    expect(useTaskStore.getState().tasks[0].progress).toEqual({
+      current: 2,
+      total: 10,
+    });
+
+    applyRealtimeEvent({
+      event_id: '2-0',
+      event_type: 'progress_updated',
+      task_id: '68',
+      session_id: 'SESS-68',
+      occurred_at: new Date().toISOString(),
+      payload: { current: 3, total: 10, completed: false },
+    });
+
+    expect(
+      useChatStore.getState().sessions['68'].answeredQuestionCount
+    ).toBe(3);
+    expect(useTaskStore.getState().tasks[0].progress).toEqual({
+      current: 3,
+      total: 10,
+    });
+  });
+
+  it('实时抽取事件保存量表真实值、可信度和证据消息', async () => {
+    const values = new Map<string, string>();
+    vi.stubGlobal('sessionStorage', {
+      getItem: (key: string) => values.get(key) ?? null,
+      setItem: (key: string, value: string) => values.set(key, value),
+      removeItem: (key: string) => values.delete(key),
+    });
+    const { useChatStore } = await import('@/lib/stores/useChatStore');
+    const { applyRealtimeEvent } = await import(
+      '@/lib/transports/applyRealtimeEvent'
+    );
+
+    applyRealtimeEvent({
+      event_id: 'extract-1',
+      event_type: 'extraction_updated',
+      task_id: '109',
+      session_id: 'SESS-109',
+      message_id: 'MSG-PATIENT-1',
+      occurred_at: '2026-08-19T10:00:00Z',
+      payload: {
+        fields: [
+          {
+            question_id: 3,
+            question_code: 'smoking_years',
+            question_text: '抽烟烟龄',
+            selected_options: ['option_3'],
+            selected_option_labels: ['10年以上'],
+            selected_option_values: ['10年以上'],
+            display_value: '10年以上',
+            source_message_ids: ['MSG-PATIENT-1'],
+            confidence: 0.95,
+          },
+        ],
+      },
+    });
+
+    const answer = useChatStore.getState().structuredAnswers['109'][0];
+    expect(answer.displayValue).toBe('10年以上');
+    expect(answer.selectedOptionLabels).toEqual(['10年以上']);
+    expect(answer.selectedOptions).toEqual(['option_3']);
+    expect(answer.extractionConfidence).toBe(0.95);
+    expect(answer.sourceMessageIds).toEqual(['MSG-PATIENT-1']);
+  });
+
+  it('把工具领域事件写入宣教、同意和护士呼叫状态', async () => {
+    const values = new Map<string, string>();
+    vi.stubGlobal('sessionStorage', {
+      getItem: (key: string) => values.get(key) ?? null,
+      setItem: (key: string, value: string) => values.set(key, value),
+      removeItem: (key: string) => values.delete(key),
+    });
+    const { useChatStore } = await import('@/lib/stores/useChatStore');
+    const { useTaskStore } = await import('@/lib/stores/useTaskStore');
+    const { applyRealtimeEvent } = await import(
+      '@/lib/transports/applyRealtimeEvent'
+    );
+    const task = useTaskStore.getState().tasks[0];
+    useTaskStore.setState({ tasks: [{ ...task, id: '88' }] });
+
+    applyRealtimeEvent({
+      event_id: 'edu-1',
+      event_type: 'education_triggered',
+      task_id: '88',
+      session_id: 'SESS-88',
+      occurred_at: '2026-08-19T10:00:00Z',
+      payload: {
+        material_id: 'EDU-ALLERGY',
+        category: 'allergy',
+        title: '药物过敏安全宣教',
+        document_version: '1.0',
+        original_content: '宣教原文',
+        patient_content: '通俗说明',
+        spoken_content: '播报内容',
+        auto_play: true,
+      },
+    });
+    expect(
+      useChatStore.getState().educationCards['88'][0].originalContent
+    ).toBe('宣教原文');
+
+    applyRealtimeEvent({
+      event_id: 'edu-status-1',
+      event_type: 'education_status_updated',
+      task_id: '88',
+      session_id: 'SESS-88',
+      occurred_at: '2026-08-19T10:00:30Z',
+      payload: {
+        source_event_id: 'edu-1',
+        material_id: 'EDU-ALLERGY',
+        status: 'acknowledged',
+        acknowledged: true,
+        acknowledged_at: '2026-08-19T10:00:30Z',
+      },
+    });
+    expect(
+      useChatStore.getState().educationCards['88'][0].acknowledged
+    ).toBe(true);
+    expect(
+      useChatStore.getState().educationCards['88'][0].acknowledgedAt
+    ).toBe('2026-08-19T10:00:30Z');
+
+    applyRealtimeEvent({
+      event_id: 'edu-2',
+      event_type: 'education_triggered',
+      task_id: '88',
+      session_id: 'SESS-88',
+      occurred_at: '2026-08-19T10:00:45Z',
+      payload: {
+        material_id: 'EDU-ALLERGY',
+        category: 'allergy',
+        title: '药物过敏安全宣教',
+        document_version: '1.0',
+        original_content: '第二次宣教原文',
+        patient_content: '第二次通俗说明',
+        spoken_content: '第二次播报内容',
+        auto_play: true,
+      },
+    });
+    expect(useChatStore.getState().educationCards['88']).toHaveLength(2);
+    expect(useChatStore.getState().educationCards['88'][0].acknowledged).toBe(
+      true
+    );
+    expect(useChatStore.getState().educationCards['88'][1].acknowledged).toBe(
+      false
+    );
+
+    applyRealtimeEvent({
+      event_id: 'consent-1',
+      event_type: 'consent_triggered',
+      task_id: '88',
+      session_id: 'SESS-88',
+      occurred_at: '2026-08-19T10:01:00Z',
+      payload: {
+        form_id: 'FORM-1',
+        form_type: 'surgery',
+        title: '手术知情同意提醒',
+        document_version: '1.0',
+        full_text: '完整条款',
+        clauses: [
+          {
+            id: 'C1',
+            clause_code: 'RISK',
+            clause_name: '风险说明',
+            patient_content: '风险内容',
+            importance_level: 'critical',
+            mandatory_delivery: true,
+            explicit_confirmation_required: true,
+          },
+        ],
+      },
+    });
+    expect(
+      useChatStore.getState().consentRequests['88'][0].clauses[0].clauseName
+    ).toBe('风险说明');
+
+    applyRealtimeEvent({
+      event_id: 'handoff-1',
+      event_type: 'handoff_requested',
+      task_id: '88',
+      session_id: 'SESS-88',
+      occurred_at: '2026-08-19T10:02:00Z',
+      payload: {
+        request_id: 'NURSE-1',
+        reason: '需要测量血压',
+        requested_action: 'measure_blood_pressure',
+        action_label: '测量血压',
+        patient_name: '张三',
+        bed_no: '08床',
+        urgency: 'urgent',
+      },
+    });
+    expect(useTaskStore.getState().tasks[0].handoffRequired).toBe(true);
+    expect(useTaskStore.getState().tasks[0].handoffActionLabel).toBe(
+      '测量血压'
+    );
+    expect(
+      useChatStore.getState().nurseAssistanceRequests['NURSE-1'].patientName
+    ).toBe('张三');
+  });
+
+  it('首问完成后把旧 pending 会话恢复为 active 并解除流式锁定', async () => {
+    const values = new Map<string, string>();
+    vi.stubGlobal('sessionStorage', {
+      getItem: (key: string) => values.get(key) ?? null,
+      setItem: (key: string, value: string) => values.set(key, value),
+      removeItem: (key: string) => values.delete(key),
+    });
+    const { useChatStore } = await import('@/lib/stores/useChatStore');
+    const { applyRealtimeEvent } = await import(
+      '@/lib/transports/applyRealtimeEvent'
+    );
+
+    useChatStore.setState({
+      sessions: {
+        '109': {
+          id: 'SESS-109',
+          sessionNo: 'SESS-109',
+          taskId: '109',
+          patientId: '84',
+          encounterId: '84',
+          interactionType: 'assessment',
+          channelType: 'text',
+          sessionStatus: 'pending',
+          currentCicareStage: 'connect',
+          answeredQuestionCount: 0,
+          totalQuestionCount: 6,
+          messages: [],
+        },
+      },
+      streamingTaskId: '109',
+    });
+
+    applyRealtimeEvent({
+      event_id: 'opening-completed-1',
+      event_type: 'assistant_message_completed',
+      task_id: '109',
+      session_id: 'SESS-109',
+      message_id: 'MSG-AI-OPENING',
+      occurred_at: '2026-08-19T11:46:11+08:00',
+      payload: {
+        content_text: '周阿姨您好，请告诉我现在最不舒服的地方。',
+        turn_no: 1,
+        is_final: true,
+      },
+    });
+
+    expect(useChatStore.getState().sessions['109'].sessionStatus).toBe(
+      'active'
+    );
+    expect(useChatStore.getState().streamingTaskId).toBeNull();
+  });
+
+  it('区分患者主动呼叫与 AI 工具呼叫，并在处理事件后保留护士身份', async () => {
+    const values = new Map<string, string>();
+    vi.stubGlobal('sessionStorage', {
+      getItem: (key: string) => values.get(key) ?? null,
+      setItem: (key: string, value: string) => values.set(key, value),
+      removeItem: (key: string) => values.delete(key),
+    });
+    const { useChatStore } = await import('@/lib/stores/useChatStore');
+    const { useTaskStore } = await import('@/lib/stores/useTaskStore');
+    const { applyRealtimeEvent } = await import(
+      '@/lib/transports/applyRealtimeEvent'
+    );
+    const task = useTaskStore.getState().tasks[0];
+    useTaskStore.setState({
+      tasks: [{ ...task, id: '109', handoffRequired: true }],
+    });
+
+    applyRealtimeEvent({
+      event_id: 'handoff-agent-1',
+      event_type: 'handoff_requested',
+      task_id: '109',
+      session_id: 'SESS-109',
+      occurred_at: '2026-08-19T11:00:00Z',
+      payload: {
+        request_id: 'NURSE-AGENT-1',
+        request_source: 'agent',
+        tool_name: 'request_nurse_assistance',
+        tool_args: { requested_action: 'measure_blood_pressure' },
+        tool_result: {
+          success: true,
+          request_id: 'NURSE-AGENT-1',
+        },
+        patient_name: '周海燕',
+        bed_no: '09-1',
+        reason: '需要测量血压',
+        action_label: '测量血压',
+        status: 'requested',
+      },
+    });
+    expect(
+      useChatStore.getState().nurseAssistanceRequests['NURSE-AGENT-1']
+        .requestSource
+    ).toBe('agent');
+    expect(
+      useChatStore.getState().events['109'][0].metadata?.toolName
+    ).toBe('request_nurse_assistance');
+
+    applyRealtimeEvent({
+      event_id: 'handoff-resolved-1',
+      event_type: 'handoff_resolved',
+      task_id: '109',
+      session_id: 'SESS-109',
+      occurred_at: '2026-08-19T11:05:00Z',
+      payload: {
+        request_id: 'NURSE-AGENT-1',
+        request_ids: ['NURSE-AGENT-1'],
+        resolved_by_staff_no: 'N001',
+        resolved_by_name: '李护士',
+        handled_at: '2026-08-19T11:05:00Z',
+        resolution: '已完成血压测量',
+        remaining_pending: false,
+      },
+    });
+    expect(
+      useChatStore.getState().nurseAssistanceRequests['NURSE-AGENT-1']
+        .status
+    ).toBe('resolved');
+    expect(
+      useChatStore.getState().events['109'][0].metadata?.resolvedByStaffNo
+    ).toBe('N001');
+    expect(useTaskStore.getState().tasks[0].handoffRequired).toBe(false);
+  });
+
+  it('知情同意签署后保留完整条款和患者操作结果', async () => {
+    const values = new Map<string, string>();
+    vi.stubGlobal('sessionStorage', {
+      getItem: (key: string) => values.get(key) ?? null,
+      setItem: (key: string, value: string) => values.set(key, value),
+      removeItem: (key: string) => values.delete(key),
+    });
+    const { useChatStore } = await import('@/lib/stores/useChatStore');
+    const { applyRealtimeEvent } = await import(
+      '@/lib/transports/applyRealtimeEvent'
+    );
+
+    applyRealtimeEvent({
+      event_id: 'consent-triggered-1',
+      event_type: 'consent_triggered',
+      task_id: '109',
+      session_id: 'SESS-109',
+      occurred_at: '2026-08-19T15:58:00Z',
+      payload: {
+        form_id: 'FORM-TOBACCO',
+        title: '住院戒烟知情确认',
+        document_version: '1.0',
+        full_text: '戒烟知情同意完整内容',
+        clauses: [
+          {
+            id: 'C1',
+            clause_name: '无烟病区说明',
+            patient_content: '病区内禁止吸烟。',
+            importance_level: 'critical',
+            mandatory_delivery: true,
+            explicit_confirmation_required: true,
+          },
+        ],
+      },
+    });
+
+    applyRealtimeEvent({
+      event_id: 'consent-status-1',
+      event_type: 'consent_status_updated',
+      task_id: '109',
+      session_id: 'SESS-109',
+      occurred_at: '2026-08-19T16:00:00Z',
+      payload: {
+        form_id: 'FORM-TOBACCO',
+        status: 'signed',
+        decision: 'agreed',
+        completed_at: '2026-08-19T16:00:00Z',
+        clauses: [
+          {
+            id: 'C1',
+            clause_name: '无烟病区说明',
+            patient_content: '病区内禁止吸烟。',
+            importance_level: 'critical',
+            mandatory_delivery: true,
+            explicit_confirmation_required: true,
+            delivery_status: 'delivered',
+            listened: true,
+            confirmed: true,
+          },
+        ],
+      },
+    });
+
+    const request = useChatStore.getState().consentRequests['109'][0];
+    expect(request.status).toBe('signed');
+    expect(request.fullText).toBe('戒烟知情同意完整内容');
+    expect(request.clauses[0].confirmed).toBe(true);
+    expect(request.completedAt).toBe('2026-08-19T16:00:00Z');
+  });
+});

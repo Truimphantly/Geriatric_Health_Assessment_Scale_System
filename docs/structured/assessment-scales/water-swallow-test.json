@@ -1,0 +1,33 @@
+{
+  "id": "water_swallow_test",
+  "title": "洼田饮水试验（吞咽障碍评估）",
+  "source_file": "量表统计(1).md 表B.17",
+  "status": "published",
+  "form_type": "symptom_scale",
+  "patient_fields": ["patient_name", "sex", "age"],
+  "sections": [
+    {
+      "id": "water_swallow",
+      "title": "饮水试验",
+      "fields": [
+        {
+          "id": "swallow_grade",
+          "label": "洼田饮水试验分级",
+          "patient_text": "咱们做个小试验，麻烦您坐着，倒一小杯温开水，大概30毫升，也就两小口，按您平时喝水的样子喝下去。喝的时候留意有没有呛到、咳嗽，是一次喝完还是分了几次。您平时喝水是下面哪种情况？",
+          "type": "single_choice",
+          "options": [
+            {"id": "grade_1", "label": "Ⅰ级（优）：能顺利地1次将水饮完，无呛咳"},
+            {"id": "grade_2", "label": "Ⅱ级（良）：分2次以上饮完，无呛咳"},
+            {"id": "grade_3", "label": "Ⅲ级（中）：能1次饮完，但有呛咳"},
+            {"id": "grade_4", "label": "Ⅳ级（可）：分2次以上饮完，且有呛咳"},
+            {"id": "grade_5", "label": "Ⅴ级（差）：频繁呛咳，不能全部饮完"}
+          ]
+        }
+      ]
+    }
+  ],
+  "review_notes": [
+    "依据量表统计(1).md表B.17结构化；按分级标准记录，Ⅰ级优、Ⅱ级良、Ⅲ级中、Ⅳ级可、Ⅴ级差，不计分。",
+    "饮水中的异常征象（啜饮、含着水、水从口中流出、勉强饮水、小心翼翼）由护士复核时结合观察确认。"
+  ]
+}

@@ -1,0 +1,104 @@
+{
+  "id": "nrs2002_elderly",
+  "title": "2002营养风险筛查量表（NRS-2002）",
+  "source_file": "量表统计(1).md 表B.18",
+  "status": "published",
+  "form_type": "risk_scale",
+  "patient_fields": ["patient_name", "sex", "age"],
+  "measurement_fields": [
+    {"id": "height_cm", "label": "身高", "patient_text": "您身高大概多少？", "type": "number", "unit": "cm", "options": []},
+    {"id": "weight_kg", "label": "体重", "patient_text": "最近称过体重吗？大概多少斤、多少公斤？", "type": "number", "unit": "kg", "options": []}
+  ],
+  "initial_screening": {
+    "rule": "任意一项为“是”进入终筛；全部为“否”说明目前无营养风险，1周后复筛。",
+    "items": [
+      {
+        "id": "bmi_lt_20_5",
+        "label": "BMI<20.5",
+        "patient_text": "咱们聊聊吃饭和营养。按身高体重算下来，您是不是偏瘦？清楚的话告诉我身高体重，我来帮您算。",
+        "type": "single_choice",
+        "options": [
+          {"id": "yes", "label": "是"},
+          {"id": "no", "label": "否"}
+        ]
+      },
+      {
+        "id": "weight_loss_3_months",
+        "label": "最近3个月体重减轻",
+        "patient_text": "最近三个月，体重有没有往下掉？裤腰是不是松了？",
+        "type": "single_choice",
+        "options": [
+          {"id": "yes", "label": "是"},
+          {"id": "no", "label": "否"}
+        ]
+      },
+      {
+        "id": "intake_reduced_last_week",
+        "label": "最近1周膳食摄入减少",
+        "patient_text": "这个星期胃口怎么样？吃得比平时少了吗？",
+        "type": "single_choice",
+        "options": [
+          {"id": "yes", "label": "是"},
+          {"id": "no", "label": "否"}
+        ]
+      },
+      {
+        "id": "severe_disease",
+        "label": "疾病严重（如ICU/大手术）",
+        "patient_text": "最近有没有得过重病、做大手术，或者住过重症监护室？",
+        "type": "single_choice",
+        "options": [
+          {"id": "yes", "label": "是"},
+          {"id": "no", "label": "否"}
+        ]
+      }
+    ]
+  },
+  "scoring": {
+    "formula": "nutrition_impairment_score + disease_severity_score + age_score",
+    "components": [
+      {
+        "id": "nutrition_impairment_score",
+        "label": "营养状态受损评分",
+        "patient_text": "结合刚才聊的吃饭和体重情况，咱们把营养状况归个档：是基本正常，还是轻度、中度、重度受损？",
+        "type": "single_choice",
+        "options": [
+          {"score": 0, "label": "无（0分）：正常营养"},
+          {"score": 1, "label": "轻度（1分）：3个月体重丢失>5%，或进食量为需要量的50～75%"},
+          {"score": 2, "label": "中度（2分）：2个月体重丢失>5%，或进食量为需要量的25～50%，或BMI 18.5～20.5"},
+          {"score": 3, "label": "重度（3分）：1个月体重丢失>5%（或3个月>15%），或进食量<需要量的25%，或BMI<18.5"}
+        ]
+      },
+      {
+        "id": "disease_severity_score",
+        "label": "疾病严重程度评分",
+        "patient_text": "您现在的病重不重？咱们归个档：是一般慢性病在家养着，还是刚骨折、做过大手术、得过脑卒中这类？",
+        "type": "single_choice",
+        "options": [
+          {"score": 0, "label": "无（0分）：正常需求"},
+          {"score": 1, "label": "轻度（1分）：髋部骨折、慢性病（肝硬化、COPD、透析、糖尿病、肿瘤）"},
+          {"score": 2, "label": "中度（2分）：腹部大手术、脑卒中、重症肺炎、血液肿瘤"},
+          {"score": 3, "label": "重度（3分）：颅脑损伤、骨髓移植、ICU患者（APACHE>10）"}
+        ]
+      },
+      {
+        "id": "age_score",
+        "label": "年龄调整评分",
+        "patient_text": "",
+        "type": "single_choice",
+        "options": [
+          {"score": 0, "label": "年龄<70岁"},
+          {"score": 1, "label": "年龄≥70岁"}
+        ]
+      }
+    ]
+  },
+  "interpretation": [
+    {"condition": "total_score >= 3", "result": "存在营养风险，需启动干预"},
+    {"condition": "total_score <= 2", "result": "暂无明显营养风险，每周复评"}
+  ],
+  "review_notes": [
+    "依据量表统计(1).md表B.18结构化；总分=营养受损+疾病严重+年龄分（≥70岁加1分）。",
+    "初筛任一“是”进入终筛；身高体重为口头估计值，护士复核时以实测为准。"
+  ]
+}

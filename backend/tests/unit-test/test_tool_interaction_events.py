@@ -1,0 +1,352 @@
+"""工具领域事件与 SSE 映射单元测试。"""
+
+import json
+from datetime import UTC, datetime
+from types import SimpleNamespace
+
+from app.schemas.events import (
+    ConsentTriggeredEvent,
+    EducationTriggeredEvent,
+    HandoffRequestedEvent,
+)
+from app.services.sse_service import format_sse_event
+from app.services.tool_interaction_service import (
+    _coalesce_legacy_patient_handoffs,
+    _find_education_acknowledgement,
+    _interaction_event_payload,
+    _resolve_pending_handoff_rows,
+)
+
+
+def _fields(event) -> dict[bytes, bytes]:
+    """模拟 Redis Stream 发布后的 bytes 字段。"""
+    raw = event.model_dump(mode="json")
+    return {
+        str(key).encode(): (
+            json.dumps(value, ensure_ascii=False).encode()
+            if isinstance(value, (dict, list))
+            else str(value).encode()
+        )
+        for key, value in raw.items()
+        if value is not None
+    }
+
+
+def test_education_event_maps_to_frontend_payload():
+    """宣教事件应保留原文、播报文本和自动播放标记。"""
+    event = EducationTriggeredEvent(
+        session_id="SESS-1",
+        task_id=1,
+        material_id="EDU-1",
+        category="allergy",
+        level=3,
+        document_version="1.0",
+        title="药物过敏安全宣教",
+        original_content="宣教原文",
+        patient_content="通俗说明",
+        spoken_content="播报内容",
+        auto_play=True,
+        tool_name="get_education_material",
+        tool_args={"category": "allergy"},
+        tool_result={"success": True, "material_id": "EDU-1"},
+    )
+    formatted = format_sse_event("1-0", _fields(event))
+    envelope = json.loads(formatted["data"])
+    assert formatted["event"] == "education_triggered"
+    assert envelope["payload"]["original_content"] == "宣教原文"
+    assert envelope["payload"]["auto_play"] is True
+    assert envelope["payload"]["tool_name"] == "get_education_material"
+    assert envelope["payload"]["tool_result"]["material_id"] == "EDU-1"
+    assert envelope["event_id"] == event.event_id
+    assert envelope["stream_id"] == "1-0"
+
+
+def test_education_status_event_keeps_acknowledged_time():
+    """患者确认宣教后应向医护端传输确认状态和时间。"""
+    from app.schemas.events import EducationStatusUpdatedEvent
+
+    event = EducationStatusUpdatedEvent(
+        session_id="SESS-1",
+        task_id=1,
+        source_event_id="EDUCATION-EVENT-1",
+        material_id="EDU-1",
+        status="acknowledged",
+        acknowledged=True,
+        acknowledged_at="2026-08-19T12:00:00Z",
+    )
+    formatted = format_sse_event("1-1", _fields(event))
+    envelope = json.loads(formatted["data"])
+
+    assert envelope["payload"]["acknowledged"] is True
+    assert envelope["payload"]["source_event_id"] == "EDUCATION-EVENT-1"
+    assert envelope["payload"]["acknowledged_at"].startswith(
+        "2026-08-19T12:00:00"
+    )
+
+
+def test_consent_event_maps_clauses():
+    """知情同意事件应向前端传输结构化条款。"""
+    event = ConsentTriggeredEvent(
+        session_id="SESS-1",
+        task_id=1,
+        form_id="FORM-1",
+        form_type="surgery",
+        title="手术知情同意提醒",
+        document_version="1.0",
+        full_text="完整文本",
+        clauses=[{"id": "C1", "patient_content": "条款内容"}],
+        tool_name="trigger_consent_form",
+        tool_args={"form_type": "surgery"},
+        tool_result={"success": True, "form_id": "FORM-1"},
+    )
+    formatted = format_sse_event("2-0", _fields(event))
+    envelope = json.loads(formatted["data"])
+    assert formatted["event"] == "consent_triggered"
+    assert envelope["payload"]["clauses"][0]["id"] == "C1"
+    assert envelope["payload"]["tool_name"] == "trigger_consent_form"
+
+
+def test_consent_status_event_keeps_patient_operation_and_clauses():
+    """知情同意完成事件应携带逐条操作结果，供两端历史卡片恢复。"""
+    from app.schemas.events import ConsentStatusUpdatedEvent
+
+    event = ConsentStatusUpdatedEvent(
+        session_id="SESS-1",
+        task_id=1,
+        form_id="FORM-1",
+        status="signed",
+        decision="agreed",
+        clauses=[
+            {
+                "id": "C1",
+                "clause_name": "风险说明",
+                "patient_content": "风险内容",
+                "listened": True,
+                "confirmed": True,
+            }
+        ],
+        completed_at="2026-08-19T12:00:00Z",
+    )
+    formatted = format_sse_event("2-1", _fields(event))
+    envelope = json.loads(formatted["data"])
+
+    assert envelope["payload"]["status"] == "signed"
+    assert envelope["payload"]["decision"] == "agreed"
+    assert envelope["payload"]["clauses"][0]["confirmed"] is True
+
+
+def test_handoff_event_maps_patient_and_action():
+    """医护呼叫事件应包含患者、床位、原因和请求操作。"""
+    event = HandoffRequestedEvent(
+        session_id="SESS-1",
+        task_id=1,
+        request_id="NURSE-1",
+        reason="需要测量血压",
+        requested_action="measure_blood_pressure",
+        action_label="测量血压",
+        patient_name="张三",
+        bed_no="08床",
+    )
+    formatted = format_sse_event("3-0", _fields(event))
+    envelope = json.loads(formatted["data"])
+    assert formatted["event"] == "handoff_requested"
+    assert envelope["payload"]["patient_name"] == "张三"
+    assert envelope["payload"]["action_label"] == "测量血压"
+
+
+def test_agent_handoff_event_keeps_tool_result_and_source():
+    """Agent 呼叫应区分来源，并保留工具参数与完整结果。"""
+    event = HandoffRequestedEvent(
+        session_id="SESS-1",
+        task_id=1,
+        message_id="MSG-PATIENT-1",
+        request_id="NURSE-1",
+        reason="患者需要测量血压",
+        requested_action="measure_blood_pressure",
+        action_label="测量血压",
+        patient_name="张三",
+        bed_no="08床",
+        request_source="agent",
+        tool_name="request_nurse_assistance",
+        tool_args={
+            "requested_action": "measure_blood_pressure",
+            "reason": "患者需要测量血压",
+        },
+        tool_result={
+            "success": True,
+            "request_id": "NURSE-1",
+            "status": "requested",
+        },
+    )
+    formatted = format_sse_event("4-0", _fields(event))
+    envelope = json.loads(formatted["data"])
+    assert envelope["payload"]["request_source"] == "agent"
+    assert envelope["payload"]["tool_name"] == "request_nurse_assistance"
+    assert envelope["payload"]["tool_result"]["request_id"] == "NURSE-1"
+
+
+def test_handoff_resolved_event_keeps_staff_identity_and_batch_ids():
+    """处理结果应包含护士身份、处理时间和本次关闭的请求编号。"""
+    from app.schemas.events import HandoffResolvedEvent
+
+    event = HandoffResolvedEvent(
+        session_id="SESS-1",
+        task_id=1,
+        request_id="NURSE-2",
+        request_ids=["NURSE-1", "NURSE-2"],
+        resolved_by_staff_id="1",
+        resolved_by_staff_no="N001",
+        resolved_by_name="李护士",
+        handled_at="2026-08-19T12:00:00Z",
+        resolution="已完成血压测量",
+    )
+    formatted = format_sse_event("5-0", _fields(event))
+    envelope = json.loads(formatted["data"])
+    assert envelope["payload"]["request_ids"] == ["NURSE-1", "NURSE-2"]
+    assert envelope["payload"]["resolved_by_staff_no"] == "N001"
+    assert envelope["payload"]["resolved_by_name"] == "李护士"
+    assert envelope["payload"]["remaining_pending"] is False
+
+
+def test_resolve_handoff_rows_closes_all_pending_requests():
+    """未指定 request_id 时应一次关闭当前任务全部待处理呼叫。"""
+    rows = [
+        SimpleNamespace(
+            event_payload={"request_id": "NURSE-1", "status": "requested"},
+            handled_status="pending",
+            handled_by=None,
+            handled_at=None,
+            updator=None,
+        ),
+        SimpleNamespace(
+            event_payload={"request_id": "NURSE-2", "status": "requested"},
+            handled_status="pending",
+            handled_by=None,
+            handled_at=None,
+            updator=None,
+        ),
+    ]
+    handled_at = datetime(2026, 8, 19, 12, 0, tzinfo=UTC)
+    request_ids = _resolve_pending_handoff_rows(
+        rows,
+        request_id=None,
+        staff_id=1,
+        staff_no="N001",
+        staff_name="李护士",
+        handled_at=handled_at,
+        resolution="均已处理",
+    )
+    assert request_ids == ["NURSE-1", "NURSE-2"]
+    assert all(row.handled_status == "resolved" for row in rows)
+    assert all(row.event_payload["resolved_by_staff_no"] == "N001" for row in rows)
+    assert all(row.event_payload["handled_at"] == handled_at.isoformat() for row in rows)
+
+
+def test_interaction_event_payload_keeps_resolved_event_handled_at():
+    """处理结果事件未填写列时间时，不应覆盖 payload 中的真实处理时间。"""
+    row = SimpleNamespace(
+        event_payload={
+            "request_ids": ["NURSE-1"],
+            "handled_at": "2026-08-19T12:00:00+00:00",
+            "resolved_by_staff_no": "N001",
+        },
+        handled_status="resolved",
+        handled_by="1",
+        handled_at=None,
+    )
+
+    payload = _interaction_event_payload(row)
+
+    assert payload["handled_at"] == "2026-08-19T12:00:00+00:00"
+    assert payload["handled_status"] == "resolved"
+    assert payload["handled_by"] == "1"
+
+
+def test_find_education_acknowledgement_is_idempotent():
+    """同一来源事件和材料已经确认时应返回原状态事件。"""
+    expected = SimpleNamespace(
+        event_payload={
+            "source_event_id": "EDU-EVENT-1",
+            "material_id": "EDU-1",
+            "acknowledged": True,
+        }
+    )
+    rows = [
+        SimpleNamespace(
+            event_payload={
+                "source_event_id": "EDU-EVENT-OTHER",
+                "material_id": "EDU-1",
+                "acknowledged": True,
+            }
+        ),
+        expected,
+    ]
+
+    result = _find_education_acknowledgement(
+        rows,
+        source_event_id="EDU-EVENT-1",
+        material_id="EDU-1",
+    )
+
+    assert result is expected
+
+
+def test_legacy_patient_handoff_coalescing_does_not_merge_agent_calls():
+    """旧患者按钮重复事件可合并，但不同 Agent 调用必须完整保留。"""
+    started_at = datetime(2026, 8, 19, 12, 0, tzinfo=UTC)
+
+    def row(
+        request_id: str,
+        *,
+        created_at: datetime,
+        source_invocation_id: str | None = None,
+        request_source: str | None = None,
+    ):
+        payload = {
+            "request_id": request_id,
+            "reason": "患者主动请求护士协助",
+            "requested_action": "other",
+            "urgency": "routine",
+        }
+        if request_source:
+            payload["request_source"] = request_source
+            payload["tool_name"] = "request_nurse_assistance"
+        return SimpleNamespace(
+            event_type="handoff_requested",
+            source_invocation_id=source_invocation_id,
+            event_payload=payload,
+            handled_status="pending",
+            handled_by=None,
+            handled_at=None,
+            create_time=created_at,
+        )
+
+    rows = [
+        row("PATIENT-1", created_at=started_at),
+        row(
+            "PATIENT-2",
+            created_at=started_at.replace(microsecond=73_000),
+        ),
+        row(
+            "AGENT-1",
+            created_at=started_at.replace(microsecond=100_000),
+            source_invocation_id="agent:call-1",
+            request_source="agent",
+        ),
+        row(
+            "AGENT-2",
+            created_at=started_at.replace(microsecond=120_000),
+            source_invocation_id="agent:call-2",
+            request_source="agent",
+        ),
+    ]
+
+    coalesced = _coalesce_legacy_patient_handoffs(rows)
+
+    assert len(coalesced) == 3
+    assert coalesced[0][1]["request_id"] == "PATIENT-1"
+    assert coalesced[0][1]["legacy_duplicate_request_ids"] == ["PATIENT-2"]
+    assert [item[1]["request_id"] for item in coalesced[1:]] == [
+        "AGENT-1",
+        "AGENT-2",
+    ]

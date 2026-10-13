@@ -1,0 +1,121 @@
+{
+  "id": "lawton_brody_iadl",
+  "title": "工具性日常生活活动能力量表（Lawton-Brody）",
+  "source_file": "量表统计(1).md 表B.2",
+  "status": "published",
+  "form_type": "ability_scale",
+  "patient_fields": ["patient_name", "sex", "age"],
+  "sections": [
+    {
+      "id": "iadl_items",
+      "title": "工具性日常生活活动条目",
+      "fields": [
+        {
+          "id": "shopping",
+          "label": "上街购物",
+          "patient_text": "您平时自己上街买东西吗？是能自己把要买的都买齐，还是只买点简单日用品、或者得有人陪着去？",
+          "type": "single_choice",
+          "options": [
+            {"id": "full", "score": 1, "label": "独立完成所有购物需求"},
+            {"id": "daily_only", "score": 0, "label": "独立购买日常生活用品"},
+            {"id": "accompanied", "score": 0, "label": "每次需人陪伴"},
+            {"id": "never", "score": 0, "label": "完全不上街"}
+          ]
+        },
+        {
+          "id": "transport",
+          "label": "使用交通工具",
+          "patient_text": "出远门的时候，您自己能坐公交、打车，或者自己开车吗？",
+          "type": "single_choice",
+          "options": [
+            {"id": "bus_or_drive", "score": 1, "label": "独立乘坐公交或独自驾车"},
+            {"id": "taxi_only", "score": 1, "label": "独立乘出租车并安排路线，但不能乘公交"},
+            {"id": "with_help", "score": 1, "label": "他人帮助或陪伴下能乘公交"},
+            {"id": "taxi_with_company", "score": 0, "label": "仅能在陪伴下乘出租车"},
+            {"id": "no_outing", "score": 0, "label": "不能外出"}
+          ]
+        },
+        {
+          "id": "cooking",
+          "label": "食物烹调",
+          "patient_text": "做饭这件事，您还能自己买菜、掌勺、摆好饭菜吗？",
+          "type": "single_choice",
+          "options": [
+            {"id": "full", "score": 1, "label": "能独立计划、烹煮和摆设饭菜"},
+            {"id": "prepared", "score": 0, "label": "备好佐料后会做"},
+            {"id": "reheat", "score": 0, "label": "会将做好的饭菜加热"},
+            {"id": "served", "score": 0, "label": "需别人煮好摆好"}
+          ]
+        },
+        {
+          "id": "housework",
+          "label": "家务维持",
+          "patient_text": "家里的活儿您还能干点什么？大扫除、洗碗铺床这些，是都能干，还是得帮着干？",
+          "type": "single_choice",
+          "options": [
+            {"id": "heavy", "score": 1, "label": "能做繁重家务或需偶尔协助"},
+            {"id": "simple", "score": 1, "label": "能做简单家务（洗碗、铺床）"},
+            {"id": "simple_untidy", "score": 1, "label": "能做简单家务但不整洁"},
+            {"id": "assisted", "score": 1, "label": "所有家务需协助"},
+            {"id": "none", "score": 0, "label": "完全不能做家务"}
+          ]
+        },
+        {
+          "id": "laundry",
+          "label": "洗衣服",
+          "patient_text": "衣服都是谁洗？您自己能洗吗？",
+          "type": "single_choice",
+          "options": [
+            {"id": "all", "score": 1, "label": "自己清洗所有衣物"},
+            {"id": "small_items", "score": 1, "label": "只洗小件或部分需协助"},
+            {"id": "by_others", "score": 0, "label": "所有衣物由别人洗"}
+          ]
+        },
+        {
+          "id": "phone_usage",
+          "label": "使用电话",
+          "patient_text": "打电话您会用吗？能自己查号、拨号，还是只会接不会拨？",
+          "type": "single_choice",
+          "options": [
+            {"id": "full", "score": 1, "label": "独立使用（查号、拨号）"},
+            {"id": "familiar_only", "score": 1, "label": "仅可拨熟悉号码"},
+            {"id": "answer_only", "score": 1, "label": "仅会接不会拨"},
+            {"id": "unable", "score": 0, "label": "完全不会"}
+          ]
+        },
+        {
+          "id": "medication_management",
+          "label": "服用药物",
+          "patient_text": "每天吃药这件事，您自己能记着按时按量吃吗？",
+          "type": "single_choice",
+          "options": [
+            {"id": "full", "score": 1, "label": "能自己负责正确时间剂量"},
+            {"id": "reminded", "score": 0, "label": "需要提醒或少许协助"},
+            {"id": "prepared_self", "score": 0, "label": "摆好后自行服用"},
+            {"id": "unable", "score": 0, "label": "不能自己服用"}
+          ]
+        },
+        {
+          "id": "finance",
+          "label": "处理财务",
+          "patient_text": "钱上的事您还管得了吗？买菜花钱、存折银行卡这些，是自己管还是要人帮？",
+          "type": "single_choice",
+          "options": [
+            {"id": "full", "score": 1, "label": "独立处理财务"},
+            {"id": "daily_only", "score": 1, "label": "处理日常购买，但大宗/银行需协助"},
+            {"id": "unable", "score": 0, "label": "不能处理财务"}
+          ]
+        }
+      ]
+    }
+  ],
+  "interpretation": [
+    {"condition": "total_score == 8", "result": "正常"},
+    {"condition": "total_score >= 6 and total_score <= 7", "result": "轻度依赖"},
+    {"condition": "total_score >= 3 and total_score <= 5", "result": "中度依赖"},
+    {"condition": "total_score <= 2", "result": "严重依赖"}
+  ],
+  "review_notes": [
+    "依据量表统计(1).md表B.2结构化；请根据最近1个月的情况回答，总分8分。"
+  ]
+}

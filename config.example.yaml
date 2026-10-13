@@ -1,0 +1,150 @@
+# ============================================================
+# medical-evaluate 主配置模板
+# 用法：拷贝为根目录 config.yaml（已 gitignore），按环境修改。
+#   cp config.example.yaml config.yaml
+# 环境变量可覆盖任意字段：前缀 APP_ + 双下划线分隔层级，
+#   例如 APP_DATABASE__PASSWORD=xxx 覆盖 database.password。
+# ============================================================
+
+# 运行环境：development | testing | production
+env: development
+
+# 应用基础配置
+app:
+  name: medical-evaluate
+  host: 0.0.0.0
+  port: 8000
+  debug: true
+
+# PostgreSQL 数据库（对应 docker-compose.yml 中的 postgres 服务）
+database:
+  host: localhost
+  port: 15432
+  user: medical
+  password: medical_dev_password
+  db: medical_evaluate
+  pool_size: 10
+  max_overflow: 20
+  pool_pre_ping: true
+  echo: false
+
+# Redis（缓存 / Stream / Celery broker & backend）
+redis:
+  host: localhost
+  port: 6379
+  # 库分配：0=缓存与Stream，1=Celery broker，2=Celery backend
+  cache_db: 0
+  broker_db: 1
+  backend_db: 2
+  password: null
+
+# Celery 任务队列
+celery:
+  # 留空则由 redis 配置自动拼装 redis://{host}:{port}/{broker_db|backend_db}
+  broker_url: null
+  backend_url: null
+  task_time_limit: 1800
+  task_soft_time_limit: 1500
+
+# 患者端与医护端身份登录
+security:
+  patient_identity_secret: change-this-in-production
+  patient_session_ttl_seconds: 28800
+  patient_session_cookie: medical_patient_session
+  patient_session_secure: false
+  staff_session_ttl_seconds: 28800
+  staff_session_cookie: medical_staff_session
+  staff_session_secure: false
+
+# 日志系统
+logging:
+  level: INFO          # DEBUG | INFO | WARNING | ERROR
+  json: false          # true 时输出结构化 JSON 日志
+  file: null           # 指定路径则同时写文件，如 logs/app.log
+
+# 模型配置（统一注册表：语言模型 + 语音模型，通过 type 区分类别）
+# 密钥支持 $ENV / ${ENV} 环境变量引用，运行时解析，避免明文入库。
+models:
+  # 语言模型（OpenAI 兼容，用于 schedule / dialog 文本降级 / extraction）
+  - name: qwen-plus
+    type: language
+    display_name: 通义千问 Plus
+    model: qwen-plus
+    api_base: https://dashscope.aliyuncs.com/compatible-mode/v1
+    api_key: $DASHSCOPE_API_KEY
+    timeout: 600.0
+    max_retries: 2
+    temperature: 0.7
+    max_tokens: 2000
+    enable_thinking: false
+    enable_prompt_caching: true
+    prompt_cache_ttl: "5m"
+    supports_thinking: false
+    supports_vision: false
+    supports_reasoning_effort: false
+
+  # 语言模型（确定性变体，用于 schedule 偏离判断，低温度保证判断稳定）
+  - name: qwen-plus-precise
+    type: language
+    display_name: 通义千问 Plus（确定性）
+    model: qwen-plus
+    api_base: https://dashscope.aliyuncs.com/compatible-mode/v1
+    api_key: $DASHSCOPE_API_KEY
+    timeout: 600.0
+    max_retries: 2
+    temperature: 0.1
+    max_tokens: 2000
+    enable_prompt_caching: true
+    prompt_cache_ttl: "5m"
+    supports_thinking: false
+    supports_vision: false
+    supports_reasoning_effort: false
+
+  # 语音模型（Qwen Audio/Omni Realtime WebSocket 全双工协议）
+  - name: dialog_agent_voice
+    type: voice
+    display_name: Qwen Audio Realtime
+    provider: qwen_audio_realtime
+    model: qwen-audio-3.0-realtime-flash
+    # 将 {WorkspaceId} 替换为阿里云百炼工作空间 ID。
+    websocket_url: wss://{WorkspaceId}.cn-beijing.maas.aliyuncs.com/api-ws/v1/realtime
+    api_key: $DASHSCOPE_API_KEY
+    timeout: 60.0
+    voice: longanqian
+    audio_format: pcm_s16le
+    input_sample_rate: 16000
+    output_sample_rate: 24000
+    turn_detection: server_vad
+    vad_threshold: 0.1
+    silence_duration_ms: 900
+    max_history_turns: 50
+
+  # 如需保留豆包适配，可复制以下配置并把 dialog_agent.voice 绑定到该模型。
+  # - name: doubao_dialog_voice
+  #   type: voice
+  #   display_name: 豆包实时语音
+  #   provider: doubao
+  #   model: doubao-voice-v1
+  #   websocket_url: wss://openspeech.bytedance.com/api/v1/tts/ws_binary
+  #   api_key: $DOUBAO_API_KEY
+  #   timeout: 60.0
+  #   reconnect_attempts: 3
+  #   voice: zh_female_qingxin
+  #   audio_format: pcm
+
+# 智能体模型绑定（先注册模型、再为智能体指定模型）
+# 简写：agent: model_name（默认作为语言模型绑定）
+# 详写：agent: {language: xxx, voice: yyy}（dialog_agent 需双协议绑定）
+agent_models:
+  schedule_agent:
+    language: qwen-plus-precise  # 低温度确定性变体，保证偏离判断稳定
+
+  dialog_agent:
+    language: qwen-plus       # 文本降级引擎
+    voice: dialog_agent_voice # Qwen Audio Realtime 语音引擎
+
+  extraction_agent:
+    language: qwen-plus
+
+  nursing_plan_agent:
+    language: qwen-plus  # 患者画像与护理计划结构化生成

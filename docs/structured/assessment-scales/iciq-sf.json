@@ -1,0 +1,70 @@
+{
+  "id": "iciq_sf",
+  "title": "国际尿失禁咨询委员会尿失禁问卷表简表（ICIQ-SF）",
+  "source_file": "量表统计(1).md 表B.11",
+  "status": "published",
+  "form_type": "symptom_scale",
+  "patient_fields": ["patient_name", "sex", "age"],
+  "sections": [
+    {
+      "id": "iciq_items",
+      "title": "最近4周漏尿情况",
+      "fields": [
+        {
+          "id": "leakage_frequency",
+          "label": "漏尿频次",
+          "patient_text": "接下来这个问题有点私密，您别不好意思，跟护士说实话才好帮您调理。最近一个月，您有没有不由自主漏尿、憋不住尿的情况？大概多久发生一次？",
+          "type": "single_choice",
+          "options": [
+            {"id": "never", "score": 0, "label": "从不"},
+            {"id": "weekly_1", "score": 1, "label": "大约每周1次或更少"},
+            {"id": "weekly_2_3", "score": 2, "label": "每周2～3次"},
+            {"id": "daily_1", "score": 3, "label": "大约每天1次"},
+            {"id": "daily_gt1", "score": 4, "label": "每天超过1次"},
+            {"id": "constant", "score": 5, "label": "一直"}
+          ]
+        },
+        {
+          "id": "leakage_amount",
+          "label": "漏尿量",
+          "patient_text": "漏的时候量大概有多少？是就湿一点点，还是得多换裤子？",
+          "type": "single_choice",
+          "options": [
+            {"id": "none", "score": 0, "label": "没有"},
+            {"id": "small", "score": 2, "label": "少量"},
+            {"id": "medium", "score": 4, "label": "中等量"},
+            {"id": "large", "score": 6, "label": "大量"}
+          ]
+        },
+        {
+          "id": "life_impact_score",
+          "label": "对日常生活的影响程度",
+          "patient_text": "这事儿对您日常生活影响有多大？要是0分是完全不影响，10分是影响特别大，您打个几分？",
+          "type": "number",
+          "unit": "分",
+          "options": []
+        },
+        {
+          "id": "leakage_timing",
+          "label": "什么时候发生漏尿（可多选）",
+          "patient_text": "一般在什么时候容易漏？比如咳嗽打喷嚏的时候、睡着的时候、还是来不及到厕所的时候？可以多说几种。",
+          "type": "multiple_choice",
+          "options": [
+            {"id": "never_leak", "label": "从未漏尿"},
+            {"id": "before_toilet", "label": "未到达厕所前"},
+            {"id": "cough_sneeze", "label": "咳嗽或打喷嚏时"},
+            {"id": "asleep", "label": "睡着时"},
+            {"id": "activity", "label": "活动或运动时"},
+            {"id": "dressing", "label": "小便结束穿衣时"},
+            {"id": "no_obvious_cause", "label": "无明显原因"},
+            {"id": "constant_leak", "label": "一直漏尿"}
+          ]
+        }
+      ]
+    }
+  ],
+  "review_notes": [
+    "依据量表统计(1).md表B.11结构化；评估最近4周的情况，前三项得分相加为总分，分数越高尿失禁越严重。",
+    "原表未给出分级阈值，未编造分档；第4项为多选补充项，不计分。"
+  ]
+}
