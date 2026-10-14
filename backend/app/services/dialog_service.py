@@ -36,6 +36,9 @@ from app.workers.event_publisher import DialogEventPublisher
 
 logger = logging.getLogger(__name__)
 _DIALOG_LOCK_TTL = 30
+# 命中该优先级及以上的关键词规则时（自杀/自伤/被侵害），
+# 由服务端直接创建心理老师上报，不依赖模型自觉调用工具。
+_CRISIS_AUTO_ESCALATE_PRIORITY = 900
 
 
 def _load_active_session(db: Session, session_no: str) -> InteractionSession:
@@ -71,6 +74,60 @@ def _current_question_turn(db: Session, session_id: int) -> int:
     if turn_no is None:
         raise AppError(ErrorCode.ERR_DIALOG_002, "AI首个问诊问题尚未就绪，请稍后重试")
     return int(turn_no)
+
+
+def _auto_escalate_crisis(
+    db: Session,
+    session: InteractionSession,
+    task: CareTask,
+    matches: list[MatchResult],
+    message: InteractionMessage,
+) -> None:
+    """安全兜底：命中高优先级危机词时自动上报心理老师。
+
+    说明：模型未在当轮调用上报工具时，仍保证危机信号不丢失；
+    通过 client_invocation_id 幂等，重复消息不会重复上报。
+    """
+    from app.schemas.interaction_tools import HandoffRequest
+    from app.services import tool_interaction_service
+
+    if not matches:
+        return
+    top = matches[0]
+    if top.priority < _CRISIS_AUTO_ESCALATE_PRIORITY:
+        return
+    if session.handoff_required:
+        return
+
+    matched = "、".join(term for term in top.matched_terms if term)[:60]
+    excerpt = (message.content_text or "").strip()[:80]
+    request = HandoffRequest(
+        task_id=task.task_no,
+        client_invocation_id=f"keyword:{session.session_no}:{message.message_no}",
+        reason=(
+            f"关键词安全兜底自动上报：命中「{top.rule_name}」（{matched}）；"
+            f"学生原话节选：{excerpt}"
+        ),
+        requested_action="notify_counselor",
+        urgency="urgent",
+    )
+    try:
+        tool_interaction_service.request_handoff(
+            db,
+            task.task_no,
+            request,
+            patient_id=session.patient_id,
+        )
+        logger.warning(
+            "[Crisis] 关键词兜底上报: session=%s rule=%s message=%s",
+            session.session_no,
+            top.rule_code,
+            message.message_no,
+        )
+    except AppError as exc:
+        logger.error(
+            "[Crisis] 兜底上报失败: session=%s err=%s", session.session_no, exc
+        )
 
 
 def _publish_constraint(
@@ -175,6 +232,8 @@ async def send_message(
 
         # 发布关键词命中的问诊约束
         _publish_constraint(publisher, session, task, matches)
+        # 安全兜底：命中自杀/自伤/被侵害等高优先级词时直接上报心理老师
+        _auto_escalate_crisis(db, session, task, matches, message)
         answer_event_id = publisher.publish(
             PatientAnswerEvent(
                 session_id=req.session_id,

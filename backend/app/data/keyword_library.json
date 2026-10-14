@@ -7,13 +7,38 @@
       "rule_name": "自杀风险关键词（最高优先）",
       "scope_type": "global",
       "trigger_condition": {
-        "keywords": ["自杀", "不想活", "想死", "轻生", "结束生命", "活不下去", "跳楼", "跳桥"],
-        "patterns": ["(没有|活着没)(意思|意义)", "想(离开|消失)"]
+        "keywords": [
+          "自杀",
+          "不想活",
+          "想死",
+          "轻生",
+          "结束生命",
+          "活不下去",
+          "跳楼",
+          "跳桥",
+          "活着没意思",
+          "活着没什么意思",
+          "活着没意义",
+          "没意思",
+          "不想面对",
+          "想解脱",
+          "死了算了",
+          "不如死",
+          "消失算了"
+        ],
+        "patterns": [
+          "(活着|活得|活者).{0,6}(没|不).{0,3}(意思|意义)",
+          "(不想|不想再).{0,4}(活|面对|继续|撑)",
+          "(想|要|干脆).{0,3}(死|消失|解脱|走掉)",
+          "(没有|没了).{0,4}(意思|意义|盼头)"
+        ]
       },
       "action_type": "constraint_prompt",
       "action_payload": {
         "prompt": "安全优先于评估进度：立即停止量表追问。先真诚共情稳住情绪（不说教、不否定、不承诺绝对保密），明确告诉对方涉及危险时你会帮他找到能帮他的大人；如情况紧急立即调用 request_nurse_assistance（requested_action=notify_counselor，urgency=urgent）上报心理老师，并提示 12356 心理援助热线。不得自行定性风险等级或下诊断。",
-        "tags": ["自杀风险"]
+        "tags": [
+          "自杀风险"
+        ]
       },
       "priority": 1000,
       "status": "active"
@@ -23,13 +48,26 @@
       "rule_name": "自伤风险关键词",
       "scope_type": "global",
       "trigger_condition": {
-        "keywords": ["自伤", "自残", "割腕", "伤害自己", "打自己", "划自己"],
-        "patterns": []
+        "keywords": [
+          "自伤",
+          "自残",
+          "割腕",
+          "伤害自己",
+          "打自己",
+          "划自己",
+          "不想醒过来",
+          "惩罚自己"
+        ],
+        "patterns": [
+          "(想|要|会).{0,4}(伤害|伤害一下|打|割|划).{0,3}(自己|我)"
+        ]
       },
       "action_type": "constraint_prompt",
       "action_payload": {
         "prompt": "安全优先：先共情接纳其感受的真实性（伤害自己往往是因为太难受），不贴标签、不说教；询问该行为是否发生在近期、是否需要帮助，并调用 request_nurse_assistance（requested_action=notify_counselor）上报心理老师；暂缓推进量表敏感条目，避免二次伤害。",
-        "tags": ["自伤风险"]
+        "tags": [
+          "自伤风险"
+        ]
       },
       "priority": 900,
       "status": "active"
@@ -39,13 +77,24 @@
       "rule_name": "被欺凌风险关键词",
       "scope_type": "global",
       "trigger_condition": {
-        "keywords": ["欺凌", "霸凌", "被欺负", "校园暴力", "孤立", "排挤"],
-        "patterns": ["(被|有人).{0,10}(欺负|打|骂|嘲笑)"]
+        "keywords": [
+          "欺凌",
+          "霸凌",
+          "被欺负",
+          "校园暴力",
+          "孤立",
+          "排挤"
+        ],
+        "patterns": [
+          "(被|有人).{0,10}(欺负|打|骂|嘲笑)"
+        ]
       },
       "action_type": "constraint_prompt",
       "action_payload": {
         "prompt": "先共情稳定，再去污名地了解情况：发生了什么、持续多久、身边有没有可以求助的人；明确告知这不怪他且可以帮他把信息带给心理老师；调用 request_nurse_assistance（requested_action=notify_counselor）上报。不下诊断、不追问细节到对方不适。",
-        "tags": ["被欺凌"]
+        "tags": [
+          "被欺凌"
+        ]
       },
       "priority": 800,
       "status": "active"
@@ -55,13 +104,23 @@
       "rule_name": "被侵害风险关键词",
       "scope_type": "global",
       "trigger_condition": {
-        "keywords": ["被打", "家暴", "侵害", "骚扰", "威胁我"],
-        "patterns": ["(家里|校外)有人.{0,6}(打|伤害|吓唬)我"]
+        "keywords": [
+          "被打",
+          "家暴",
+          "侵害",
+          "骚扰",
+          "威胁我"
+        ],
+        "patterns": [
+          "(家里|校外)有人.{0,6}(打|伤害|吓唬)我"
+        ]
       },
       "action_type": "constraint_prompt",
       "action_payload": {
         "prompt": "安全最高优先：共情稳定为先，不强迫叙述细节；如实告知涉及危险时会帮他找到能帮他的大人；立即调用 request_nurse_assistance（requested_action=notify_counselor，urgency=urgent）上报心理老师，并提示可拨打 12355 青少年服务台。",
-        "tags": ["被侵害"]
+        "tags": [
+          "被侵害"
+        ]
       },
       "priority": 950,
       "status": "active"
@@ -71,13 +130,28 @@
       "rule_name": "强烈绝望表达",
       "scope_type": "global",
       "trigger_condition": {
-        "keywords": ["撑不下去了", "没有希望", "绝望", "全是我的错", "活着好累"],
-        "patterns": ["(对不起|都是)我.{0,4}(的错|不好)"]
+        "keywords": [
+          "撑不下去了",
+          "没有希望",
+          "绝望",
+          "全是我的错",
+          "活着好累",
+          "太累了",
+          "撑不住",
+          "扛不住",
+          "没有盼头"
+        ],
+        "patterns": [
+          "(对不起|都是)我.{0,4}(的错|不好)",
+          "(扛|撑).{0,3}(不住|不下去)"
+        ]
       },
       "action_type": "constraint_prompt",
       "action_payload": {
         "prompt": "先认可其感受的真实性并用具体共情回应（避免空洞的我理解），不急于纠正或给建议；温和邀请对方多说说最近发生了什么；如绝望感强烈或持续，调用 request_nurse_assistance（requested_action=notify_counselor）上报心理老师。",
-        "tags": ["强烈绝望"]
+        "tags": [
+          "强烈绝望"
+        ]
       },
       "priority": 700,
       "status": "active"
@@ -87,13 +161,22 @@
       "rule_name": "学业压力话题",
       "scope_type": "global",
       "trigger_condition": {
-        "keywords": ["考试", "成绩", "排名", "作业写不完", "压力大", "补课"],
+        "keywords": [
+          "考试",
+          "成绩",
+          "排名",
+          "作业写不完",
+          "压力大",
+          "补课"
+        ],
         "patterns": []
       },
       "action_type": "constraint_prompt",
       "action_payload": {
         "prompt": "青少年提及学业压力，请先共情（不评判、不说教），再自然追问：压力主要来自哪里、最近睡眠和心情如何，并顺势衔接学业压力相关评估条目。",
-        "tags": ["学业压力"]
+        "tags": [
+          "学业压力"
+        ]
       },
       "priority": 100,
       "status": "active"
@@ -103,13 +186,21 @@
       "rule_name": "睡眠困扰话题",
       "scope_type": "global",
       "trigger_condition": {
-        "keywords": ["失眠", "睡不着", "睡不好", "熬夜", "早醒"],
+        "keywords": [
+          "失眠",
+          "睡不着",
+          "睡不好",
+          "熬夜",
+          "早醒"
+        ],
         "patterns": []
       },
       "action_type": "constraint_prompt",
       "action_payload": {
         "prompt": "青少年提及睡眠困扰，请共情后追问：持续多久、睡前一般在做什么、白天精神状态如何，并顺势衔接睡眠相关评估条目。",
-        "tags": ["睡眠困扰"]
+        "tags": [
+          "睡眠困扰"
+        ]
       },
       "priority": 100,
       "status": "active"
@@ -119,13 +210,21 @@
       "rule_name": "主动求助触发关键词",
       "scope_type": "global",
       "trigger_condition": {
-        "keywords": ["找老师", "找心理老师", "想聊聊", "帮帮我", "找大人"],
+        "keywords": [
+          "找老师",
+          "找心理老师",
+          "想聊聊",
+          "帮帮我",
+          "找大人"
+        ],
         "patterns": []
       },
       "action_type": "trigger_education",
       "action_payload": {
         "prompt": "青少年有求助意愿，请肯定其主动求助的行为，可调用 get_education_material 提供相关科普，或按其意愿引导联系心理老师。",
-        "tags": ["主动求助"]
+        "tags": [
+          "主动求助"
+        ]
       },
       "priority": 50,
       "status": "active"

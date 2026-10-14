@@ -17,13 +17,10 @@ class HandoffRequest(BaseModel):
     task_id: str | int | None = None
     client_invocation_id: str | None = Field(default=None, max_length=128)
     reason: str = Field(..., min_length=1, max_length=1000)
-    requested_action: Literal[
-        "measure_temperature",
-        "measure_blood_pressure",
-        "measure_weight",
-        "measure_height",
-        "other",
-    ] = "other"
+    # 心理护航口径动作：notify_counselor（通知心理老师）/ contact_guardian（联系监护人）
+    # / crisis_assessment（危机评估到场）/ explain_consent（解释知情同意）等；
+    # 同时兼容旧客户端传入的测量类动作与任意自定义动作。
+    requested_action: str = Field(default="other", max_length=64)
     urgency: Literal["routine", "urgent"] = "routine"
 
 

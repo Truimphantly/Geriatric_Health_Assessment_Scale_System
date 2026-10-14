@@ -50,10 +50,10 @@ celery:
 security:
   patient_identity_secret: change-this-in-production
   patient_session_ttl_seconds: 28800
-  patient_session_cookie: medical_patient_session
+  patient_session_cookie: psychology_student_session
   patient_session_secure: false
   staff_session_ttl_seconds: 28800
-  staff_session_cookie: medical_staff_session
+  staff_session_cookie: psychology_teacher_session
   staff_session_secure: false
 
 # 日志系统

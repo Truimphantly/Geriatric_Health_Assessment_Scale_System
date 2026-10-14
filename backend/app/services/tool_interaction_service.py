@@ -152,7 +152,7 @@ def _handoff_event(
         request_id=str(result.get("request_id") or f"SUPPORT-{uuid.uuid4()}"),
         reason=str(result.get("reason") or "患者需要护士协助"),
         requested_action=str(result.get("requested_action") or "other"),
-        action_label=str(result.get("action_label") or "人工护理操作"),
+        action_label=str(result.get("action_label") or "人工支持协助"),
         urgency=str(result.get("urgency") or "routine"),
         priority=str(result.get("priority") or "high"),
         title=str(result.get("title") or "请求护士协助"),
@@ -334,13 +334,14 @@ def publish_tool_result(
 def _new_handoff_result(request: HandoffRequest) -> dict[str, Any]:
     """构造前端主动呼叫的统一工具结果。"""
     action_labels = {
-        "measure_temperature": "测量体温",
-        "measure_blood_pressure": "测量血压",
-        "measure_weight": "测量体重",
-        "measure_height": "测量身高",
-        "other": "人工护理协助",
+        "notify_counselor": "通知心理老师",
+        "contact_guardian": "联系监护人",
+        "crisis_assessment": "危机评估到场",
+        "explain_consent": "解释知情同意",
+        "patient_home_call": "学生呼叫",
+        "other": "人工支持协助",
     }
-    action_label = action_labels[request.requested_action]
+    action_label = action_labels.get(request.requested_action, "人工支持协助")
     return {
         "success": True,
         "event_id": f"HANDOFF-EVENT-{uuid.uuid4().hex.upper()}",
@@ -350,7 +351,7 @@ def _new_handoff_result(request: HandoffRequest) -> dict[str, Any]:
         "reason": request.reason.strip(),
         "urgency": request.urgency,
         "priority": "high" if request.urgency == "urgent" else "medium",
-        "title": f"需要护士协助{action_label}",
+        "title": f"需要心理老师{action_label}",
         "description": request.reason.strip(),
         "status": "requested",
         "request_source": "patient",
