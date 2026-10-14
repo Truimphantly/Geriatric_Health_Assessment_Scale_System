@@ -34,7 +34,7 @@ class CreateTaskRequest(BaseModel):
     assigned_nurse_id: int | None = Field(default=None, description="负责护士ID")
     planned_start_time: datetime | None = Field(default=None, description="计划开始时间")
     task_type: str = Field(default="assessment", description="任务类型")
-    task_name: str = Field(default="入院量表评估", description="任务名称")
+    task_name: str = Field(default="心理状态了解", description="任务名称")
     task_source: str = Field(default="manual", description="任务来源")
 
 

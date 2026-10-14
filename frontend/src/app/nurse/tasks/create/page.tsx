@@ -358,7 +358,7 @@ function CreateTaskContent() {
                     onChange={(event) => setScene(event.target.value as AssessmentScene)}
                     className="w-full rounded-xl border border-border bg-surface px-4 py-3"
                   >
-                    <option value="admission">入院评估</option>
+                    <option value="admission">心理评估</option>
                     <option value="reassessment">复评</option>
                     <option value="transfer">转科评估</option>
                     <option value="discharge">出院评估</option>

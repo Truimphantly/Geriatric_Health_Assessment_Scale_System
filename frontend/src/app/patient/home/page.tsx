@@ -1,7 +1,6 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import Image from 'next/image';
 import Link from 'next/link';
 import PatientLayout from '@/components/layout/PatientLayout';
 import { NurseCallButton } from '@/components/patient/NurseCallButton';
@@ -35,8 +34,8 @@ export default function PatientHomePage() {
     activeTask?.taskStatus === 'pending_review'
       ? '查看记录'
       : current > 0
-        ? '继续评估'
-        : '开始评估';
+        ? '继续和小晴聊'
+        : '开始和小晴聊';
 
   useEffect(() => {
     if (runtimeConfig.dataMode !== 'api' || !user) return;
@@ -143,8 +142,8 @@ export default function PatientHomePage() {
         </section>
 
         <section className="patient-card mt-4 flex items-center gap-3 overflow-hidden px-4 py-3">
-          <span className="flex h-14 w-16 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-[#fff1df] to-[#e8f3df] text-[#d17942]">
-            <PatientIcon name="hospital" className="h-9 w-9" />
+          <span className="grid h-14 w-14 shrink-0 place-items-center rounded-2xl border-[2.5px] border-[var(--ink)] bg-[var(--accent-sky)] text-[26px]">
+            🏫
           </span>
           <div className="min-w-0 flex-1">
             <p className="truncate text-[17px] font-bold">
@@ -164,7 +163,7 @@ export default function PatientHomePage() {
               <div>
                 <div className="flex items-center gap-2">
                   <h2 className="text-[22px] font-black">
-                    {activeTask.taskType}
+                    和小晴聊聊近况
                   </h2>
                   <span className="rounded-full bg-[#ffe0cd] px-2.5 py-1 text-xs font-bold text-primary">
                     {activeTask.taskStatus === 'pending_review'
@@ -182,12 +181,12 @@ export default function PatientHomePage() {
               <div
                 className="relative grid h-[82px] w-[82px] place-items-center rounded-full"
                 style={{
-                  background: `conic-gradient(#ff6041 ${progress}%, #f1e6df ${progress}% 100%)`,
+                  background: `conic-gradient(#7fdbb6 ${progress}%, #f5e9d8 ${progress}% 100%)`,
                 }}
                 aria-label={`任务完成进度 ${progress}%`}
               >
-                <span className="grid h-[62px] w-[62px] place-items-center rounded-full bg-[#fffaf4]">
-                  <PatientIcon name="clipboard" className="h-7 w-7 text-primary" />
+                <span className="grid h-[62px] w-[62px] place-items-center rounded-full border-2 border-[var(--ink)] bg-[#fffaf4] text-[26px]">
+                  💬
                 </span>
               </div>
             </div>
@@ -206,33 +205,23 @@ export default function PatientHomePage() {
           </section>
         ) : (
           <section className="patient-card mt-4 p-5 text-center">
-            <Image
-              src="/assets/patient/states/empty-tasks.svg"
-              alt=""
-              width={72}
-              height={72}
-              priority
-              className="mx-auto h-[72px] w-[72px]"
-            />
-            <h2 className="mt-2 text-lg font-bold">现在没有要完成的任务</h2>
+            <span className="mx-auto grid h-[72px] w-[72px] place-items-center rounded-3xl border-[2.5px] border-[var(--ink)] bg-[var(--accent-mint)] text-[34px]">
+              🌱
+            </span>
+            <h2 className="mt-3 text-lg font-black">现在没有要完成的任务</h2>
             <p className="mt-1 text-sm text-foreground-muted">
               老师准备好了就会出现
             </p>
           </section>
         )}
 
-        <section className="patient-card mt-4 flex min-h-[96px] items-center overflow-hidden bg-gradient-to-r from-[#fff3ee] to-[#fff8f4] px-3">
-          <Image
-            src="/assets/patient/illustrations/nurse-help.webp"
-            alt="呼叫帮助"
-            width={112}
-            height={112}
-            priority
-            className="h-[92px] w-[92px] shrink-0 object-contain object-bottom"
-          />
+        <section className="patient-card-sticker mt-4 flex min-h-[96px] items-center gap-3 px-4">
+          <span className="grid h-14 w-14 shrink-0 place-items-center rounded-2xl border-[2.5px] border-[var(--ink)] bg-[var(--accent-peach)] text-[26px]">
+            🫂
+          </span>
           <div className="min-w-0 flex-1">
-            <p className="text-lg font-black text-[#a24c46]">需要帮助？</p>
-            <p className="text-sm font-bold text-[#a24c46]">叫心理老师来陪你聊聊</p>
+            <p className="text-lg font-black text-foreground">需要人陪？</p>
+            <p className="text-sm font-bold text-foreground-muted">叫心理老师来聊聊</p>
           </div>
           <NurseCallButton
             taskId={activeTask?.id}
@@ -248,25 +237,25 @@ export default function PatientHomePage() {
               href: '/patient/tasks',
               title: '我的任务',
               icon: 'clipboard' as const,
-              tone: 'from-[#fff1dd] to-[#fff8ed] text-[#e77c36]',
+              tone: 'bg-[var(--accent-lemon)] text-foreground',
             },
             {
               href: '/patient/assistant',
               title: '小晴助手',
               icon: 'nav-assistant' as const,
-              tone: 'from-[#e8f7f6] to-[#f1fbfa] text-[#2e8d89]',
+              tone: 'bg-[var(--accent-mint)] text-foreground',
             },
             {
               href: '/patient/assistant',
               title: '求助资源',
               icon: 'document' as const,
-              tone: 'from-[#e8f1ff] to-[#f2f7ff] text-[#4f81dc]',
+              tone: 'bg-[var(--accent-sky)] text-foreground',
             },
           ].map((item) => (
             <Link
               key={item.title}
               href={item.href}
-              className={`flex min-h-[110px] flex-col items-center justify-center gap-2 rounded-[20px] bg-gradient-to-br ${item.tone} shadow-sm`}
+              className={`flex min-h-[110px] flex-col items-center justify-center gap-2 rounded-[20px] border-[2.5px] border-[var(--ink)] ${item.tone} shadow-[3px_3px_0_var(--ink)]`}
             >
               <PatientIcon name={item.icon} className="h-9 w-9" />
               <span className="text-sm font-black text-foreground">

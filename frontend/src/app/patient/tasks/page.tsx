@@ -77,13 +77,13 @@ export default function PatientTasksPage() {
           </span>
           <div className="min-w-0 flex-1">
             <div className="flex flex-wrap items-center gap-2">
-              <h2 className="text-[20px] font-black">{task.taskType}</h2>
+              <h2 className="text-[20px] font-black">和小晴聊聊近况</h2>
               <span className="rounded-full border-2 border-[var(--ink)] bg-[var(--accent-lemon)] px-2 py-0.5 text-xs font-black">
-                {task.collectionMode === 'ai_dialogue' ? '小晴对话' : '传统问卷'}
+                {task.collectionMode === 'ai_dialogue' ? '聊天式' : '填表式'}
               </span>
             </div>
             <p className="mt-1 text-sm font-semibold text-foreground-muted">
-              {task.scaleNames?.length ?? 1} 份量表 · 负责 {task.assignedNurseName}
+              像聊天一样，大约 10 分钟
             </p>
           </div>
           <span aria-hidden="true" className="mt-0.5 text-3xl font-black leading-none text-foreground-placeholder">
@@ -141,7 +141,7 @@ export default function PatientTasksPage() {
         ✓
       </span>
       <span className="min-w-0 flex-1 truncate text-[16px] font-bold">
-        {task.taskType}
+        和小晴的聊天
       </span>
       <span className="text-sm font-semibold text-[#8b8378]">
         {task.taskStatus === 'pending_review' ? '待复核' : '已完成'}
