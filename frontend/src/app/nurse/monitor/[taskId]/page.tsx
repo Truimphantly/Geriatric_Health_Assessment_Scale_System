@@ -500,11 +500,11 @@ export default function NurseMonitorDetailPage() {
               <dd className="mt-1 font-medium">{task.sex ?? '—'} / {task.age !== undefined ? `${task.age}岁` : '—'}</dd>
             </div>
             <div>
-              <dt className="flex items-center gap-1 text-[11px] text-foreground-muted"><CalendarDaysIcon className="h-3 w-3" />入院日期</dt>
+              <dt className="flex items-center gap-1 text-[11px] text-foreground-muted"><CalendarDaysIcon className="h-3 w-3" />建档日期</dt>
               <dd className="mt-1 font-medium">{formatMonitorDate(task.admissionDate)}</dd>
             </div>
             <div>
-              <dt className="text-[11px] text-foreground-muted">病区</dt>
+              <dt className="text-[11px] text-foreground-muted">中心</dt>
               <dd className="mt-1 font-medium">{task.wardName ?? '—'}</dd>
             </div>
           </dl>
@@ -566,11 +566,11 @@ export default function NurseMonitorDetailPage() {
             <Card padding="md" className="border-red-300 bg-red-50">
               <div className="flex items-center gap-2 text-red-800">
                 <UserPlusIcon className="h-5 w-5" />
-                <h2 className="font-semibold">患者正在呼叫医护</h2>
+                <h2 className="font-semibold">学生正在呼叫医护</h2>
               </div>
               <dl className="mt-3 space-y-2 text-sm">
                 <div>
-                  <dt className="text-xs text-red-700">患者与床位</dt>
+                  <dt className="text-xs text-red-700">学生与床位</dt>
                   <dd className="font-medium">
                     {task.patientName} · {task.bedNo}
                   </dd>
@@ -578,7 +578,7 @@ export default function NurseMonitorDetailPage() {
                 <div>
                   <dt className="text-xs text-red-700">请求操作</dt>
                   <dd className="font-medium">
-                    {task.handoffActionLabel ?? '人工护理协助'}
+                    {task.handoffActionLabel ?? '人工支持协助'}
                   </dd>
                 </div>
                 <div>
@@ -786,9 +786,9 @@ export default function NurseMonitorDetailPage() {
                   size="sm"
                 >
                   {session?.sessionStatus === 'active'
-                    ? '患者在线'
+                    ? '学生在线'
                     : session?.sessionStatus === 'paused'
-                      ? '患者已暂停'
+                      ? '学生已暂停'
                       : '会话已结束'}
                 </Badge>
                 <span>开始 {formatMonitorDateTime(conversationStartedAt)}</span>
@@ -810,7 +810,7 @@ export default function NurseMonitorDetailPage() {
               {([
                 ['all', '全部'],
                 ['ai', 'AI'],
-                ['patient', '患者'],
+                ['patient', '学生'],
                 ['tool', '工具结果'],
               ] as const).map(([value, label]) => (
                 <button

@@ -165,9 +165,9 @@ export default function NurseReviewPage() {
         </Link>
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-3">
           <div>
-            <h1 className="text-3xl">护士<span className="text-primary italic">评估复核</span></h1>
+            <h1 className="text-3xl">心理老师<span className="text-primary italic">评估复核</span></h1>
             <p className="text-foreground-muted mt-1">
-              {task.patientName} · {task.bedNo} · {task.collectionMode === 'ai_dialogue' ? 'AI结构化结果' : '患者问卷提交'}
+              {task.patientName} · {task.bedNo} · {task.collectionMode === 'ai_dialogue' ? 'AI结构化结果' : '学生问卷提交'}
             </p>
           </div>
           <div className="flex gap-2">
@@ -219,7 +219,7 @@ export default function NurseReviewPage() {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="rounded-xl bg-surface-secondary p-4">
                   <p className="text-xs text-foreground-muted">
-                    {task.collectionMode === 'ai_dialogue' ? 'AI结构化答案' : '患者提交答案'}
+                    {task.collectionMode === 'ai_dialogue' ? 'AI结构化答案' : '学生提交答案'}
                   </p>
                   <p className="font-medium mt-2">{source || '未采集'}</p>
                   {sourceMessages?.length && (
@@ -232,7 +232,7 @@ export default function NurseReviewPage() {
                   )}
                 </div>
                 <div>
-                  <label className="text-xs text-foreground-muted">护士独立确认答案</label>
+                  <label className="text-xs text-foreground-muted">心理老师独立确认答案</label>
                   <input
                     value={nurse}
                     onChange={(event) =>
@@ -271,13 +271,13 @@ export default function NurseReviewPage() {
       )}
 
       <Card padding="lg" className="mt-5">
-        <label className="font-medium">护士补充问诊摘要</label>
+        <label className="font-medium">心理老师补充问诊摘要</label>
         <textarea
           value={supplementaryInquiry}
           onChange={(event) => setSupplementaryInquiry(event.target.value)}
           rows={4}
           className="w-full mt-2 rounded-xl border border-border p-3"
-          placeholder="记录护士补问内容、患者补充说明和临床判断依据"
+          placeholder="记录心理老师补问内容、学生补充说明和临床判断依据"
         />
       </Card>
 
@@ -300,7 +300,7 @@ export default function NurseReviewPage() {
           disabled={submitting}
           onClick={() => void persistReview('returned')}
         >
-          退回患者重评
+          退回学生重评
         </Button>
         <Button
           loading={submitting}

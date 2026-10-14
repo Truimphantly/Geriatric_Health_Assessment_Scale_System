@@ -73,7 +73,7 @@ export default function ToolResultHistoryCard(
                   </div>
                 )}
               <p className="text-xs text-foreground-muted">
-                患者操作：
+                学生操作：
                 {props.item.acknowledged ? '已确认阅读' : '尚未确认阅读'}
                 {props.item.acknowledgedAt
                   ? ` · ${formatDateTime(props.item.acknowledgedAt)}`
@@ -116,7 +116,7 @@ export default function ToolResultHistoryCard(
                     {clause.patientContent}
                   </p>
                   <p className="mt-3 text-xs text-foreground-muted">
-                    患者操作：
+                    学生操作：
                     {clause.confirmed
                       ? '已阅读并确认'
                       : clause.listened
@@ -153,8 +153,8 @@ export default function ToolResultHistoryCard(
 }
 
 function consentStatusLabel(item: ConsentRequest): string {
-  if (item.status === 'signed') return '患者已确认并签署';
-  if (item.status === 'refused') return '患者已拒绝';
-  if (item.status === 'needs_explanation') return '患者请求护士解释';
-  return '待患者确认';
+  if (item.status === 'signed') return '学生已确认并签署';
+  if (item.status === 'refused') return '学生已拒绝';
+  if (item.status === 'needs_explanation') return '学生请求心理老师解释';
+  return '待学生确认';
 }

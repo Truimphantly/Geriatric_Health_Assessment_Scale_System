@@ -36,7 +36,7 @@ export default function EditPatientPage() {
           setError(
             loadError instanceof Error
               ? loadError.message
-              : '患者信息加载失败'
+              : '学生信息加载失败'
           );
         }
       })
@@ -54,7 +54,7 @@ export default function EditPatientPage() {
       router.push(`/nurse/patients/${updated.patient.id}`);
     } catch (updateError) {
       setError(
-        updateError instanceof Error ? updateError.message : '患者信息保存失败'
+        updateError instanceof Error ? updateError.message : '学生信息保存失败'
       );
     } finally {
       setSubmitting(false);
@@ -68,22 +68,22 @@ export default function EditPatientPage() {
         className="mb-5 inline-flex items-center gap-2 text-foreground-muted"
       >
         <ArrowLeftIcon className="h-5 w-5" />
-        返回患者详情
+        返回学生详情
       </Link>
       <div className="mb-6">
         <Badge variant="primary" size="sm">
-          院内患者档案
+          院内学生档案
         </Badge>
         <h1 className="mt-2 text-3xl">
-          编辑<span className="italic text-primary">患者信息</span>
+          编辑<span className="italic text-primary">学生信息</span>
         </h1>
         <p className="mt-1 text-foreground-muted">
-          更新患者主档和本次住院记录；历史评估快照不会被改写
+          更新学生主档和本次住院记录；历史评估快照不会被改写
         </p>
       </div>
       {loading ? (
         <Card padding="lg" className="text-center text-foreground-muted">
-          正在加载患者信息...
+          正在加载学生信息...
         </Card>
       ) : record ? (
         <PatientRecordForm
@@ -96,7 +96,7 @@ export default function EditPatientPage() {
         />
       ) : (
         <Card padding="lg" className="text-center text-danger">
-          {error || '患者住院记录不存在'}
+          {error || '学生住院记录不存在'}
         </Card>
       )}
     </NurseLayout>

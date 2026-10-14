@@ -88,7 +88,7 @@ export default function PatientLayout({
         </main>
 
         {showNavigation && (
-          <nav className="patient-bottom-nav" aria-label="患者端主导航">
+          <nav className="patient-bottom-nav" aria-label="学生端主导航">
             <div className="grid grid-cols-3 gap-2">
               {(
                 [

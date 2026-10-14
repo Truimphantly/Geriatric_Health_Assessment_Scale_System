@@ -1,29 +1,37 @@
-@import url('https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Inter:wght@300;400;500;600&display=swap');
+/* 心晴伙伴 · 青少年心理护航系统
+   全局皮肤：学生端为 A 卡通治愈贴纸风（见 .patient-app），
+   老师端为同宇宙克制版（本 :root 作用域，去贴纸、重信息密度）。
+   字体全部走本地中文字体栈，避免外链字体在离线演示环境阻塞渲染。 */
 @import "tailwindcss";
 
 :root {
   /* 背景色 */
-  --background: #F7F4EF;
-  --surface: #FFFFFF;
-  --surface-secondary: #FBF9F5;
+  --background: #fff6ec;
+  --surface: #ffffff;
+  --surface-secondary: #fff9f2;
 
   /* 文本色 */
-  --foreground: #1F2421;
-  --foreground-muted: #5C635D;
-  --foreground-placeholder: #BFBFBF;
+  --foreground: #2a2320;
+  --foreground-muted: #6b5f53;
+  --foreground-placeholder: #b9ac9c;
 
   /* 边框色 */
-  --border: #E7E1D7;
+  --border: #eddfc9;
 
-  /* 功能色 */
-  --primary: #C4612F;
-  --primary-hover: #A94E22;
-  --primary-tint: #F2E3D6;
+  /* 功能色：主色薄荷（同学生端专色系） */
+  --primary: #2e8b6a;
+  --primary-hover: #247054;
+  --primary-tint: #e2f8ec;
+  --accent-mint: #7fdbb6;
+  --accent-peach: #ffb5a7;
+  --accent-lemon: #ffd66b;
+  --accent-sky: #a9c9de;
+  --ink: #2a2320;
 
-  --success: #52C41A;
-  --warning: #FAAD14;
-  --danger: #FF4D4F;
-  --info: #1890FF;
+  --success: #3dad82;
+  --warning: #f0b94f;
+  --danger: #ef6a63;
+  --info: #6fa3d8;
 }
 
 @theme inline {
@@ -46,8 +54,8 @@
   --color-danger: var(--danger);
   --color-info: var(--info);
 
-  --font-serif: 'DM Serif Display', serif;
-  --font-sans: 'Inter', system-ui, sans-serif;
+  --font-serif: 'Noto Sans SC', 'PingFang SC', 'Microsoft YaHei', system-ui, sans-serif;
+  --font-sans: 'Noto Sans SC', 'PingFang SC', 'Microsoft YaHei', system-ui, sans-serif;
 }
 
 body {
@@ -117,8 +125,8 @@ html.patient-scrollbar:hover::-webkit-scrollbar-thumb {
 }
 
 h1, h2 {
-  font-family: var(--font-serif);
-  font-weight: 500;
+  font-family: var(--font-sans);
+  font-weight: 800;
   letter-spacing: -0.02em;
 }
 

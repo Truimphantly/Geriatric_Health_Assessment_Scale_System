@@ -519,7 +519,7 @@ export function applyRealtimeEvent(event: SseEnvelope): void {
         actionLabel: value(
           event.payload,
           'action_label',
-          '人工护理操作'
+          '人工支持操作'
         ),
         urgency: value(event.payload, 'urgency', 'routine'),
         patientName: value(event.payload, 'patient_name', ''),
@@ -552,7 +552,7 @@ export function applyRealtimeEvent(event: SseEnvelope): void {
         taskId: event.task_id,
         messageId: event.message_id,
         eventType: 'handoff',
-        title: value(event.payload, 'title', '请求护士协助'),
+        title: value(event.payload, 'title', '请求心理老师协助'),
         description: value(event.payload, 'description', reason),
         priority: value(
           event.payload,
@@ -586,7 +586,7 @@ export function applyRealtimeEvent(event: SseEnvelope): void {
         actionLabel: value(
           event.payload,
           'action_label',
-          '人工护理操作'
+          '人工支持操作'
         ),
         urgency: value(
           event.payload,

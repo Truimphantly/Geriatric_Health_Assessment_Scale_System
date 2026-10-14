@@ -193,7 +193,7 @@ export const useChatStore = create<ChatStore>()(
                       ? {
                           ...item,
                           ...card,
-                          // SSE 重放同一材料时不能覆盖患者已经确认的状态。
+                          // SSE 重放同一材料时不能覆盖学生已经确认的状态。
                           acknowledged: item.acknowledged || card.acknowledged,
                         }
                       : item

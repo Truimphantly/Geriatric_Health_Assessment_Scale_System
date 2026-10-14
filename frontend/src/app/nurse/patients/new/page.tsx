@@ -23,7 +23,7 @@ export default function NewPatientPage() {
       router.push(`/nurse/patients/${record.patient.id}`);
     } catch (createError) {
       setError(
-        createError instanceof Error ? createError.message : '新增患者失败'
+        createError instanceof Error ? createError.message : '新增学生失败'
       );
     } finally {
       setSubmitting(false);
@@ -37,17 +37,17 @@ export default function NewPatientPage() {
         className="mb-5 inline-flex items-center gap-2 text-foreground-muted"
       >
         <ArrowLeftIcon className="h-5 w-5" />
-        返回患者列表
+        返回学生列表
       </Link>
       <div className="mb-6">
         <Badge variant="primary" size="sm">
-          建立院内患者档案
+          建立院内学生档案
         </Badge>
         <h1 className="mt-2 text-3xl">
-          新增<span className="italic text-primary">患者</span>
+          新增<span className="italic text-primary">学生</span>
         </h1>
         <p className="mt-1 text-foreground-muted">
-          一次录入患者主档、本次住院信息和临床安全摘要
+          一次录入学生主档、本次住院信息和临床安全摘要
         </p>
       </div>
       <PatientRecordForm

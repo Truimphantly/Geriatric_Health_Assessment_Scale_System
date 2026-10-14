@@ -72,7 +72,7 @@ export default function PatientRecordForm({
     secondaryDiagnoses: diagnosisValue(initialRecord, 'secondary'),
     riskNote: diagnosisValue(initialRecord, 'risk_note'),
     admissionSource: initialRecord?.encounter.admissionSource ?? '门诊',
-    nursingLevel: initialRecord?.encounter.nursingLevel ?? '二级护理',
+    nursingLevel: initialRecord?.encounter.nursingLevel ?? '二级支持',
     insuranceType: initialRecord?.encounter.insuranceType ?? '',
     allergySummary: initialRecord?.encounter.allergySummary ?? '',
   }));
@@ -80,7 +80,7 @@ export default function PatientRecordForm({
 
   const requiredFields = useMemo(
     () => [
-      ['患者姓名', form.name],
+      ['学生姓名', form.name],
       ['出生日期', form.birthday],
       ['联系电话', form.phone],
       ['档案号', form.inpatientNo],
@@ -156,11 +156,11 @@ export default function PatientRecordForm({
     <form onSubmit={submit} className="space-y-5">
       <Card padding="lg">
         <CardHeader>
-          <CardTitle>患者基本信息</CardTitle>
+          <CardTitle>学生基本信息</CardTitle>
         </CardHeader>
         <CardContent className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
           <Input
-            label="患者姓名 *"
+            label="学生姓名 *"
             value={form.name}
             onChange={(event) => update('name', event.target.value)}
           />
@@ -189,11 +189,11 @@ export default function PatientRecordForm({
             placeholder={
               mode === 'edit'
                 ? initialRecord?.patient.idCard ?? '留空保持原身份证号'
-                : '仅用于患者身份核验'
+                : '仅用于学生身份核验'
             }
           />
           <Input
-            label="HIS 患者 ID"
+            label="HIS 学生 ID"
             value={form.hisPatientId}
             onChange={(event) => update('hisPatientId', event.target.value)}
           />
@@ -210,7 +210,7 @@ export default function PatientRecordForm({
             }
           />
           <Input
-            label="与患者关系"
+            label="与学生关系"
             value={form.emergencyContactRelation}
             onChange={(event) =>
               update('emergencyContactRelation', event.target.value)
@@ -372,7 +372,7 @@ export default function PatientRecordForm({
           取消
         </Button>
         <Button type="submit" loading={submitting}>
-          {mode === 'create' ? '保存并创建患者' : '保存患者信息'}
+          {mode === 'create' ? '保存并创建学生' : '保存学生信息'}
         </Button>
       </div>
     </form>

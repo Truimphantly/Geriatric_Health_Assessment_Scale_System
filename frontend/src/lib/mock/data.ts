@@ -1,7 +1,7 @@
 import type { Patient, PatientEncounter, CareTask, AssessmentScale } from '@/lib/types';
 
 /**
- * Mock 患者数据
+ * Mock 学生数据
  */
 export const mockPatients: Patient[] = [
   {
@@ -61,7 +61,7 @@ export const mockEncounters: PatientEncounter[] = [
     encounterNo: 'E2026080001',
     inpatientNo: 'IN20260801',
     department: '心内科',
-    ward: '心内病区A',
+    ward: '心内中心A',
     bedNo: '301-1',
     admissionDate: '2026-08-14T09:30:00',
     diagnosis: '冠心病、高血压',
@@ -73,7 +73,7 @@ export const mockEncounters: PatientEncounter[] = [
     encounterNo: 'E2026080002',
     inpatientNo: 'IN20260802',
     department: '心内科',
-    ward: '心内病区A',
+    ward: '心内中心A',
     bedNo: '302-2',
     admissionDate: '2026-08-15T14:20:00',
     diagnosis: '急性心肌梗死',
@@ -85,7 +85,7 @@ export const mockEncounters: PatientEncounter[] = [
     encounterNo: 'E2026080003',
     inpatientNo: 'IN20260803',
     department: '心内科',
-    ward: '心内病区B',
+    ward: '心内中心B',
     bedNo: '401-3',
     admissionDate: '2026-08-16T08:00:00',
     diagnosis: '心房颤动、心力衰竭',
@@ -97,7 +97,7 @@ export const mockEncounters: PatientEncounter[] = [
     encounterNo: 'E2026080004',
     inpatientNo: 'IN20260804',
     department: '心内科',
-    ward: '心内病区A',
+    ward: '心内中心A',
     bedNo: '301-4',
     admissionDate: '2026-08-13T16:45:00',
     diagnosis: '冠心病',
@@ -109,7 +109,7 @@ export const mockEncounters: PatientEncounter[] = [
     encounterNo: 'E2026080005',
     inpatientNo: 'IN20260805',
     department: '心内科',
-    ward: '心内病区B',
+    ward: '心内中心B',
     bedNo: '405-2',
     admissionDate: '2026-08-16T11:15:00',
     diagnosis: '冠状动脉粥样硬化性心脏病',
@@ -118,7 +118,7 @@ export const mockEncounters: PatientEncounter[] = [
 ];
 
 /**
- * Mock 护理任务
+ * Mock 任务
  */
 export const mockTasks: CareTask[] = [
   {
@@ -130,12 +130,12 @@ export const mockTasks: CareTask[] = [
     patientName: '张小华',
     bedNo: '301-1',
     department: '心内科',
-    wardName: '心内病区A',
+    wardName: '心内中心A',
     taskType: '心理评估',
     collectionMode: 'ai_dialogue',
     taskStatus: 'in_progress',
     assignedNurseId: 'N001',
-    assignedNurseName: '李护士',
+    assignedNurseName: '李心理老师',
     scaleId: '1',
     scaleName: '心理评估任务包',
     scaleVersion: 'v1.0',
@@ -163,17 +163,17 @@ export const mockTasks: CareTask[] = [
     patientName: '李建国',
     bedNo: '302-2',
     department: '心内科',
-    wardName: '心内病区A',
+    wardName: '心内中心A',
     taskType: '心理评估',
     collectionMode: 'traditional_form',
     taskStatus: 'pending',
     assignedNurseId: 'N001',
-    assignedNurseName: '李护士',
+    assignedNurseName: '李心理老师',
     scaleId: '1',
     scaleName: '心理评估任务包',
     scaleVersion: 'v1.0',
     scaleIds: ['1', '2', '5'],
-    scaleNames: ['入院评估单', 'ADL日常生活能力', '跌倒/坠床风险'],
+    scaleNames: ['心理评估单', 'ADL日常生活能力', '跌倒/坠床风险'],
     participantType: 'patient',
     participantName: '李建国',
     assessmentScene: 'admission',
@@ -191,12 +191,12 @@ export const mockTasks: CareTask[] = [
     patientName: '王秀英',
     bedNo: '401-3',
     department: '心内科',
-    wardName: '心内病区B',
+    wardName: '心内中心B',
     taskType: '心理评估',
     collectionMode: 'ai_dialogue',
     taskStatus: 'pending_review',
     assignedNurseId: 'N002',
-    assignedNurseName: '王护士',
+    assignedNurseName: '王心理老师',
     scaleId: '1',
     scaleName: '心理评估任务包',
     scaleVersion: 'v1.0',
@@ -209,7 +209,7 @@ export const mockTasks: CareTask[] = [
     consentRequired: true,
     educationTopics: ['防跌倒宣教', '用药安全宣教'],
     currentStage: 'exit',
-    aiSummary: '患者由女儿协助完成评估，存在跌倒风险和夜间下床需求，建议护士进一步确认步态与用药情况。',
+    aiSummary: '学生由女儿协助完成评估，存在跌倒风险和夜间下床需求，建议心理老师进一步确认步态与用药情况。',
     createdAt: '2026-08-16T08:30:00',
     progress: {
       current: 20,
@@ -225,24 +225,24 @@ export const mockTasks: CareTask[] = [
     patientName: '赵德华',
     bedNo: '301-4',
     department: '心内科',
-    wardName: '心内病区A',
+    wardName: '心内中心A',
     taskType: '心理评估',
     collectionMode: 'ai_dialogue',
     taskStatus: 'completed',
     assignedNurseId: 'N001',
-    assignedNurseName: '李护士',
+    assignedNurseName: '李心理老师',
     scaleId: '1',
     scaleName: '心理评估任务包',
     scaleVersion: 'v1.0',
     scaleIds: ['1', '2', '3'],
-    scaleNames: ['入院评估单', 'ADL日常生活能力', 'NRS2002营养风险'],
+    scaleNames: ['心理评估单', 'ADL日常生活能力', 'NRS2002营养风险'],
     participantType: 'patient',
     participantName: '赵德华',
     assessmentScene: 'admission',
     consentRequired: false,
     educationTopics: ['冠心病住院生活宣教'],
     currentStage: 'exit',
-    aiSummary: '评估过程顺利，患者沟通清晰，自理能力良好，已完成住院生活宣教。',
+    aiSummary: '评估过程顺利，学生沟通清晰，自理能力良好，已完成住院生活宣教。',
     createdAt: '2026-08-15T14:00:00',
     completedAt: '2026-08-15T14:35:00',
     progress: {
@@ -259,9 +259,9 @@ export const mockScales: AssessmentScale[] = [
   {
     id: '1',
     scaleCode: 'ADMISSION_GENERAL',
-    scaleName: '入院评估单',
+    scaleName: '心理评估单',
     scaleType: 'general',
-    description: '患者入院时的基本信息和一般状况评估',
+    description: '学生建档时的基本信息和一般状况评估',
   },
   {
     id: '2',
@@ -294,7 +294,7 @@ export const mockScales: AssessmentScale[] = [
 ];
 
 /**
- * 根据患者ID获取住院记录
+ * 根据学生ID获取住院记录
  */
 export function getEncounterByPatientId(patientId: string): PatientEncounter | undefined {
   return mockEncounters.find((enc) => enc.patientId === patientId);
@@ -308,7 +308,7 @@ export function getTaskById(taskId: string): CareTask | undefined {
 }
 
 /**
- * 根据患者ID获取患者
+ * 根据学生ID获取学生
  */
 export function getPatientById(patientId: string): Patient | undefined {
   return mockPatients.find((patient) => patient.id === patientId);

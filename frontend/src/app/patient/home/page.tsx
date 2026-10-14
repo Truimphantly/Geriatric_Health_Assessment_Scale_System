@@ -70,7 +70,7 @@ export default function PatientHomePage() {
         );
         setUnreadCount((current) => Math.max(0, current - 1));
       } catch {
-        // 保留通知面板，避免一次网络失败阻断患者查看其他通知。
+        // 保留通知面板，避免一次网络失败阻断学生查看其他通知。
       }
     }
   };

@@ -5,7 +5,7 @@ export interface PatientDemoAccount {
 }
 
 /**
- * 与 deploy/Install.md 中的本地 API 演示患者保持一致。
+ * 与 deploy/Install.md 中的本地 API 演示学生保持一致。
  * 这些数据只用于本地联调，不可用于生产环境。
  */
 export const patientDemoAccounts: PatientDemoAccount[] = [

@@ -162,7 +162,7 @@ export default function TaskDetailPage() {
         {/* 页面标题 */}
         <div className="flex items-center justify-between mb-6">
           <div>
-            <h1 className="text-3xl font-serif font-medium text-foreground mb-2">
+            <h1 className="text-3xl font-sans font-extrabold text-foreground mb-2">
               任务<span className="text-primary italic">详情</span>
             </h1>
             <p className="text-foreground-muted">任务编号: {task.taskNo}</p>
@@ -175,15 +175,15 @@ export default function TaskDetailPage() {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           {/* 左侧主要信息 */}
           <div className="lg:col-span-2 space-y-6">
-            {/* 患者信息 */}
+            {/* 学生信息 */}
             <Card padding="lg">
               <CardHeader>
-                <CardTitle>患者信息</CardTitle>
+                <CardTitle>学生信息</CardTitle>
               </CardHeader>
               <CardContent>
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <label className="text-xs text-foreground-muted">患者姓名</label>
+                    <label className="text-xs text-foreground-muted">学生姓名</label>
                     <p className="text-sm font-medium text-foreground mt-1">
                       {task.patientName}
                     </p>
@@ -205,7 +205,7 @@ export default function TaskDetailPage() {
                     </p>
                   </div>
                   <div className="col-span-2">
-                    <label className="text-xs text-foreground-muted">病区</label>
+                    <label className="text-xs text-foreground-muted">中心</label>
                     <p className="text-sm font-medium text-foreground mt-1">
                       {task.wardName}
                     </p>
@@ -259,7 +259,7 @@ export default function TaskDetailPage() {
                   <div className="flex items-start space-x-3">
                     <UserCircleIcon className="w-5 h-5 text-foreground-muted flex-shrink-0 mt-0.5" />
                     <div className="flex-1">
-                      <label className="text-xs text-foreground-muted">责任护士</label>
+                      <label className="text-xs text-foreground-muted">负责老师</label>
                       <p className="text-sm font-medium text-foreground mt-1">
                         {task.assignedNurseName}
                       </p>
@@ -380,7 +380,7 @@ export default function TaskDetailPage() {
                         : preparationRunning
                           ? `当前阶段：${task.preparation.stage ?? '后台准备中'}`
                           : task.preparation.status === 'ready'
-                            ? '首问已生成，患者端已可见'
+                            ? '首问已生成，学生端已可见'
                             : '等待后台开始准备'}
                     </span>
                     {preparationFailed && (
@@ -412,7 +412,7 @@ export default function TaskDetailPage() {
                     showLabel
                   />
                     <p className="text-xs text-foreground-muted mt-3">
-                    患者正在进行
+                    学生正在进行
                     {task.collectionMode === 'ai_dialogue' ? ' AI 问诊' : '传统问卷填写'}，
                     已完成 {progressCurrent}/{progressTotal}
                   </p>
@@ -430,10 +430,10 @@ export default function TaskDetailPage() {
                   <div className="space-y-4">
                     <div className="p-4 bg-surface-secondary rounded-xl">
                         <h4 className="text-sm font-medium text-foreground mb-2">
-                          {task.collectionMode === 'ai_dialogue' ? 'AI评估摘要' : '患者问卷提交'}
+                          {task.collectionMode === 'ai_dialogue' ? 'AI评估摘要' : '学生问卷提交'}
                         </h4>
                         <p className="text-sm leading-6">
-                          {task.aiSummary ?? '患者已完成采集，等待护士查看原始回答并确认最终结果。'}
+                          {task.aiSummary ?? '学生已完成采集，等待心理老师查看原始回答并确认最终结果。'}
                         </p>
                         <div className="mt-3 flex flex-wrap gap-2">
                         {task.collectionMode === 'ai_dialogue' ? (
@@ -565,7 +565,7 @@ export default function TaskDetailPage() {
                         onClick={() => router.push(`/nurse/tasks/${task.id}/nursing-plan`)}
                         className="w-full"
                       >
-                        查看患者画像与护理计划
+                        查看学生画像与支持计划
                       </Button>
                       <Button
                         variant="outline"
@@ -590,7 +590,7 @@ export default function TaskDetailPage() {
                       className="w-full"
                     >
                       <ClipboardDocumentCheckIcon className="w-4 h-4 mr-2" />
-                      患者画像与护理计划
+                      学生画像与支持计划
                     </Button>
                   )}
 
@@ -609,7 +609,7 @@ export default function TaskDetailPage() {
             {showQRCode && (
               <Card padding="lg">
                 <CardHeader>
-                  <CardTitle>患者端二维码</CardTitle>
+                  <CardTitle>学生端二维码</CardTitle>
                 </CardHeader>
                 <CardContent>
                   <div className="text-center">
@@ -617,7 +617,7 @@ export default function TaskDetailPage() {
                       <QrCodeIcon className="w-32 h-32 text-foreground-muted" />
                     </div>
                     <p className="text-xs text-foreground-muted mb-2">
-                      或发送任务编号给患者
+                      或发送任务编号给学生
                     </p>
                     <div className="flex items-center space-x-2">
                       <input

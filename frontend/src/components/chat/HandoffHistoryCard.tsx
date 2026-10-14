@@ -67,7 +67,7 @@ export default function HandoffHistoryCard({
             </span>
           </div>
           <p className="mt-1 text-sm text-foreground-muted">
-            {text(metadata.patientName) || '患者'}
+            {text(metadata.patientName) || '学生'}
             {text(metadata.bedNo) ? ` · ${text(metadata.bedNo)}` : ''}
           </p>
           <dl className="mt-3 grid gap-2 text-sm sm:grid-cols-2">
@@ -77,7 +77,7 @@ export default function HandoffHistoryCard({
             </div>
             <div>
               <dt className="text-xs text-foreground-muted">请求操作</dt>
-              <dd>{text(metadata.actionLabel) || '人工护理协助'}</dd>
+              <dd>{text(metadata.actionLabel) || '人工支持协助'}</dd>
             </div>
           </dl>
           <p className="mt-3 text-sm leading-6">
@@ -97,7 +97,7 @@ export default function HandoffHistoryCard({
             <div className="mt-3 rounded-xl bg-white/70 p-3 text-sm">
               <p className="font-medium text-emerald-800">处理结果</p>
               <p className="mt-1">
-                {text(metadata.resolvedByName) || '护士'}
+                {text(metadata.resolvedByName) || '心理老师'}
                 {text(metadata.resolvedByStaffNo)
                   ? `（工号 ${text(metadata.resolvedByStaffNo)}）`
                   : ''}

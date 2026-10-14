@@ -18,7 +18,7 @@ export interface User {
   username?: string;
 }
 
-// 患者信息
+// 学生信息
 export interface Patient {
   id: string;
   patientNo: string;
@@ -111,7 +111,7 @@ export interface TaskPreparation {
   stages: Record<string, TaskPreparationStage>;
 }
 
-// 护理任务
+// 任务
 export interface CareTask {
   id: string;
   taskNo: string;
@@ -365,7 +365,7 @@ export interface StructuredAnswer {
   displayValue?: string; // normalized user-visible answer
   sourceMessageIds: string[];
   extractionConfidence: number;
-  corrected: boolean; // 患者是否已纠正
+  corrected: boolean; // 学生是否已纠正
   answerType?: 'text' | 'number' | 'boolean' | 'date' | 'single_choice' | 'multiple_choice';
   options?: Array<{ code: string; label: string; value?: string; score?: number | null }>;
   invalid?: boolean;

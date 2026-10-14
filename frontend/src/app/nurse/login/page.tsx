@@ -43,7 +43,7 @@ export default function NurseLoginPage() {
           <div className="inline-flex items-center justify-center w-16 h-16 bg-primary rounded-2xl mb-4">
             <span className="text-3xl text-white font-bold">晴</span>
           </div>
-          <h1 className="text-3xl font-serif font-medium text-foreground mb-2">
+          <h1 className="text-3xl font-sans font-extrabold text-foreground mb-2">
             心晴伙伴<span className="text-primary italic">系统</span>
           </h1>
           <p className="text-foreground-muted">心理老师端登录</p>
@@ -111,13 +111,13 @@ export default function NurseLoginPage() {
           </CardContent>
         </Card>
 
-        {/* 患者端入口 */}
+        {/* 学生端入口 */}
         <div className="mt-6 text-center">
           <a
             href="/patient"
             className="text-sm text-foreground-muted hover:text-primary transition-colors"
           >
-            前往患者端 →
+            前往学生端 →
           </a>
         </div>
       </div>

@@ -35,7 +35,7 @@ const tabs: Array<{
   {
     id: 'education',
     label: '宣教材料',
-    description: '患者可见与播报内容',
+    description: '学生可见与播报内容',
     icon: BookOpenIcon,
   },
   {
@@ -231,7 +231,7 @@ export default function NurseConfigPage() {
 
   const runRuleTest = async () => {
     if (!testText.trim()) {
-      setError('请输入需要测试的患者表达。');
+      setError('请输入需要测试的学生表达。');
       return;
     }
     setTesting(true);
@@ -473,7 +473,7 @@ export default function NurseConfigPage() {
                   </div>
                   {[
                     ['originalContent', '医学宣教原文', 7],
-                    ['patientContent', '患者易懂文本', 5],
+                    ['patientContent', '学生易懂文本', 5],
                     ['spokenContent', '语音播报文本', 5],
                   ].map(([field, label, rows]) => (
                     <label key={field}>
@@ -511,7 +511,7 @@ export default function NurseConfigPage() {
                           })
                         }
                       />
-                      需要患者确认已阅读
+                      需要学生确认已阅读
                     </label>
                     <label className="flex items-center gap-2 text-sm">
                       <input
@@ -714,7 +714,7 @@ export default function NurseConfigPage() {
                 <Card padding="lg">
                   <h2 className="text-xl">命中测试</h2>
                   <p className="mt-1 text-sm text-foreground-muted">
-                    输入一句患者表达，使用数据库中的全部启用规则测试。
+                    输入一句学生表达，使用数据库中的全部启用规则测试。
                   </p>
                   <div className="mt-4 flex flex-col gap-3 sm:flex-row">
                     <input
@@ -801,7 +801,7 @@ export default function NurseConfigPage() {
                       {selectedScale?.scaleName ?? '量表完整配置'}
                     </h2>
                     <p className="mt-1 text-sm text-foreground-muted">
-                      JSON 包含量表主档、版本、分组、题目、选项、规则和护理措施。
+                      JSON 包含量表主档、版本、分组、题目、选项、规则和支持措施。
                       Demo 模式只允许编辑已有记录，不允许在此新增或删除配置项。
                     </p>
                   </div>

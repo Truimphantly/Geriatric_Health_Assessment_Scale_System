@@ -23,10 +23,10 @@ interface ConsentInteractionCardProps {
 }
 
 function statusLabel(request: ConsentRequest): string {
-  if (request.status === 'signed') return '患者已确认并签署';
-  if (request.status === 'refused') return '患者已拒绝';
-  if (request.status === 'needs_explanation') return '患者请求护士解释';
-  return '待患者确认';
+  if (request.status === 'signed') return '学生已确认并签署';
+  if (request.status === 'refused') return '学生已拒绝';
+  if (request.status === 'needs_explanation') return '学生请求心理老师解释';
+  return '待学生确认';
 }
 
 export default function ConsentInteractionCard({
@@ -193,7 +193,7 @@ export default function ConsentInteractionCard({
                 {clause.patientContent}
               </p>
               <p className="mt-3 text-xs text-foreground-muted">
-                患者操作：
+                学生操作：
                 {clause.confirmed
                   ? '已阅读并确认'
                   : clause.listened
@@ -320,7 +320,7 @@ export default function ConsentInteractionCard({
             loading={submitting}
             onClick={() => void submit('needs_explanation')}
           >
-            我需要护士解释
+            我需要心理老师解释
           </Button>
           <Button
             type="button"

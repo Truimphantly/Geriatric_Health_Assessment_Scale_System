@@ -33,7 +33,7 @@ function statusPresentation(
     return { label: '在院', variant: 'success' as const };
   }
   if (status === 'pending_admission') {
-    return { label: '待入院', variant: 'warning' as const };
+    return { label: '待建档', variant: 'warning' as const };
   }
   if (status === 'cancelled') {
     return { label: '已取消', variant: 'default' as const };
@@ -69,7 +69,7 @@ export default function NursePatientDetailPage() {
           setError(
             loadError instanceof Error
               ? loadError.message
-              : '患者信息加载失败'
+              : '学生信息加载失败'
           );
         }
       })
@@ -83,7 +83,7 @@ export default function NursePatientDetailPage() {
     return (
       <NurseLayout>
         <Card padding="lg" className="text-center text-foreground-muted">
-          正在加载患者信息...
+          正在加载学生信息...
         </Card>
       </NurseLayout>
     );
@@ -93,7 +93,7 @@ export default function NursePatientDetailPage() {
     return (
       <NurseLayout>
         <Card padding="lg" className="text-center text-danger">
-          {error || '患者住院记录不存在'}
+          {error || '学生住院记录不存在'}
         </Card>
       </NurseLayout>
     );
@@ -109,7 +109,7 @@ export default function NursePatientDetailPage() {
         className="mb-5 inline-flex items-center gap-2 text-foreground-muted"
       >
         <ArrowLeftIcon className="h-5 w-5" />
-        返回患者列表
+        返回学生列表
       </Link>
 
       <div className="mb-6 flex flex-col justify-between gap-4 md:flex-row md:items-start">
@@ -127,7 +127,7 @@ export default function NursePatientDetailPage() {
               : patient.gender === 'female'
                 ? '女'
                 : '其他'}{' '}
-            · {patient.age}岁 · 患者编号 {patient.patientNo}
+            · {patient.age}岁 · 学生编号 {patient.patientNo}
             {patient.hisPatientId ? ` · HIS ${patient.hisPatientId}` : ''}
           </p>
         </div>
@@ -135,7 +135,7 @@ export default function NursePatientDetailPage() {
           <Link href={`/nurse/patients/${patient.id}/edit`}>
             <Button variant="outline" className="w-full sm:w-auto">
               <PencilSquareIcon className="mr-2 h-5 w-5" />
-              编辑患者
+              编辑学生
             </Button>
           </Link>
           {encounter.encounterStatus === 'in_hospital' && (
@@ -161,7 +161,7 @@ export default function NursePatientDetailPage() {
                 <p className="mt-1 font-medium">{encounter.inpatientNo}</p>
               </div>
               <div>
-                <p className="text-foreground-muted">病区床号</p>
+                <p className="text-foreground-muted">中心床号</p>
                 <p className="mt-1 font-medium">
                   {encounter.ward} · {encounter.bedNo}
                 </p>
@@ -176,13 +176,13 @@ export default function NursePatientDetailPage() {
                 </p>
               </div>
               <div>
-                <p className="text-foreground-muted">入院来源</p>
+                <p className="text-foreground-muted">来源</p>
                 <p className="mt-1 font-medium">
                   {encounter.admissionSource || '未记录'}
                 </p>
               </div>
               <div>
-                <p className="text-foreground-muted">护理级别</p>
+                <p className="text-foreground-muted">关注级别</p>
                 <p className="mt-1 font-medium">
                   {encounter.nursingLevel || '未记录'}
                 </p>
@@ -200,7 +200,7 @@ export default function NursePatientDetailPage() {
                 </p>
               </div>
               <div>
-                <p className="text-foreground-muted">入院时间</p>
+                <p className="text-foreground-muted">建档时间</p>
                 <p className="mt-1 font-medium">
                   {displayDateTime(encounter.admissionDate)}
                 </p>
@@ -287,7 +287,7 @@ export default function NursePatientDetailPage() {
         </Card>
         <Card padding="lg">
           <CardHeader>
-            <CardTitle>护理任务摘要</CardTitle>
+            <CardTitle>任务摘要</CardTitle>
           </CardHeader>
           <CardContent className="grid grid-cols-3 gap-3 text-center">
             <div className="rounded-xl bg-surface-secondary p-3">
@@ -313,7 +313,7 @@ export default function NursePatientDetailPage() {
       <div className="mt-7">
         <div className="mb-4 flex items-center gap-2">
           <ClipboardDocumentListIcon className="h-6 w-6 text-primary" />
-          <h2 className="text-2xl">护理任务记录</h2>
+          <h2 className="text-2xl">任务记录</h2>
         </div>
         {tasks.length ? (
           <div className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3">
@@ -328,7 +328,7 @@ export default function NursePatientDetailPage() {
         ) : (
           <Card padding="lg" className="text-center text-foreground-muted">
             <CalendarDaysIcon className="mx-auto mb-2 h-8 w-8 opacity-50" />
-            尚未创建护理任务
+            尚未创建任务
           </Card>
         )}
       </div>

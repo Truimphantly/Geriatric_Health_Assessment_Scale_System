@@ -50,7 +50,7 @@ export default function NurseTasksPage() {
       {/* 页面头部 */}
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h1 className="text-3xl font-serif font-medium text-foreground mb-2">
+          <h1 className="text-3xl font-sans font-extrabold text-foreground mb-2">
             任务<span className="text-primary italic">管理</span>
           </h1>
           <p className="text-foreground-muted">管理所有心理评估任务</p>

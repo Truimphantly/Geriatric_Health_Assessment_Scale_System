@@ -28,7 +28,7 @@ const selectClassName =
 function encounterStatusLabel(
   status: PatientWithEncounter['encounter']['encounterStatus']
 ) {
-  if (status === 'pending_admission') return '待入院';
+  if (status === 'pending_admission') return '待建档';
   if (status === 'in_hospital') return '在院';
   if (status === 'cancelled') return '取消';
   return '已出院';
@@ -71,7 +71,7 @@ export default function NursePatientsPage() {
             setError(
               loadError instanceof Error
                 ? loadError.message
-                : '患者列表加载失败'
+                : '学生列表加载失败'
             );
           }
         })
@@ -108,21 +108,21 @@ export default function NursePatientsPage() {
         <div>
           <div className="flex flex-wrap items-center gap-2">
             <Badge variant="primary" size="sm">
-              院内患者主索引
+              院内学生主索引
             </Badge>
             <IntegrationStatus compact />
           </div>
           <h1 className="mt-2 text-3xl">
-            患者<span className="italic text-primary">管理</span>
+            学生<span className="italic text-primary">管理</span>
           </h1>
           <p className="mt-1 text-foreground-muted">
-            管理患者主档、住院过程、临床安全信息和护理任务
+            管理学生主档、住院过程、临床安全信息和任务
           </p>
         </div>
         <Link href="/nurse/patients/new">
           <Button className="w-full md:w-auto">
             <PlusIcon className="mr-2 h-5 w-5" />
-            新增患者
+            新增学生
           </Button>
         </Link>
       </div>
@@ -132,7 +132,7 @@ export default function NursePatientsPage() {
           <Input
             value={keyword}
             onChange={(event) => setKeyword(event.target.value)}
-            placeholder="姓名 / 患者号 / HIS ID / 住院号 / 床号"
+            placeholder="姓名 / 学生号 / HIS ID / 住院号 / 床号"
           />
           <select
             aria-label="住院状态"
@@ -143,7 +143,7 @@ export default function NursePatientsPage() {
             className={selectClassName}
           >
             <option value="">全部住院状态</option>
-            <option value="待入院">待入院</option>
+            <option value="待建档">待建档</option>
             <option value="在院">在院</option>
             <option value="已出院">已出院</option>
             <option value="取消">取消</option>
@@ -168,12 +168,12 @@ export default function NursePatientsPage() {
             ))}
           </select>
           <select
-            aria-label="病区"
+            aria-label="中心"
             value={wardName}
             onChange={(event) => setWardName(event.target.value)}
             className={selectClassName}
           >
-            <option value="">全部病区</option>
+            <option value="">全部中心</option>
             {wardName && !wards.includes(wardName) && (
               <option value={wardName}>{wardName}</option>
             )}
@@ -194,7 +194,7 @@ export default function NursePatientsPage() {
 
       {loading ? (
         <Card padding="lg" className="text-center text-foreground-muted">
-          正在加载患者列表...
+          正在加载学生列表...
         </Card>
       ) : (
         <div className="grid grid-cols-1 gap-4 xl:grid-cols-2">
@@ -253,7 +253,7 @@ export default function NursePatientsPage() {
                         </p>
                       </div>
                       <div className="rounded-xl bg-surface-secondary p-3">
-                        <p className="text-xs text-foreground-muted">护理级别</p>
+                        <p className="text-xs text-foreground-muted">关注级别</p>
                         <p className="mt-1 truncate font-medium">
                           {encounter.nursingLevel || '未记录'}
                         </p>
@@ -268,13 +268,13 @@ export default function NursePatientsPage() {
 
                     <div className="mt-3 flex flex-col gap-2 text-xs text-foreground-muted sm:flex-row sm:items-center sm:justify-between">
                       <p>
-                        患者号 {patient.patientNo}
+                        学生号 {patient.patientNo}
                         {patient.hisPatientId
                           ? ` · HIS ${patient.hisPatientId}`
                           : ''}
                       </p>
                       <p>
-                        护理任务 {taskSummary?.total ?? 0} 项 · 进行中{' '}
+                        任务 {taskSummary?.total ?? 0} 项 · 进行中{' '}
                         {taskSummary?.inProgress ?? 0} 项
                       </p>
                     </div>
@@ -300,7 +300,7 @@ export default function NursePatientsPage() {
             <UserGroupIcon className="mx-auto h-12 w-12 opacity-40" />
           )}
           <p className="mt-3 text-foreground-muted">
-            没有找到符合条件的患者
+            没有找到符合条件的学生
           </p>
         </Card>
       )}

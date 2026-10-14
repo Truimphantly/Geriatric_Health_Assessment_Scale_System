@@ -26,14 +26,14 @@ export default function NurseDashboardPage() {
     completed: tasks.filter((t) => t.taskStatus === 'completed').length,
   };
 
-  // 我的任务（分配给当前护士的）
+  // 我的任务（分配给当前心理老师的）
   const myTasks = tasks.filter((t) => t.assignedNurseId === user?.id);
 
   return (
     <NurseLayout>
       {/* 欢迎信息 */}
       <div className="mb-8">
-        <h1 className="text-3xl font-serif font-medium text-foreground mb-2">
+        <h1 className="text-3xl font-sans font-extrabold text-foreground mb-2">
           您好，<span className="text-primary italic">{user?.name}</span>
         </h1>
         <p className="text-foreground-muted">今天有 {myTasks.length} 项待处理任务</p>
@@ -45,7 +45,7 @@ export default function NurseDashboardPage() {
           <div className="flex items-center justify-between">
             <div>
               <p className="text-sm text-foreground-muted mb-1">总任务数</p>
-              <p className="text-3xl font-serif font-medium text-foreground">{stats.total}</p>
+              <p className="text-3xl font-sans font-extrabold text-foreground">{stats.total}</p>
             </div>
             <div className="p-3 bg-primary-tint rounded-xl">
               <ClipboardDocumentListIcon className="w-6 h-6 text-primary" />
@@ -57,7 +57,7 @@ export default function NurseDashboardPage() {
           <div className="flex items-center justify-between">
             <div>
               <p className="text-sm text-foreground-muted mb-1">待开始</p>
-              <p className="text-3xl font-serif font-medium text-foreground">{stats.pending}</p>
+              <p className="text-3xl font-sans font-extrabold text-foreground">{stats.pending}</p>
             </div>
             <div className="p-3 bg-blue-50 rounded-xl">
               <ClockIcon className="w-6 h-6 text-info" />
@@ -69,7 +69,7 @@ export default function NurseDashboardPage() {
           <div className="flex items-center justify-between">
             <div>
               <p className="text-sm text-foreground-muted mb-1">待审核</p>
-              <p className="text-3xl font-serif font-medium text-foreground">
+              <p className="text-3xl font-sans font-extrabold text-foreground">
                 {stats.pendingReview}
               </p>
             </div>
@@ -83,7 +83,7 @@ export default function NurseDashboardPage() {
           <div className="flex items-center justify-between">
             <div>
               <p className="text-sm text-foreground-muted mb-1">已完成</p>
-              <p className="text-3xl font-serif font-medium text-foreground">{stats.completed}</p>
+              <p className="text-3xl font-sans font-extrabold text-foreground">{stats.completed}</p>
             </div>
             <div className="p-3 bg-green-50 rounded-xl">
               <CheckCircleIcon className="w-6 h-6 text-success" />

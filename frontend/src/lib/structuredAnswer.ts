@@ -2,7 +2,7 @@ import type { StructuredAnswer } from '@/lib/types';
 
 /**
  * 返回结构化答案的用户可见值。
- * option code 只用于审计和后端关联，禁止直接展示给患者或医护。
+ * option code 只用于审计和后端关联，禁止直接展示给学生或医护。
  */
 export function getStructuredAnswerDisplayValue(answer: StructuredAnswer): string {
   if (answer.invalid) return '待人工确认';

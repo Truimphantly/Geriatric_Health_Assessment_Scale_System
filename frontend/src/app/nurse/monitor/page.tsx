@@ -23,7 +23,7 @@ export default function NurseMonitorPage() {
       <div className="mb-6">
         <Badge variant="info">实时状态</Badge>
         <h1 className="text-3xl mt-2">评估<span className="text-primary italic">监控中心</span></h1>
-        <p className="text-foreground-muted mt-1">同步查看患者进度、AI会话、风险和人工介入请求</p>
+        <p className="text-foreground-muted mt-1">同步查看学生进度、AI会话、风险和人工介入请求</p>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">

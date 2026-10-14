@@ -84,7 +84,7 @@ function CreateTaskContent() {
     ])
       .then(([patientRecords, scaleRecords]) => {
         if (!patientRecords.length) {
-          throw new Error('后端未返回在院患者');
+          throw new Error('后端未返回在院学生');
         }
         if (!scaleRecords.length) {
           throw new Error('后端未返回可用量表');
@@ -132,7 +132,7 @@ function CreateTaskContent() {
 
   const next = () => {
     if (step === 1 && !selectedPatientId) {
-      setError('请选择患者');
+      setError('请选择学生');
       return;
     }
     if (step === 2 && selectedScaleIds.length === 0) {
@@ -145,7 +145,7 @@ function CreateTaskContent() {
 
   const createTask = async () => {
     if (!patient || !encounter) {
-      setError('患者或住院记录不完整，暂时无法创建任务');
+      setError('学生或住院记录不完整，暂时无法创建任务');
       return;
     }
     const duplicate = tasks.some(
@@ -156,7 +156,7 @@ function CreateTaskContent() {
         task.taskStatus !== 'cancelled'
     );
     if (duplicate) {
-      setError('该患者已有相同场景的未完成任务，请先查看现有任务');
+      setError('该学生已有相同场景的未完成任务，请先查看现有任务');
       return;
     }
     setLoading(true);
@@ -166,7 +166,7 @@ function CreateTaskContent() {
         patient,
         encounter,
         nurseId: user?.id ?? 'N001',
-        nurseName: user?.name ?? '张护士',
+        nurseName: user?.name ?? '张心理老师',
         scaleIds: selectedScales.map((scale) => scale.id),
         scaleNames: selectedScales.map((scale) => scale.scaleName),
         collectionMode,
@@ -210,11 +210,11 @@ function CreateTaskContent() {
             <IntegrationStatus compact />
           </div>
           <h1 className="text-3xl mt-2">创建<span className="text-primary italic">评估任务包</span></h1>
-          <p className="text-foreground-muted mt-1">选择患者、量表、采集方式和配套宣教内容</p>
+          <p className="text-foreground-muted mt-1">选择学生、量表、采集方式和配套宣教内容</p>
         </div>
 
         <div className="grid grid-cols-4 gap-2 mb-6">
-          {['患者与参与人', '选择量表', '执行配置', '发布确认'].map((label, index) => (
+          {['学生与参与人', '选择量表', '执行配置', '发布确认'].map((label, index) => (
             <div
               key={label}
               className={`rounded-xl px-3 py-3 text-center text-xs md:text-sm ${
@@ -232,7 +232,7 @@ function CreateTaskContent() {
 
         {step === 1 && (
           <Card padding="lg">
-            <h2 className="text-xl mb-4">选择在院患者</h2>
+            <h2 className="text-xl mb-4">选择在院学生</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
               {patients.map((item) => {
                 const currentEncounter = encounters.find((record) => record.patientId === item.id);
@@ -261,7 +261,7 @@ function CreateTaskContent() {
               <h3 className="font-medium mb-3">本次参与人</h3>
               <div className="grid grid-cols-3 gap-3">
                 {[
-                  { value: 'patient', label: '患者本人' },
+                  { value: 'patient', label: '学生本人' },
                   { value: 'family', label: '家属' },
                   { value: 'agent', label: '授权代理人' },
                 ].map((item) => (
@@ -279,7 +279,7 @@ function CreateTaskContent() {
               </div>
               {participantType !== 'patient' && (
                 <div className="mt-3 max-w-sm">
-                  <Input label="与患者关系" value={relationship} onChange={(event) => setRelationship(event.target.value)} />
+                  <Input label="与学生关系" value={relationship} onChange={(event) => setRelationship(event.target.value)} />
                 </div>
               )}
             </div>
@@ -329,7 +329,7 @@ function CreateTaskContent() {
                     value: 'ai_dialogue',
                     label: 'AI对话采集',
                     detail: apiMode
-                      ? '文字问诊、实时抽取与护理监控'
+                      ? '文字问诊、实时抽取与对话监控'
                       : '文字/语音模拟、实时抽取与宣教',
                   },
                   { value: 'traditional_form', label: '传统问卷', detail: '分组填写、自动保存与断点续答' },
@@ -382,8 +382,8 @@ function CreateTaskContent() {
                   className="w-5 h-5 accent-primary"
                 />
                 <span>
-                  <span className="font-medium block">包含入院须知与知情同意</span>
-                  <span className="text-xs text-foreground-muted">患者需逐条确认并完成演示手写签名</span>
+                  <span className="font-medium block">包含评估须知与知情同意</span>
+                  <span className="text-xs text-foreground-muted">学生需逐条确认并完成演示手写签名</span>
                 </span>
               </label>
 
@@ -417,13 +417,13 @@ function CreateTaskContent() {
               {apiMode && (
                 <div className="mt-5 rounded-xl border border-blue-200 bg-blue-50 p-4 text-sm text-blue-800">
                   {collectionMode === 'traditional_form'
-                    ? '传统问卷将按已发布量表逐组填写，答案自动保存并提交后等待护士复核。'
-                    : 'AI 对话任务会先完成首问准备，患者端只会看到准备完成后的任务。'}
+                    ? '传统问卷将按已发布量表逐组填写，答案自动保存并提交后等待心理老师复核。'
+                    : 'AI 对话任务会先完成首问准备，学生端只会看到准备完成后的任务。'}
                 </div>
               )}
 
               <div className="mt-5">
-                <label className="block text-sm font-medium mb-2">护士备注</label>
+                <label className="block text-sm font-medium mb-2">心理老师备注</label>
                 <textarea
                   value={notes}
                   onChange={(event) => setNotes(event.target.value)}
@@ -444,8 +444,8 @@ function CreateTaskContent() {
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
               <div className="rounded-xl bg-surface-secondary p-4">
-                <p className="text-foreground-muted">患者与参与人</p>
-                <p className="font-medium mt-1">{patient.name} · {participantType === 'patient' ? '患者本人' : `${relationship}协助`}</p>
+                <p className="text-foreground-muted">学生与参与人</p>
+                <p className="font-medium mt-1">{patient.name} · {participantType === 'patient' ? '学生本人' : `${relationship}协助`}</p>
               </div>
               <div className="rounded-xl bg-surface-secondary p-4">
                 <p className="text-foreground-muted">住院信息</p>
@@ -456,8 +456,8 @@ function CreateTaskContent() {
                 <p className="font-medium mt-1">{collectionMode === 'ai_dialogue' ? 'AI对话采集' : '传统问卷'}</p>
               </div>
               <div className="rounded-xl bg-surface-secondary p-4">
-                <p className="text-foreground-muted">负责护士</p>
-                <p className="font-medium mt-1">{user?.name ?? '张护士'}</p>
+                <p className="text-foreground-muted">负责心理老师</p>
+                <p className="font-medium mt-1">{user?.name ?? '张心理老师'}</p>
               </div>
             </div>
             <div className="mt-5">
@@ -469,7 +469,7 @@ function CreateTaskContent() {
             <div className="mt-5">
               <p className="text-sm text-foreground-muted mb-2">宣教与知情同意</p>
               <p className="text-sm">
-                {consentRequired ? '包含入院须知签名；' : '不包含知情同意；'}
+                {consentRequired ? '包含评估须知签名；' : '不包含知情同意；'}
                 {educationTopics.length ? educationTopics.join('、') : '无额外宣教'}
               </p>
             </div>

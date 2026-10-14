@@ -135,7 +135,7 @@ export function mapTaskDto(dto: BackendTaskDto): CareTask {
     encounterId: id(dto.encounter_id),
     encounterNo: dto.encounter_no,
     inpatientNo: dto.inpatient_no,
-    patientName: dto.patient_name ?? `患者 ${id(dto.patient_id)}`,
+    patientName: dto.patient_name ?? `学生 ${id(dto.patient_id)}`,
     bedNo: dto.bed_no ?? '待分配',
     department: dto.department,
     wardName: dto.ward_name,
@@ -309,7 +309,7 @@ export function mapDialogMessage(dto: DialogMessageDto): InteractionMessage {
   const role =
     backendRole === 'assistant' || backendRole === 'ai' || backendRole === 'AI'
       ? 'ai'
-      : backendRole === 'user' || backendRole === '患者'
+      : backendRole === 'user' || backendRole === '学生'
         ? 'patient'
         : backendRole === '家属'
           ? 'patient'
@@ -429,7 +429,7 @@ export function mapInHospitalPatient(dto: InHospitalPatientDto): {
       diagnosis: diagnosisText,
       diagnosisSnapshot: diagnosis,
       encounterStatus:
-        dto.encounter.encounter_status === '待入院'
+        dto.encounter.encounter_status === '待建档'
           ? 'pending_admission'
           : dto.encounter.encounter_status === '在院'
             ? 'in_hospital'

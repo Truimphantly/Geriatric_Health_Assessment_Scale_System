@@ -104,7 +104,7 @@ function PatientVerifyContent() {
         router.push('/patient/tasks');
       } catch (loginError) {
         setError(
-          loginError instanceof Error ? loginError.message : '患者身份核验失败'
+          loginError instanceof Error ? loginError.message : '学生身份核验失败'
         );
       } finally {
         setLoading(false);
@@ -126,7 +126,7 @@ function PatientVerifyContent() {
     }
 
     if (patient.idCard !== idCardNo.trim()) {
-      setError('证件后四位与任务患者不匹配');
+      setError('证件后四位与任务学生不匹配');
       setLoading(false);
       return;
     }
@@ -188,7 +188,7 @@ function PatientVerifyContent() {
                 <div className="grid grid-cols-2 rounded-2xl border-2 border-foreground bg-surface-secondary p-1">
                   {(
                     [
-                      ['patient', '患者本人'],
+                      ['patient', '学生本人'],
                       ['family', '家属协助'],
                     ] as const
                   ).map(([value, label]) => (
@@ -239,7 +239,7 @@ function PatientVerifyContent() {
               {!apiMode && participantType === 'family' && (
                 <label className="patient-field flex items-center gap-3 px-4">
                   <PatientIcon name="family" className="text-foreground-muted" />
-                  <span className="shrink-0 text-[16px] font-bold">与患者关系</span>
+                  <span className="shrink-0 text-[16px] font-bold">与学生关系</span>
                   <select
                     value={relationship}
                     onChange={(event) => setRelationship(event.target.value)}

@@ -269,7 +269,7 @@ export default function PatientConsentPage() {
   const needExplanation = async () => {
     if (handoffSubmittingRef.current) return;
     handoffSubmittingRef.current = true;
-    const reason = `患者对知情同意条款“${current.clauseName}”表示不理解`;
+    const reason = `学生对知情同意条款“${current.clauseName}”表示不理解`;
     const nextClauses = clauses.map((item) =>
       item.id === current.id
         ? { ...item, understandingStatus: 'not_understood' as const }
@@ -278,7 +278,7 @@ export default function PatientConsentPage() {
     const progress: ConsentProgress = {
       taskId,
       clauses: nextClauses,
-      participantName: task?.participantName ?? task?.patientName ?? '患者',
+      participantName: task?.participantName ?? task?.patientName ?? '学生',
       decision: 'needs_explanation',
       signatureData,
     };
@@ -332,7 +332,7 @@ export default function PatientConsentPage() {
     const progress: ConsentProgress = {
       taskId,
       clauses,
-      participantName: task?.participantName ?? task?.patientName ?? '患者',
+      participantName: task?.participantName ?? task?.patientName ?? '学生',
       decision: 'agreed',
       signatureData,
       completedAt: new Date().toISOString(),

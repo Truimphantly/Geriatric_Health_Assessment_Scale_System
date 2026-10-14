@@ -62,7 +62,7 @@ const actionLabels: Record<NursingPlanAction, string> = {
 };
 
 const itemTypeLabels: Record<string, string> = {
-  nursing_measure: '护理措施',
+  nursing_measure: '支持措施',
   education: '宣教措施',
   observation: '观察重点',
   handover: '交接班提示',
@@ -71,7 +71,7 @@ const itemTypeLabels: Record<string, string> = {
 function statusLabel(status: string) {
   return {
     ai_draft: 'AI草案',
-    adjusted: '护士已调整',
+    adjusted: '心理老师已调整',
     confirmed: '已确认生效',
     ended: '已结束',
   }[status] ?? status;
@@ -121,7 +121,7 @@ export default function NursingPlanPage() {
         .catch((loadError) => {
           if (controller.signal.aborted || isRequestCancelled(loadError)) return;
           setError(
-            loadError instanceof Error ? loadError.message : '护理计划加载失败'
+            loadError instanceof Error ? loadError.message : '支持计划加载失败'
           );
         })
         .finally(() => {
@@ -171,7 +171,7 @@ export default function NursingPlanPage() {
   const generate = (force = false) =>
     run(
       () => careRepository.generateNursingPlan(taskId, force),
-      force ? '已重新生成 AI 护理计划草案' : '已生成 AI 护理计划草案'
+      force ? '已重新生成 AI 支持计划草案' : '已生成 AI 支持计划草案'
     );
 
   const save = () => {
@@ -190,12 +190,12 @@ export default function NursingPlanPage() {
             nurseComment: item.nurseComment ?? null,
           })),
         }),
-      '护士修改已保存'
+      '心理老师修改已保存'
     );
   };
 
   const confirm = () =>
-    run(() => careRepository.confirmNursingPlan(taskId), '护理计划已确认生效');
+    run(() => careRepository.confirmNursingPlan(taskId), '支持计划已确认生效');
 
   const pendingCount = useMemo(
     () => plan?.items.filter((item) => item.nurseAction === 'pending').length ?? 0,
@@ -205,7 +205,7 @@ export default function NursingPlanPage() {
   if (loading && !plan) {
     return (
       <NurseLayout>
-        <div className="py-20 text-center text-foreground-muted">正在加载患者画像与护理计划...</div>
+        <div className="py-20 text-center text-foreground-muted">正在加载学生画像与支持计划...</div>
       </NurseLayout>
     );
   }
@@ -223,13 +223,13 @@ export default function NursingPlanPage() {
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-3">
           <div>
             <p className="text-sm text-foreground-muted">
-              {task?.patientName ?? '患者'} · {task?.bedNo ?? '床位未知'} · {task?.taskNo ?? taskId}
+              {task?.patientName ?? '学生'} · {task?.bedNo ?? '床位未知'} · {task?.taskNo ?? taskId}
             </p>
-            <h1 className="text-3xl font-serif font-medium mt-1">
-              患者<span className="text-primary italic">画像与护理计划</span>
+            <h1 className="text-3xl font-sans font-extrabold mt-1">
+              学生<span className="text-primary italic">画像与支持计划</span>
             </h1>
             <p className="text-sm text-foreground-muted mt-2">
-              AI 根据评估答案、量表风险和对话摘要形成差异化建议，护士编辑并确认后生效。
+              AI 根据评估答案、量表风险和对话摘要形成差异化建议，心理老师编辑并确认后生效。
             </p>
           </div>
           <div className="flex flex-wrap gap-2">
@@ -244,9 +244,9 @@ export default function NursingPlanPage() {
         {!plan ? (
           <Card padding="lg" className="text-center">
             <SparklesIcon className="w-12 h-12 mx-auto text-primary mb-3" />
-            <h2 className="text-xl font-semibold">尚未生成护理计划</h2>
+            <h2 className="text-xl font-semibold">尚未生成支持计划</h2>
             <p className="text-sm text-foreground-muted mt-2">
-              评估完成后可根据结构化结果生成 AI 患者画像和护理指导草案。
+              评估完成后可根据结构化结果生成 AI 学生画像和支持指导草案。
             </p>
             <Button className="mt-5" loading={working} onClick={() => void generate()}>
               <SparklesIcon className="w-4 h-4 mr-2" /> 生成 AI 草案
@@ -256,7 +256,7 @@ export default function NursingPlanPage() {
           <>
             <Card padding="lg">
               <CardHeader>
-                <CardTitle>患者画像</CardTitle>
+                <CardTitle>学生画像</CardTitle>
               </CardHeader>
               <CardContent>
                 <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
@@ -285,7 +285,7 @@ export default function NursingPlanPage() {
 
             <Card padding="lg">
               <CardHeader>
-                <CardTitle>护理计划摘要</CardTitle>
+                <CardTitle>支持计划摘要</CardTitle>
               </CardHeader>
               <CardContent>
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
@@ -314,9 +314,9 @@ export default function NursingPlanPage() {
             <Card padding="lg">
               <CardHeader>
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
-                  <CardTitle>差异化护理指导</CardTitle>
+                  <CardTitle>差异化支持指导</CardTitle>
                   <span className="text-xs text-foreground-muted">
-                    {pendingCount ? `还有 ${pendingCount} 项待护士处理` : '所有建议已处理'}
+                    {pendingCount ? `还有 ${pendingCount} 项待心理老师处理` : '所有建议已处理'}
                   </span>
                 </div>
               </CardHeader>
@@ -357,7 +357,7 @@ export default function NursingPlanPage() {
                             </select>
                           </label>
                           <label className="text-xs text-foreground-muted">
-                            护士处置
+                            心理老师处置
                             <select
                               value={item.nurseAction}
                               disabled={plan.planStatus === 'confirmed'}
@@ -373,7 +373,7 @@ export default function NursingPlanPage() {
                             value={item.nurseComment ?? ''}
                             disabled={plan.planStatus === 'confirmed'}
                             onChange={(event) => updateItem(item.id, { nurseComment: event.target.value })}
-                            placeholder="护士备注（可选）"
+                            placeholder="心理老师备注（可选）"
                             className="w-full rounded-lg border border-border bg-surface px-2.5 py-2 text-sm disabled:bg-surface-secondary"
                           />
                         </div>
@@ -397,14 +397,14 @@ export default function NursingPlanPage() {
                 disabled={working || plan.planStatus === 'confirmed'}
                 onClick={() => void save()}
               >
-                <ClipboardDocumentListIcon className="w-4 h-4 mr-2" /> 保存护士修改
+                <ClipboardDocumentListIcon className="w-4 h-4 mr-2" /> 保存心理老师修改
               </Button>
               <Button
                 loading={working}
                 disabled={plan.planStatus === 'confirmed' || pendingCount > 0}
                 onClick={() => void confirm()}
               >
-                <CheckCircleIcon className="w-4 h-4 mr-2" /> 确认护理计划
+                <CheckCircleIcon className="w-4 h-4 mr-2" /> 确认支持计划
               </Button>
             </div>
           </>

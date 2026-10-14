@@ -34,7 +34,7 @@ interface NurseLayoutProps {
 
 const navigation = [
   { name: '工作台', href: '/nurse/dashboard', icon: HomeIcon },
-  { name: '患者管理', href: '/nurse/patients', icon: UserGroupIcon },
+  { name: '学生管理', href: '/nurse/patients', icon: UserGroupIcon },
   { name: '任务管理', href: '/nurse/tasks', icon: ClipboardDocumentListIcon },
   { name: '实时监控', href: '/nurse/monitor', icon: ComputerDesktopIcon },
   { name: 'AI质评', href: '/nurse/quality', icon: StarIcon },
@@ -165,9 +165,9 @@ export default function NurseLayout({
             <div className="flex items-center space-x-8">
               <Link href="/nurse/dashboard" className="flex items-center space-x-2">
                 <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
-                  <span className="text-white font-bold">医</span>
+                  <span className="text-foreground font-black">晴</span>
                 </div>
-                <span className="text-xl font-serif font-medium">心晴伙伴</span>
+                <span className="text-xl font-sans font-extrabold">心晴伙伴</span>
               </Link>
 
               {/* 导航菜单 */}
@@ -238,7 +238,7 @@ export default function NurseLayout({
       {activeRequests.length > 0 && (
         <aside
           className="fixed right-4 top-20 z-[60] w-[min(24rem,calc(100vw-2rem))] space-y-3"
-          aria-label="患者呼叫提醒"
+          aria-label="学生呼叫提醒"
         >
           {activeRequests.slice(0, 3).map((request) => (
             <div

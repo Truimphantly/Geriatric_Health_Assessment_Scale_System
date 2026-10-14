@@ -44,9 +44,9 @@ const mockEducationMaterials: EducationMaterialConfig[] = [
     category: 'tobacco',
     title: '住院期间戒烟与烟草危害宣教',
     documentVersion: '1.0',
-    originalContent: '吸烟会增加心脑血管和呼吸系统疾病风险，住院病区属于无烟环境。',
-    patientContent: '住院期间请不要吸烟，如烟瘾明显请告诉护士。',
-    spokenContent: '跟您提醒一下，住院期间请不要吸烟，如有不适请及时告诉护士。',
+    originalContent: '吸烟会增加心脑血管和呼吸系统疾病风险，住院中心属于无烟环境。',
+    patientContent: '住院期间请不要吸烟，如烟瘾明显请告诉心理老师。',
+    spokenContent: '跟您提醒一下，住院期间请不要吸烟，如有不适请及时告诉心理老师。',
     sourceName: '系统内置演示材料',
     priority: 'medium',
     requiresAcknowledgement: true,
@@ -61,7 +61,7 @@ const mockEducationMaterials: EducationMaterialConfig[] = [
     title: '药物过敏安全宣教',
     documentVersion: '1.0',
     originalContent: '已知或疑似药物过敏者，应主动说明具体药物及既往反应。',
-    patientContent: '每次用药前，请主动告诉医生和护士您对什么药过敏。',
+    patientContent: '每次用药前，请主动告诉医生和心理老师您对什么药过敏。',
     spokenContent: '请记住，每次用药前都要主动说明具体对什么药过敏。',
     sourceName: '系统内置演示材料',
     priority: 'high',
@@ -162,9 +162,9 @@ function buildMockNursingPlan(taskId: string): NursingPlan {
     taskId: Number(taskId) || 1,
     planNo: `PLAN-DEMO-${taskId}`,
     planStatus: 'ai_draft',
-    riskSummary: '当前为演示草案：建议重点关注跌倒风险、用药过敏信息和患者理解程度。',
-    educationSummary: '用药前核对过敏史，采用短句和回教法确认患者理解。',
-    handoverSummary: '交接班时说明患者配合度、认知状态及需要持续观察的风险点。',
+    riskSummary: '当前为演示草案：建议重点关注跌倒风险、用药过敏信息和学生理解程度。',
+    educationSummary: '用药前核对过敏史，采用短句和回教法确认学生理解。',
+    handoverSummary: '交接班时说明学生配合度、认知状态及需要持续观察的风险点。',
     generatedBy: 'ai:demo',
     confirmedBy: null,
     confirmedAt: null,
@@ -182,7 +182,7 @@ function buildMockNursingPlan(taskId: string): NursingPlan {
       educationNeedLevel: 'high',
       detail: {
         task_id: Number(taskId) || 1,
-        summary: '患者可正常交流，但需要护士使用通俗语言并重复确认重点。',
+        summary: '学生可正常交流，但需要心理老师使用通俗语言并重复确认重点。',
         evidence: ['演示评估结果', '对话理解度观察'],
       },
       generatedBy: 'ai:demo',
@@ -204,7 +204,7 @@ function buildMockNursingPlan(taskId: string): NursingPlan {
         id: 2,
         itemType: 'education',
         itemCode: 'medication_allergy_education',
-        itemContent: '用药前向患者复述过敏药物核对要点，并请患者回述。',
+        itemContent: '用药前向学生复述过敏药物核对要点，并请学生回述。',
         sourceType: 'risk_event',
         sourceId: 'demo-allergy-event',
         priority: 'medium',
@@ -236,7 +236,7 @@ const MOCK_STAFF_USERS: Record<
       id: 'N001',
       username: 'N001',
       role: 'nurse',
-      name: '李护士',
+      name: '李心理老师',
       department: '心内科',
       avatar: '',
     },
@@ -247,7 +247,7 @@ const MOCK_STAFF_USERS: Record<
       id: 'N002',
       username: 'N002',
       role: 'nurse',
-      name: '王护士',
+      name: '王心理老师',
       department: '老年医学科',
       avatar: '',
     },
@@ -258,7 +258,7 @@ const MOCK_STAFF_USERS: Record<
       id: 'N003',
       username: 'N003',
       role: 'nurse',
-      name: '赵护士',
+      name: '赵心理老师',
       department: '消化内科',
       avatar: '',
     },
@@ -269,7 +269,7 @@ const MOCK_STAFF_USERS: Record<
       id: 'N004',
       username: 'N004',
       role: 'nurse',
-      name: '陈护士',
+      name: '陈心理老师',
       department: '呼吸与危重症医学科',
       avatar: '',
     },
@@ -280,7 +280,7 @@ const MOCK_STAFF_USERS: Record<
       id: 'N005',
       username: 'N005',
       role: 'nurse',
-      name: '刘护士',
+      name: '刘心理老师',
       department: '骨科',
       avatar: '',
     },
@@ -316,12 +316,12 @@ function buildMockTask(input: CreateTaskInput): CareTask {
     bedNo: input.encounter.bedNo,
     department: input.encounter.department,
     wardName: input.encounter.ward,
-    taskType: '入院评估任务包',
+    taskType: '心理评估任务包',
     collectionMode: input.collectionMode,
     taskStatus: 'pending',
     assignedNurseId: input.nurseId,
     assignedNurseName: input.nurseName,
-    scaleName: '入院评估任务包',
+    scaleName: '心理评估任务包',
     scaleVersion: 'v1.0',
     scaleIds: input.scaleIds,
     scaleNames: input.scaleNames,
@@ -454,7 +454,7 @@ export class MockCareRepository implements CareRepository {
       (typeof mockEncounters)[number]['encounterStatus'] | ''
     > = {
       '': '',
-      待入院: 'pending_admission',
+      待建档: 'pending_admission',
       在院: 'in_hospital',
       已出院: 'discharged',
       取消: 'cancelled',
@@ -509,7 +509,7 @@ export class MockCareRepository implements CareRepository {
     const encounter = mockEncounters.find(
       (item) => item.patientId === patientId
     );
-    if (!patient || !encounter) throw new Error('患者住院记录不存在');
+    if (!patient || !encounter) throw new Error('学生住院记录不存在');
     return buildMockPatientRecord(patient, encounter);
   }
 
@@ -551,7 +551,7 @@ export class MockCareRepository implements CareRepository {
         (!input.encounter.id || item.id === input.encounter.id)
     );
     if (patientIndex < 0 || encounterIndex < 0) {
-      throw new Error('患者住院记录不存在');
+      throw new Error('学生住院记录不存在');
     }
     if (
       mockEncounters.some(
@@ -795,7 +795,7 @@ export class MockCareRepository implements CareRepository {
         {
           messageNo: `MOCK-${Date.now()}-A`,
           role: 'assistant',
-          content: '请以病区实际通知为准，如需帮助请联系护士。',
+          content: '请以中心实际通知为准，如需帮助请联系心理老师。',
           resultStatus: 'handoff_required',
           occurredAt: new Date().toISOString(),
         },
@@ -937,10 +937,10 @@ export class MockCareRepository implements CareRepository {
     const current =
       mockNursingPlans.get(taskId) ?? buildMockNursingPlan(taskId);
     if (current.items.some((item) => item.nurseAction === 'pending')) {
-      throw new Error('请先处理全部护理计划明细');
+      throw new Error('请先处理全部支持计划明细');
     }
     if (current.items.every((item) => item.nurseAction === 'rejected')) {
-      throw new Error('护理计划至少需要保留一条有效建议');
+      throw new Error('支持计划至少需要保留一条有效建议');
     }
     const confirmed: NursingPlan = {
       ...current,
@@ -1036,7 +1036,7 @@ export class MockCareRepository implements CareRepository {
       request_id: `NURSE-${Date.now()}`,
       reason: _reason,
       requested_action: _details?.requestedAction ?? 'other',
-      action_label: '人工护理协助',
+      action_label: '人工支持协助',
       urgency: _details?.urgency ?? 'routine',
       request_source: 'patient',
       status: 'requested',
@@ -1057,7 +1057,7 @@ export class MockCareRepository implements CareRepository {
       request_id: _requestId,
       request_ids: _requestId ? [_requestId] : [],
       status: 'resolved',
-      resolved_by_name: '演示护士',
+      resolved_by_name: '演示心理老师',
       handled_at: new Date().toISOString(),
       remaining_pending: false,
       timestamp: new Date().toISOString(),

@@ -21,7 +21,7 @@ import {
 } from '@heroicons/react/24/outline';
 
 const dialogueDimensions = ['CICARE规范性', '信息准确性', '问询完整性', '追问合理性', '宣教适宜性', '沟通友好度', '安全性'];
-const assessmentDimensions = ['答案抽取准确性', '答案完整性', '临床计分正确性', '风险识别正确性', '护理建议匹配度'];
+const assessmentDimensions = ['答案抽取准确性', '答案完整性', '临床计分正确性', '风险识别正确性', '支持建议匹配度'];
 const defaultDialogueScores = Object.fromEntries(
   dialogueDimensions.map((item) => [item, 4])
 );
@@ -263,7 +263,7 @@ export default function NurseQualityDetailPage() {
               <Badge variant="warning" size="sm">等待评估结果</Badge>
               <p className="text-sm text-foreground-muted mt-3 leading-6">
                 当前任务仍在采集中。AI 结构化评估结果生成后，才可评价答案抽取、
-                临床计分、风险识别和护理建议。
+                临床计分、风险识别和支持建议。
               </p>
             </div>
           )}
