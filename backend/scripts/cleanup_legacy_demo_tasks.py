@@ -109,7 +109,21 @@ def main() -> None:
             f"软删除: 任务 {len(tasks)} 个 / 会话 {len(sessions)} 个 / "
             f"消息 {len(messages)} 条 / 事件 {len(events)} 条"
         )
+        purge_legacy_alerts(set(task_ids))
 
 
 if __name__ == "__main__":
     main()
+
+def purge_legacy_alerts(legacy_task_ids: set[int]) -> None:
+    """清除医护提醒流中属于已删任务的提醒（否则 SSE 回放会重新弹出）。"""
+    import redis as redis_lib
+
+    client = redis_lib.Redis(host="127.0.0.1", port=6379, db=0, decode_responses=True)
+    for key in client.scan_iter("nurse_stream:*"):
+        removed = 0
+        for entry_id, fields in client.xrange(key):
+            if str(fields.get("task_id") or "") in {str(item) for item in legacy_task_ids}:
+                client.xdel(key, entry_id)
+                removed += 1
+        print(f"提醒流清理 {key}: 删除 {removed} 条")

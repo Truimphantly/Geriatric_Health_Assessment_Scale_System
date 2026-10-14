@@ -416,7 +416,7 @@ export const useChatStore = create<ChatStore>()(
       resetDemoData: () => set(initialState),
     }),
     {
-      name: 'medical-evaluate-chat-storage',
+      name: 'psychology-chat-storage-v2',
       version: 2,
       storage: createJSONStorage(() => sessionStorage),
       // v2：清理心理版改造前遗留的提醒历史（旧演示数据不再回显）
