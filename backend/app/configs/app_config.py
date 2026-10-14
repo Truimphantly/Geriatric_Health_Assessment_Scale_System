@@ -111,6 +111,9 @@ class SecurityConfig(BaseModel):
     staff_session_ttl_seconds: int = 28800
     staff_session_cookie: str = "medical_staff_session"
     staff_session_secure: bool = False
+    guardian_session_ttl_seconds: int = 28800
+    guardian_session_cookie: str = "psychology_guardian_session"
+    guardian_session_secure: bool = False
 
 
 class LoggingConfig(BaseModel):
