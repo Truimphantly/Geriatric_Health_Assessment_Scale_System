@@ -402,7 +402,7 @@ function PatientVerifyContent() {
 
           <p className="mt-4 flex items-center justify-center gap-2 text-sm text-foreground-muted">
             <PatientIcon name="shield" className="h-4 w-4" />
-            信息仅用于护理评估
+            信息仅用于心理评估
           </p>
 
           {apiMode && (

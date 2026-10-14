@@ -62,7 +62,7 @@ function buildScriptResult(answerIndex: number, content: string): ScriptResult {
   if (answerIndex === 0) {
     return {
       stage: 'introduce',
-      content: '谢谢您的配合。我是AI护理评估助手，本次回答会由护士复核。首先请告诉我您的年龄。',
+      content: '谢谢您的配合。我是AI心理陪伴助手小晴，本次对话会由心理老师复核。首先请告诉我您的年龄。',
       answer: {
         questionId: 'ready',
         questionCode: 'READY',
@@ -317,7 +317,7 @@ export default function PatientDialoguePage() {
         role: 'ai',
         cicareStage: 'connect',
         intentType: 'greeting',
-        contentText: `您好，${currentTask.participantName ?? currentTask.patientName}。我是AI护理评估助手小医，请确认您现在方便开始评估吗？`,
+        contentText: `您好，${currentTask.participantName ?? currentTask.patientName}。我是AI心理陪伴助手小晴，今天想跟你随便聊聊最近的状态。现在方便开始吗？`,
         occurredAt: new Date().toISOString(),
       };
       const nextSession: InteractionSession = {
@@ -950,7 +950,7 @@ export default function PatientDialoguePage() {
 
   return (
     <PatientLayout
-      title="AI智能评估"
+      title="心晴对话"
       showBack
       onBack={() => router.push(`/patient/tasks/${taskId}`)}
       headerRight={

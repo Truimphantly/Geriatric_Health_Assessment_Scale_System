@@ -48,7 +48,7 @@ export default function PatientAssistantPage() {
       id: 1,
       role: 'assistant',
       content:
-        '您好！我是小医助手，我可以为您解答住院期间的生活相关问题。',
+        '您好！我是小晴助手，我可以为您解答住院期间的生活相关问题。',
     },
   ]);
 
@@ -170,7 +170,7 @@ export default function PatientAssistantPage() {
               {message.role === 'assistant' ? (
                 <Image
                   src="/assets/patient/illustrations/assistant-avatar.webp"
-                  alt="小医助手"
+                  alt="小晴助手"
                   width={58}
                   height={58}
                   className="h-14 w-14 shrink-0 rounded-full border border-[#f3ceb3] bg-[#fff5ed] object-contain"
@@ -189,7 +189,7 @@ export default function PatientAssistantPage() {
                   }`}
                 >
                   {message.role === 'assistant'
-                    ? '小医助手'
+                    ? '小晴助手'
                     : user?.name ?? '我'}
                 </p>
                 <div

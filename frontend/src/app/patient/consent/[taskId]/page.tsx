@@ -42,7 +42,7 @@ const initialClauses: ConsentClause[] = [
     id: 'consent-3',
     clauseCode: 'PRIVACY',
     clauseName: '隐私与数据使用',
-    patientContent: '本次回答用于护理评估，AI整理结果必须由护士复核。原型中不会上传真实患者信息。',
+    patientContent: '本次回答用于心理评估，AI整理结果由心理老师复核，不会上传真实信息。',
     importanceLevel: 'important',
     mandatoryDelivery: true,
     explicitConfirmationRequired: true,

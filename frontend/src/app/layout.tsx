@@ -4,7 +4,7 @@ import { NetworkStatus } from '@/components/shared/NetworkStatus';
 import './globals.css';
 
 export const metadata: Metadata = {
-  title: '智能护理评估原型',
+  title: '心晴伙伴·青少年心理护航',
   description: '住院患者入院评估、宣教、知情同意与护士复核交互原型',
 };
 

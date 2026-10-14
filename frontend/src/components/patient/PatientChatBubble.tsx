@@ -28,7 +28,7 @@ export function PatientChatBubble({
       ) : (
         <Image
           src="/assets/patient/illustrations/assistant-avatar.webp"
-          alt="小医"
+          alt="小晴"
           width={40}
           height={40}
           className="h-10 w-10 shrink-0 rounded-full border border-[#bce6e2] bg-[#ecf9f7] object-contain"
@@ -41,7 +41,7 @@ export function PatientChatBubble({
             isPatient ? 'text-primary' : 'text-[#2e9893]'
           }`}
         >
-          {isPatient ? '我' : '小医'}
+          {isPatient ? '我' : '小晴'}
         </p>
         <div
           className={`rounded-[18px] px-4 py-3 text-left text-[15px] leading-7 ${

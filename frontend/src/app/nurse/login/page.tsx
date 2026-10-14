@@ -41,12 +41,12 @@ export default function NurseLoginPage() {
         {/* Logo 和标题 */}
         <div className="text-center mb-8">
           <div className="inline-flex items-center justify-center w-16 h-16 bg-primary rounded-2xl mb-4">
-            <span className="text-3xl text-white font-bold">医</span>
+            <span className="text-3xl text-white font-bold">晴</span>
           </div>
           <h1 className="text-3xl font-serif font-medium text-foreground mb-2">
-            智能护理评估<span className="text-primary italic">系统</span>
+            心晴伙伴<span className="text-primary italic">系统</span>
           </h1>
-          <p className="text-foreground-muted">医护端登录</p>
+          <p className="text-foreground-muted">心理老师端登录</p>
         </div>
 
         {/* 登录表单 */}
