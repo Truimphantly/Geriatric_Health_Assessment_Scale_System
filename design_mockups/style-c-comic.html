@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>风格C · 日系青春漫画风 — 心晴伙伴</title>
+<style>
+:root{
+  --paper:#FAFAFA; --ink:#1C1C1A; --blue:#2FA4C0; --blue-deep:#20758A; --cream:#FFEFC8;
+  --dot:#E9DFC8; --danger:#E25B4B;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:var(--paper);color:var(--ink);font-family:"Microsoft YaHei","PingFang SC",system-ui,sans-serif;min-height:100vh;background-image:radial-gradient(var(--dot) 1px,transparent 1.7px);background-size:20px 20px}
+.wrap{max-width:1180px;margin:0 auto;padding:30px 24px 80px}
+
+/* ── 杂志刊头 ── */
+.top{display:flex;align-items:baseline;gap:18px;border-bottom:4px solid var(--ink);padding-bottom:14px;margin-bottom:34px}
+.mast{font-size:34px;font-weight:900;letter-spacing:6px}
+.mast i{font-style:normal;color:var(--blue)}
+.vert{writing-mode:vertical-rl;font-weight:900;font-size:14px;letter-spacing:4px;height:70px}
+.nav{margin-left:auto;display:flex;gap:22px;font-weight:800;font-size:14.5px}
+.nav a{color:var(--ink);text-decoration:none;position:relative}
+.nav a:hover{color:var(--blue-deep)}
+.nav a::after{content:"";position:absolute;left:0;bottom:-5px;width:100%;height:3px;background:var(--blue);transform:scaleX(0);transition:transform .2s}
+.nav a:hover::after{transform:scaleX(1)}
+
+/* ── 主构图：大字 + 漫画对话框 + 线稿小晴 ── */
+.hero{display:grid;grid-template-columns:1.1fr .9fr;gap:30px;align-items:stretch}
+.hero-main{background:var(--paper);border:3.5px solid var(--ink);border-radius:14px;padding:34px;position:relative;overflow:hidden}
+.hero-main::after{content:"";position:absolute;right:-30px;top:-40px;width:180px;height:180px;border-radius:50%;background:var(--cream);border:3.5px solid var(--ink);z-index:0}
+.hero-main h1{position:relative;z-index:1;font-size:46px;line-height:1.3;font-weight:900}
+.hero-main h1 i{font-style:normal;color:var(--blue-deep)}
+.hero-main p{position:relative;z-index:1;margin-top:16px;font-size:15.5px;line-height:1.95;max-width:32em;color:#3F4A4E}
+.btn-row{position:relative;z-index:1;margin-top:26px;display:flex;gap:14px}
+.btn{font-weight:900;font-size:16px;border-radius:10px;cursor:pointer}
+.btn-solid{background:var(--ink);color:#fff;border:3.5px solid var(--ink);padding:14px 30px;box-shadow:5px 5px 0 var(--blue)}
+.btn-solid:hover{transform:translate(-2px,-2px);box-shadow:7px 7px 0 var(--blue)}
+.btn-line{background:var(--paper);border:3.5px solid var(--ink);padding:14px 26px}
+.figure{position:relative;z-index:1;margin-top:8px;display:flex;gap:10px}
+.fig-tag{background:var(--blue);color:#fff;border-radius:6px;padding:5px 12px;font-weight:900;font-size:12px;transform:rotate(-2deg)}
+
+/* 漫画头像框 */
+.panel{background:#fff;border:3.5px solid var(--ink);border-radius:14px;position:relative;display:grid;place-items:center;padding:24px}
+.panel .bubble{position:absolute;top:22px;left:20px;background:var(--cream);border:3px solid var(--ink);border-radius:12px;padding:10px 16px;font-weight:900;font-size:14.5px;max-width:200px;box-shadow:3px 3px 0 var(--ink)}
+.panel .bubble::before{content:"";position:absolute;bottom:-13px;left:30px;width:16px;height:16px;background:var(--cream);border:3px solid var(--ink);border-top:none;border-left:none;transform:rotate(38deg)}
+.sxf{width:210px;height:210px}
+
+/* ── 格状分区 ── */
+.grid2{display:grid;grid-template-columns:1.15fr .85fr;gap:30px;margin-top:34px}
+.card{background:#fff;border:3.5px solid var(--ink);border-radius:14px;padding:26px 28px;position:relative}
+.card h3{font-weight:900;font-size:18px}
+.kicker{background:var(--ink);color:#fff;display:inline-block;font-size:12px;font-weight:900;padding:4px 12px;border-radius:6px;margin-bottom:12px}
+.list{display:grid;gap:14px;margin-top:16px}
+.list>div{display:flex;gap:14px;align-items:flex-start;background:var(--paper);border:2.5px solid var(--ink);border-radius:10px;padding:14px 16px}
+.num{background:var(--blue);color:#fff;font-weight:900;border-radius:50%;width:28px;height:28px;display:grid;place-items:center;font-size:13px;flex-shrink:0}
+.list b{font-size:14.5px}
+.list small{display:block;color:#5B666B;margin-top:3px;font-size:12.5px;line-height:1.65}
+.list .arr{margin-left:auto;font-weight:900;color:var(--blue-deep)}
+
+/* 情绪公式 */
+.formula{margin-top:22px;text-align:center;font-weight:900;font-size:15px}
+.formula span{padding:8px 14px;border:2.5px solid var(--ink);border-radius:10px;display:inline-block;background:var(--cream)}
+.formula i{font-style:normal;margin:0 8px;font-size:18px;color:var(--blue-deep)}
+
+/* 危机段 */
+.crisis{margin-top:34px;background:var(--ink);color:#FAFAFA;border-radius:14px;border:3.5px solid var(--ink);padding:26px 30px;position:relative;overflow:hidden}
+.crisis::before{content:"!?";position:absolute;right:18px;top:-12px;font-size:120px;font-weight:900;color:transparent;-webkit-text-stroke:3px var(--blue);opacity:.55;transform:rotate(8deg)}
+.crisis h3{font-weight:900;font-size:18px;color:var(--cream)}
+.crisis p{margin-top:10px;font-size:14.5px;line-height:1.9;max-width:42em;color:#D7E4E8}
+.hotline{margin-top:14px;display:flex;gap:12px;flex-wrap:wrap}
+.hotline b{background:var(--blue);color:#fff;padding:8px 16px;border-radius:8px;font-size:14px}
+
+footer{margin-top:44px;text-align:center;font-size:13px;color:#5B666B;font-weight:700;border-top:3px solid var(--ink);padding-top:16px}
+@media(max-width:860px){.hero,.grid2{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="top">
+    <div class="mast">心晴<i>伙伴</i></div>
+    <div class="vert">青年篇 · 心理护航刊</div>
+    <div class="nav"><a href="#">对话</a><a href="#">记录</a><a href="#">支援</a><a href="#">关于小晴</a></div>
+  </div>
+
+  <div class="hero">
+    <div class="hero-main">
+      <h1> complicidad<br>把今天的 stories，<br><i>讲给会认真听完的小晴</i></h1>
+      <p>她是 AI，不是医生，也不贴标签。过程保密；万一说到危险的内容，她会停下来，和学校的心理老师一起帮你。一集聊天大约 10 分钟，随时可以喊停。</p>
+      <div class="btn-row">
+        <button class="btn btn-solid">🎙 进入对话</button>
+        <button class="btn btn-line">改用打字</button>
+      </div>
+      <div class="figure">
+        <span class="fig-tag">第 1 话 · 最近的状态</span>
+        <span class="fig-tag" style="background:var(--cream);color:var(--ink)">麦克风只在按下时工作</span>
+      </div>
+    </div>
+
+    <div class="panel">
+      <div class="bubble">嗨，今天也辛苦啦～先说考试还是睡觉，你选</div>
+      <svg class="sxf" viewBox="0 0 200 200" aria-label="小晴">
+        <!-- 漫画黑白线稿机器人小晴 -->
+        <circle cx="100" cy="100" r="86" fill="#fff" stroke="#1C1C1A" stroke-width="5"/>
+        <path d="M40 60 Q100 30 160 60" fill="none" stroke="#1C1C1A" stroke-width="5"/>
+        <path d="M34 120 L18 132" stroke="#1C1C1A" stroke-width="5"/><circle cx="14" cy="135" r="6" fill="#2FA4C0" stroke="#1C1C1A" stroke-width="4"/>
+        <path d="M166 120 L182 132" stroke="#1C1C1A" stroke-width="5"/><circle cx="186" cy="135" r="6" fill="#2FA4C0" stroke="#1C1C1A" stroke-width="4"/>
+        <!-- 大眼睛 + 高光 -->
+        <ellipse cx="66" cy="95" rx="13" ry="17" fill="#1C1C1A"/><ellipse cx="134" cy="95" rx="13" ry="17" fill="#1C1C1A"/>
+        <ellipse cx="62" cy="88" rx="5" ry="6.5" fill="#fff"/><ellipse cx="130" cy="88" rx="5" ry="6.5" fill="#fff"/>
+        <!-- 微笑 + 网点腮红 -->
+        <path d="M84 122 q16 14 32 0" fill="none" stroke="#1C1C1A" stroke-width="5" stroke-linecap="round"/>
+        <g fill="#1C1C1A"><circle cx="46" cy="116" r="1.8"/><circle cx="52" cy="122" r="1.8"/><circle cx="42" cy="124" r="1.8"/></g>
+        <g fill="#1C1C1A"><circle cx="154" cy="116" r="1.8"/><circle cx="160" cy="122" r="1.8"/><circle cx="150" cy="124" r="1.8"/></g>
+        <!-- 头顶天线 -->
+        <line x1="100" y1="14" x2="100" y2="30" stroke="#1C1C1A" stroke-width="5"/><circle cx="100" cy="10" r="7" fill="#FFEFC8" stroke="#1C1C1A" stroke-width="4"/>
+        <!-- 速度线 -->
+        <path d="M30 150 l-14 6 M40 162 l-11 8 M170 150 l14 6 M160 162 l11 8" stroke="#1C1C1A" stroke-width="3" stroke-linecap="round"/>
+      </svg>
+    </div>
+  </div>
+
+  <div class="grid2">
+    <div class="card">
+      <span class="kicker">进 度</span>
+      <h3>本次连载 · 还剩 9 帧</h3>
+      <div class="list">
+        <div><span class="num">03</span><div><b>PHQ-A · 青少年情绪自评（9 题）</b><small>第 3 题进行中 · 已经答完的可以修改</small></div><span class="arr">继续 ▸</span></div>
+        <div><span class="num">ND</span><div><b>ASQ · 小确认（4 题）</b><small>在 PHQ-A 后面；每个回答都会留给心理老师</small></div><span class="arr" style="color:#9AA6AA">排队中</span></div>
+      </div>
+      <div class="formula">
+        <span>今天先到这里</span><i>=</i><span>存稿成功</span><i>+</i><span>明天见</span>
+      </div>
+    </div>
+
+    <div class="card">
+      <span class="kicker">记 录</span>
+      <h3>我的连载 · 十月</h3>
+      <div class="list">
+        <div><span class="num">14</span><div><b>多云 → 小晴给考试周画了条界</b><small>“先把这件事放下，睡一个能过关的觉”</small></div></div>
+        <div><span class="num">12</span><div><b>晴 · 写了 200 字给未来的自己</b><small>解锁贴纸：抬头的天空</small></div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="crisis">
+    <h3>第 3-2 帧 · 通知心理老师（已送达）</h3>
+    <p>按约定触发安全协议：小晴已通知心理老师并驻场陪你对话。这不是小题大做，而是作品里每个人都会得到的保护页。若此刻需要立刻找到大人，可以拨打：</p>
+    <div class="hotline"><b>12356 心理援助</b><b>12355 青少年服务台</b><b>校内王老师 ·16:28 已查收</b></div>
+  </div>
+
+  <footer>心晴伙伴 · 不作诊断，只做风险提示与转介；评估结果由人工复核产生</footer>
+</div>
+</body>
+</html>

@@ -149,7 +149,7 @@ def _handoff_event(
         session_id=session.session_no,
         task_id=task.id,
         message_id=message_no,
-        request_id=str(result.get("request_id") or f"NURSE-{uuid.uuid4()}"),
+        request_id=str(result.get("request_id") or f"SUPPORT-{uuid.uuid4()}"),
         reason=str(result.get("reason") or "患者需要护士协助"),
         requested_action=str(result.get("requested_action") or "other"),
         action_label=str(result.get("action_label") or "人工护理操作"),
@@ -344,7 +344,7 @@ def _new_handoff_result(request: HandoffRequest) -> dict[str, Any]:
     return {
         "success": True,
         "event_id": f"HANDOFF-EVENT-{uuid.uuid4().hex.upper()}",
-        "request_id": f"NURSE-{uuid.uuid4().hex.upper()}",
+        "request_id": f"SUPPORT-{uuid.uuid4().hex.upper()}",
         "requested_action": request.requested_action,
         "action_label": action_label,
         "reason": request.reason.strip(),

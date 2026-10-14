@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>A风格完整样机 · 心理老师端登录 — 心晴伙伴</title>
+<style>
+:root{
+  --bg:#FFF6EC; --card:#FFFFFF; --ink:#2A2320; --ink-soft:#5A5048; --ink-dim:#8A7E73;
+  --mint:#7FDBB6; --mint-deep:#2E8B6A; --peach:#FFB5A7; --lemon:#FFD66B; --sky:#A9C9DE;
+  --bd:2.5px;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:"Microsoft YaHei","PingFang SC",system-ui,sans-serif;min-height:100vh;display:grid;place-items:center;padding:36px 20px}
+.wrap{max-width:460px;width:100%}
+a.back{display:inline-flex;align-items:center;gap:6px;font-size:13.5px;font-weight:800;color:var(--ink);text-decoration:none;margin-bottom:18px;border:var(--bd) solid var(--ink);background:var(--card);border-radius:999px;padding:7px 16px;box-shadow:3px 3px 0 var(--ink);margin-bottom:26px}
+.card{background:var(--card);border:3px solid var(--ink);border-radius:24px;padding:32px 32px 28px;box-shadow:7px 7px 0 var(--peach)}
+.logo-row{text-align:center}
+.logo-row .dot{width:56px;height:56px;border-radius:18px;border:var(--bd) solid var(--ink);background:var(--peach);display:grid;place-items:center;font-size:26px;margin:0 auto 12px}
+h1{text-align:center;font-size:23px;font-weight:900}
+.sub{text-align:center;margin-top:8px;font-size:13.5px;color:var(--ink-soft);font-weight:600}
+form{margin-top:24px}
+label{display:block;font-weight:900;font-size:13px;margin-bottom:8px}
+.inp{display:flex;align-items:center;gap:10px;border:var(--bd) solid var(--ink);border-radius:14px;background:var(--bg);padding:0 16px;margin-bottom:16px}
+.inp span{font-size:17px}
+.inp input{flex:1;border:none;outline:none;font:inherit;font-size:15px;font-weight:700;padding:13px 0;background:transparent}
+.inp input::placeholder{color:#B9AC9C;font-weight:500}
+.go{margin-top:10px;width:100%;border:var(--bd) solid var(--ink);background:var(--peach);border-radius:16px;font-weight:900;font-size:16px;padding:14px;cursor:pointer;box-shadow:5px 5px 0 var(--ink)}
+.go:hover{transform:translate(-1px,-1px);box-shadow:6px 6px 0 var(--ink)}
+.demo{margin-top:20px;border:2.5px dashed #E5CFC9;border-radius:16px;padding:14px 16px;background:#FFFBF4}
+.demo b{font-size:12.5px}
+.demo .chips{display:flex;gap:8px;margin-top:8px;flex-wrap:wrap}
+.demo .chips span{border:var(--bd) solid var(--ink);border-radius:999px;background:var(--card);font-size:11.5px;font-weight:900;padding:4px 12px;cursor:pointer}
+.p{margin-top:14px;text-align:center;font-size:11.5px;color:var(--ink-dim);font-weight:700}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <a class="back" href="login.html">‹ 返回入口</a>
+
+  <div class="card">
+    <div class="logo-row"><div class="dot">🧑‍🏫</div></div>
+    <h1>心理老师 · 工作台登录</h1>
+    <p class="sub">平安成长这件事，系统只是替你看着表</p>
+
+    <form>
+      <label>工号</label>
+      <div class="inp"><span>🪪</span><input value="N002"/></div>
+
+      <label>密码</label>
+      <div class="inp"><span>🔑</span><input type="password" value="••••••"/></div>
+
+      <button class="go">进入工作台 →</button>
+    </form>
+
+    <div class="demo">
+      <b>演示账号（合成数据）</b>
+      <div class="chips"><span>N001 · 校主管</span><span class="chips-i">N002 · 班主任</span><span>N005 · 校外督导</span></div>
+      <p style="margin-top:8px;font-size:11.5px;color:var(--ink-dim);font-weight:700">密码统一 123456 · 正式部署后改为企业账号体系（对接学校统一身份认证）</p>
+    </div>
+    <p class="p">危机上报不常来，来的时候系统会<em style="font-weight:900">同时</em>通知你两处：工作台 + 短信上由后勤代转</p>
+  </div>
+</div>
+</body>
+</html>

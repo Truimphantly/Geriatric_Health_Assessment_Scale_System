@@ -8,7 +8,7 @@ import { cn } from '@/lib/utils';
 
 export function NurseCallButton({
   taskId,
-  reason = '患者在住院服务页面主动呼叫护士',
+  reason = '学生在首页主动呼叫心理老师',
   className,
   compact = false,
   iconOnly = false,
@@ -53,12 +53,12 @@ export function NurseCallButton({
     status === 'loading'
       ? '正在呼叫'
       : status === 'sent'
-        ? '护士已收到'
+        ? '心理老师已收到'
         : status === 'error'
           ? '重试呼叫'
           : compact
-            ? '找护士'
-            : '随时呼叫护士';
+            ? '呼叫心理老师'
+            : '随时呼叫心理老师';
 
   return (
     <button

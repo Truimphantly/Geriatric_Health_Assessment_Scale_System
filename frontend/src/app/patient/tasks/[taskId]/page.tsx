@@ -29,7 +29,7 @@ export default function PatientTaskDetailPage() {
           <PatientState
             kind="empty-tasks"
             title="任务不存在或已经失效"
-            description="请返回任务中心查看最新护理任务。"
+            description="请返回任务中心查看最新任务。"
           />
           <button
             className="patient-primary-button mt-4 w-full"
@@ -53,7 +53,7 @@ export default function PatientTaskDetailPage() {
   const content = [
     ...(task.scaleNames?.length
       ? task.scaleNames
-      : ['入院基本情况', '日常生活能力', '护理风险']),
+      : ['情绪与睡眠', '压力与学业', '安全与求助']),
   ];
 
   return (
@@ -155,7 +155,7 @@ export default function PatientTaskDetailPage() {
           {[
             ['pause', '可以暂停', '中途可暂停'],
             ['edit', '可以纠正', '随时修改'],
-            ['shield', '护士最终复核', '检查与确认'],
+            ['shield', '心理老师复核', '最后确认'],
           ].map(([icon, title, detail]) => (
             <div key={title} className="px-1">
               <PatientIcon
@@ -178,7 +178,7 @@ export default function PatientTaskDetailPage() {
               name="check-circle"
               className="mx-auto h-10 w-10 text-success"
             />
-            <p className="mt-2 text-lg font-black">评估已提交，等待护士复核</p>
+            <p className="mt-2 text-lg font-black">评估已提交，等待心理老师复核</p>
             {canViewDialogue && (
               <button
                 className="patient-outline-button mt-4 w-full"

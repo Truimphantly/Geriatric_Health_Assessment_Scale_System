@@ -80,7 +80,7 @@ export default function PatientHomePage() {
     <PatientLayout showNavigation>
       <div className="px-[18px] pb-4 pt-7">
         <header className="relative flex items-center justify-between">
-          <h1 className="text-[29px] font-black text-[#3e1f18]">住院服务</h1>
+          <h1 className="text-[29px] font-black text-foreground">心晴伙伴</h1>
           <button
             type="button"
             className="patient-touch-button relative text-foreground"
@@ -138,7 +138,7 @@ export default function PatientHomePage() {
         <section className="mt-4 flex items-center gap-3">
           <PatientBrandMark />
           <h2 className="text-[25px] font-black">
-            您好，{user?.name ?? '患者'}
+            你好，{user?.name ?? '同学'}
           </h2>
         </section>
 
@@ -148,11 +148,11 @@ export default function PatientHomePage() {
           </span>
           <div className="min-w-0 flex-1">
             <p className="truncate text-[17px] font-bold">
-              {activeTask?.department ?? user?.department ?? '住院病区'}
+              {activeTask?.department ?? user?.department ?? '心理护航中心'}
               {activeTask?.bedNo ? ` · ${activeTask.bedNo}` : ''}
             </p>
             <p className="mt-0.5 text-xs text-foreground-muted">
-              护理团队将陪伴您完成入院流程
+              小晴和心理老师会一直在你身边
             </p>
           </div>
           <PatientIcon name="location" className="text-[#625954]" />
@@ -168,7 +168,7 @@ export default function PatientHomePage() {
                   </h2>
                   <span className="rounded-full bg-[#ffe0cd] px-2.5 py-1 text-xs font-bold text-primary">
                     {activeTask.taskStatus === 'pending_review'
-                      ? '待护士复核'
+                      ? '待老师复核'
                       : activeTask.taskStatus === 'completed'
                         ? '已完成'
                         : '进行中'}
@@ -214,9 +214,9 @@ export default function PatientHomePage() {
               priority
               className="mx-auto h-[72px] w-[72px]"
             />
-            <h2 className="mt-2 text-lg font-bold">当前没有护理任务</h2>
+            <h2 className="mt-2 text-lg font-bold">现在没有要完成的任务</h2>
             <p className="mt-1 text-sm text-foreground-muted">
-              新任务会在护士准备完成后显示
+              老师准备好了就会出现
             </p>
           </section>
         )}
@@ -224,15 +224,15 @@ export default function PatientHomePage() {
         <section className="patient-card mt-4 flex min-h-[96px] items-center overflow-hidden bg-gradient-to-r from-[#fff3ee] to-[#fff8f4] px-3">
           <Image
             src="/assets/patient/illustrations/nurse-help.webp"
-            alt="护士呼叫帮助"
+            alt="呼叫帮助"
             width={112}
             height={112}
             priority
             className="h-[92px] w-[92px] shrink-0 object-contain object-bottom"
           />
           <div className="min-w-0 flex-1">
-            <p className="text-lg font-black text-[#c83c29]">需要帮助？</p>
-            <p className="text-sm font-bold text-[#c83c29]">随时呼叫护士</p>
+            <p className="text-lg font-black text-[#a24c46]">需要帮助？</p>
+            <p className="text-sm font-bold text-[#a24c46]">叫心理老师来陪你聊聊</p>
           </div>
           <NurseCallButton
             taskId={activeTask?.id}
@@ -246,19 +246,19 @@ export default function PatientHomePage() {
           {[
             {
               href: '/patient/tasks',
-              title: '护理任务',
+              title: '我的任务',
               icon: 'clipboard' as const,
               tone: 'from-[#fff1dd] to-[#fff8ed] text-[#e77c36]',
             },
             {
               href: '/patient/assistant',
-              title: '住院助手',
+              title: '小晴助手',
               icon: 'nav-assistant' as const,
               tone: 'from-[#e8f7f6] to-[#f1fbfa] text-[#2e8d89]',
             },
             {
               href: '/patient/assistant',
-              title: '病区指南',
+              title: '求助资源',
               icon: 'document' as const,
               tone: 'from-[#e8f1ff] to-[#f2f7ff] text-[#4f81dc]',
             },

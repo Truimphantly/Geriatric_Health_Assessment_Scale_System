@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>A风格完整样机 · 三端门厅 — 心晴伙伴</title>
+<style>
+:root{
+  --bg:#FFF6EC; --card:#FFFFFF; --ink:#2A2320; --ink-soft:#5A5048; --ink-dim:#8A7E73;
+  --mint:#7FDBB6; --mint-deep:#2E8B6A; --peach:#FFB5A7; --lemon:#FFD66B; --sky:#A9C9DE;
+  --bd:2.5px;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:"Microsoft YaHei","PingFang SC",system-ui,sans-serif;min-height:100vh;display:grid;place-items:center;padding:36px 20px;background-image:radial-gradient(#F3E5CE 9%,transparent 10%);background-size:34px 34px}
+.wrap{max-width:1060px;width:100%}
+
+.brand-row{text-align:center;margin-bottom:30px}
+.brand-row .mini{width:96px;height:96px;margin:0 auto 14px;position:relative}
+.footnote{margin-top:8px;font-size:12.5px;color:var(--ink-dim);font-weight:700}
+h1{text-align:center;font-size:38px;font-weight:900;line-height:1.3}
+h1 em{font-style:normal;background:linear-gradient(transparent 60%,var(--lemon) 60%);padding:0 4px}
+.sub{text-align:center;margin-top:10px;font-size:15px;color:var(--ink-soft);font-weight:600}
+
+.portals{margin-top:36px;display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+.pt{display:block;text-decoration:none;color:var(--ink);background:var(--card);border:3px solid var(--ink);border-radius:24px;padding:26px 24px 22px;box-shadow:7px 7px 0 var(--ink);position:relative;transition:transform .15s,box-shadow .15s}
+.pt:hover{transform:translate(-2px,-3px);box-shadow:9px 10px 0 var(--ink)}
+.pt .stick{position:absolute;top:-15px;left:24px;border:var(--bd) solid var(--ink);border-radius:12px;padding:4px 13px;font-weight:900;font-size:12px;transform:rotate(-3deg);box-shadow:2px 2px 0 var(--ink)}
+.pt .emoji{font-size:40px}
+.pt h2{font-size:21px;font-weight:900;margin-top:10px}
+.pt p{margin-top:8px;font-size:13px;color:var(--ink-soft);line-height:1.85}
+.pt .foot{margin-top:14px;font-size:12px;font-weight:800;color:var(--ink-dim);display:flex;align-items:center;gap:6px}
+.pt.s{box-shadow:7px 7px 0 var(--mint)}
+.pt.s:hover{box-shadow:9px 10px 0 var(--mint)}
+.pt.s .stick{background:var(--mint)}
+.pt.t{box-shadow:7px 7px 0 var(--peach)}
+.pt.t:hover{box-shadow:9px 10px 0 var(--peach)}
+.pt.t .stick{background:var(--peach)}
+.pt.g{box-shadow:7px 7px 0 var(--sky)}
+.pt.g:hover{box-shadow:9px 10px 0 var(--sky)}
+.pt.g .stick{background:var(--sky)}
+
+.strip{margin-top:30px;background:var(--lemon);border:3px solid var(--ink);border-radius:18px;padding:16px 24px;display:flex;gap:14px;align-items:center;box-shadow:4px 4px 0 var(--ink)}
+.strip .mk{font-size:24px}
+.strip p{font-size:13.5px;line-height:1.8;font-weight:700;color:#4A3F10}
+
+footer{margin-top:26px;text-align:center;font-size:12px;color:var(--ink-dim);font-weight:700}
+@media(max-width:860px){.portals{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="brand-row">
+    <svg class="mini" viewBox="0 0 200 200">
+      <circle cx="100" cy="100" r="96" fill="#FFF9F2" stroke="#2A2320" stroke-width="4"/>
+      <g><path d="M74 84 q10 -10 20 0" fill="none" stroke="#2A2320" stroke-width="4" stroke-linecap="round"/><path d="M106 84 q10 -10 20 0" fill="none" stroke="#2A2320" stroke-width="4" stroke-linecap="round"/></g>
+      <ellipse cx="52" cy="112" rx="10" ry="6.5" fill="#FFB5A7"/><ellipse cx="148" cy="112" rx="10" ry="6.5" fill="#FFB5A7"/>
+      <path d="M84 108 q16 14 32 2" fill="none" stroke="#2A2320" stroke-width="4" stroke-linecap="round"/>
+      <circle cx="100" cy="34" r="9" fill="#7FDBB6" stroke="#2A2320" stroke-width="3"/>
+      <line x1="100" y1="43" x2="100" y2="56" stroke="#2A2320" stroke-width="3"/>
+    </svg>
+    <h1>心晴伙伴 · <em>青少年心理护航系统</em></h1>
+    <div class="sub">选择你的入口 —— 三个世界，同一份被认真对待的心</div>
+  </div>
+
+  <div class="portals">
+    <a class="pt s" href="login-student.html">
+      <span class="stick">和中学生</span>
+      <div class="emoji">🙋</div>
+      <h2>学生端</h2>
+      <p>和小晴聊天做测评 · 情绪手账 · 点一个情绪格子见老师。没人会强迫你，答错也不扣分。</p>
+      <div class="foot">任务号 + 证件后四位，或扫码 →</div>
+    </a>
+
+    <a class="pt t" href="login-staff.html">
+      <span class="stick">校方 / 机构工作台</span>
+      <div class="emoji">🧑‍🏫</div>
+      <h2>心理老师端</h2>
+      <p>建任务、看风险图、处理危机上报、复核结论。AI 全都不下诊断，最后一步永远是你。</p>
+      <div class="foot">工号 + 密码（支持学号树多校区）→</div>
+    </a>
+
+    <a class="pt g" href="login-guardian.html">
+      <span class="stick">监护人 / 家长</span>
+      <div class="emoji">🏠</div>
+      <h2>家长端</h2>
+      <p>收到需要监护人知晓的通知时进来：签知情同意、看转介去向、约定和你孩子的面谈安排。</p>
+      <div class="foot">手机号 + 短信验证码 →</div>
+    </a>
+  </div>
+
+  <div class="strip">
+    <span class="mk">🔒</span>
+    <p>我们的边界：学生和小晴的日常对话不会同步给老师和家长；只有<b>安全与求助</b>信息走保密例外；一切风险提示都交由本校心理老师人工处理。</p>
+  </div>
+
+  <footer>心晴伙伴 · 由老年健康评估系统底座改造 · 数据为合成演示 · 一码两端不能同登</footer>
+</div>
+</body>
+</html>

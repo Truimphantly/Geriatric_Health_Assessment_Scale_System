@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>A风格完整样机 · 目录</title>
+<style>
+:root{--bg:#FFF6EC;--card:#FFFFFF;--ink:#2A2320;--mint:#7FDBB6;--peach:#FFB5A7;--lemon:#FFD66B}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:"Microsoft YaHei","PingFang SC",system-ui,sans-serif;min-height:100vh;display:grid;place-items:center;padding:40px 20px}
+.wrap{max-width:1000px;width:100%}
+h1{font-size:32px;font-weight:900}
+h1 i{font-style:normal;background:linear-gradient(transparent 62%,var(--lemon) 62%)}
+p.desc{margin-top:12px;color:#5A5048;font-size:14.5px;line-height:1.95;max-width:52em}
+.grid{margin-top:28px;display:grid;grid-template-columns:repeat(2,1fr);gap:18px}
+a.card{display:block;background:var(--card);border:3px solid var(--ink);border-radius:20px;padding:22px 24px;text-decoration:none;color:var(--ink);box-shadow:6px 6px 0 var(--peach)}
+a.card:hover{transform:translate(-2px,-2px);box-shadow:8px 8px 0 var(--peach)}
+a.card.nurse{box-shadow:6px 6px 0 var(--mint)}
+a.card.nurse:hover{box-shadow:8px 8px 0 var(--mint)}
+.card h2{font-size:18px;font-weight:900;display:flex;align-items:center;gap:10px}
+.card h2 span{font-size:11px;font-weight:900;background:var(--mint);border:2px solid var(--ink);border-radius:999px;padding:3px 10px}
+.card h2.n2 span{background:var(--peach)}
+.card p{margin-top:9px;font-size:13px;color:#5A5048;line-height:1.8}
+.tokens{margin-top:26px;background:var(--card);border:3px dashed #C9BCA8;border-radius:18px;padding:18px 22px;font-size:12.5px;line-height:2;color:#5A5048;font-weight:600}
+.tokens b{color:var(--ink)}
+@media(max-width:860px){.grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>风格 A · <i>卡通治愈贴纸风</i> 完整样机</h1>
+  <p class="desc">学生端 3 页 + 医护端 2 页。医护端采用"同宇宙克制版"：同一套奶油底/薄荷主色/粗描边 token，但去贴纸、增密度，保证工作台的信息效率。</p>
+
+  <div class="grid">
+    <a class="card" href="login.html"><h2>三端门厅（系统入口）<span>入口层</span></h2><p>学生 / 心理老师 / 家长三个世界的选择页 + 系统保密边界声明。</p></a>
+    <a class="card" href="login-student.html"><h2>学生 · 登录 <span>入口层</span></h2><p>任务号+证件后四位 / 扫码令牌 / 家属协助，进门先读知情同意。</p></a>
+    <a class="card" href="login-staff.html"><h2>老师 · 工作台登录 <span>入口层</span></h2><p>工号密码 + 演示账号（正式部署对接学校统一身份认证）。</p></a>
+    <a class="card" href="login-guardian.html"><h2>家长端 · 登录 <span>入口层</span></h2><p>手机号+短信验证码；明确"家长端能看什么、永远看不到什么"。</p></a>
+    <a class="card" href="guardian-notice.html"><h2>家长端 · 通知与同意书 <span>家长域</span></h2><p>危机面谈通知卡、四类知情同意条款在线签署、手写签名区。</p></a>
+    <a class="card" href="student-dialog.html"><h2>学生 · 小晴对话页 <span>核心页</span></h2><p>语音气泡对话、AI 科普贴纸卡、危机上报横条、语音波形条、麦克风停靠栏。</p></a>
+    <a class="card" href="student-tasks.html"><h2>学生 · 今日任务页 <span>进度</span></h2><p>任务贴纸卡（PHQ-A 3/9、ASQ 排队）、小晴待机屏、已记录信息面板。</p></a>
+    <a class="card" href="student-mood.html"><h2>学生 · 情绪手账页 <span>记录</span></h2><p>周情绪格子、打卡贴纸、连续记录徽章、小晴周报卡、手账时间线。</p></a>
+    <a class="card nurse" href="nurse-list.html"><h2>老师 · 工作台 <span>管理端</span></h2><p>KPI 风险行、学生任务表、危机介入提醒条——克制版贴纸系统。</p></a>
+    <a class="card nurse" href="nurse-review.html"><h2>老师 · 复核详情 <span>管理端</span></h2><p>风险摘要条、可改抽取值表格、危机时间线、复核与转介操作。</p></a>
+  </div>
+
+  <div class="tokens">
+    <b>设计 token 速览</b> — 背底 <b>#FFF6EC</b> · 卡面 <b>#FFFFFF</b> · 墨色 <b>#2A2320</b> · 薄荷 <b>#7FDBB6</b> · 蜜桃 <b>#FFB5A7</b> · 柠檬 <b>#FFD66B</b> · 天蓝 <b>#A9C9DE</b> · 危险 <b>#F0716B</b><br/>
+    描边 <b>2.5–3px 墨色</b> · 硬投影 <b>offset 5–8px 同描边</b> · 圆角 <b>16–24px</b> · 贴纸 <b>rotate ±1–6deg</b> · 小晴形象 = 圆头机器人 + 腮红 + 天线（素材到手后替换 SVG 占位）
+  </div>
+</div>
+</body>
+</html>

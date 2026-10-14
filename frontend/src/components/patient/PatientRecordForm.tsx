@@ -83,12 +83,12 @@ export default function PatientRecordForm({
       ['患者姓名', form.name],
       ['出生日期', form.birthday],
       ['联系电话', form.phone],
-      ['住院号', form.inpatientNo],
-      ['科室', form.department],
-      ['病区', form.ward],
-      ['床号', form.bedNo],
-      ['入院时间', form.admissionDate],
-      ['主要诊断', form.primaryDiagnosis],
+      ['档案号', form.inpatientNo],
+      ['归属中心', form.department],
+      ['校区/院区', form.ward],
+      ['房间/座位号', form.bedNo],
+      ['建档时间', form.admissionDate],
+      ['内部参考（不向学生展示）', form.primaryDiagnosis],
       ...(mode === 'create' ? ([['身份证号', form.idCardNo]] as const) : []),
     ],
     [form, mode]
@@ -107,7 +107,7 @@ export default function PatientRecordForm({
       return;
     }
     if (form.dischargeDate && form.encounterStatus === 'in_hospital') {
-      setValidationError('已填写出院时间时，住院状态不能仍为“在院”');
+      setValidationError('已填写结束时间时，在册状态不能仍为“在册”');
       return;
     }
     await onSubmit({
@@ -235,36 +235,36 @@ export default function PatientRecordForm({
 
       <Card padding="lg">
         <CardHeader>
-          <CardTitle>本次住院信息</CardTitle>
+          <CardTitle>心理护航档案信息</CardTitle>
         </CardHeader>
         <CardContent className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
           <Input
-            label="住院号 *"
+            label="档案号 *"
             value={form.inpatientNo}
             onChange={(event) => update('inpatientNo', event.target.value)}
           />
           <Input
-            label="科室编码"
+            label="中心编码"
             value={form.departmentCode}
             onChange={(event) => update('departmentCode', event.target.value)}
           />
           <Input
-            label="科室 *"
+            label="归属中心 *"
             value={form.department}
             onChange={(event) => update('department', event.target.value)}
           />
           <Input
-            label="病区 *"
+            label="校区/院区 *"
             value={form.ward}
             onChange={(event) => update('ward', event.target.value)}
           />
           <Input
-            label="床号 *"
+            label="房间/座位号 *"
             value={form.bedNo}
             onChange={(event) => update('bedNo', event.target.value)}
           />
           <label className="text-sm font-medium">
-            <span className="mb-1.5 block">住院状态 *</span>
+            <span className="mb-1.5 block">在册状态 *</span>
             <select
               value={form.encounterStatus}
               onChange={(event) =>
@@ -272,38 +272,38 @@ export default function PatientRecordForm({
               }
               className={fieldClassName}
             >
-              <option value="pending_admission">待入院</option>
-              <option value="in_hospital">在院</option>
-              <option value="discharged">已出院</option>
+              <option value="pending_admission">待建档</option>
+              <option value="in_hospital">在册</option>
+              <option value="discharged">已结案</option>
               <option value="cancelled">取消</option>
             </select>
           </label>
           <Input
-            label="入院时间 *"
+            label="建档时间 *"
             type="datetime-local"
             value={form.admissionDate}
             onChange={(event) => update('admissionDate', event.target.value)}
           />
           <Input
-            label="出院时间"
+            label="结束时间"
             type="datetime-local"
             value={form.dischargeDate}
             onChange={(event) => update('dischargeDate', event.target.value)}
           />
           <Input
-            label="入院来源"
+            label="来源"
             value={form.admissionSource}
             onChange={(event) => update('admissionSource', event.target.value)}
-            placeholder="门诊 / 急诊 / 转院"
+            placeholder="普筛 / 班主任转介 / 自主求助"
           />
           <Input
-            label="护理级别"
+            label="关注级别"
             value={form.nursingLevel}
             onChange={(event) => update('nursingLevel', event.target.value)}
-            placeholder="特级 / 一级 / 二级 / 三级护理"
+            placeholder="重点 / 常规 / 随访观察"
           />
           <Input
-            label="医保类别"
+            label="费用类别"
             value={form.insuranceType}
             onChange={(event) => update('insuranceType', event.target.value)}
           />
@@ -312,12 +312,12 @@ export default function PatientRecordForm({
 
       <Card padding="lg">
         <CardHeader>
-          <CardTitle>临床与安全摘要</CardTitle>
+          <CardTitle>内部参考与安全摘要</CardTitle>
         </CardHeader>
         <CardContent className="grid grid-cols-1 gap-4 md:grid-cols-2">
           <div className="md:col-span-2">
             <Input
-              label="主要诊断 *"
+              label="内部参考说明 *"
               value={form.primaryDiagnosis}
               onChange={(event) =>
                 update('primaryDiagnosis', event.target.value)
@@ -325,7 +325,7 @@ export default function PatientRecordForm({
             />
           </div>
           <label className="text-sm font-medium">
-            <span className="mb-1.5 block">其他诊断（每行一项）</span>
+            <span className="mb-1.5 block">其他参考信息（每行一项）</span>
             <textarea
               rows={4}
               value={form.secondaryDiagnoses}
@@ -336,7 +336,7 @@ export default function PatientRecordForm({
             />
           </label>
           <label className="text-sm font-medium">
-            <span className="mb-1.5 block">风险备注</span>
+            <span className="mb-1.5 block">安全备注</span>
             <textarea
               rows={4}
               value={form.riskNote}
@@ -346,7 +346,7 @@ export default function PatientRecordForm({
           </label>
           <div className="md:col-span-2">
             <label className="text-sm font-medium">
-              <span className="mb-1.5 block">过敏信息摘要</span>
+              <span className="mb-1.5 block">重要健康信息摘要</span>
               <textarea
                 rows={3}
                 value={form.allergySummary}
@@ -354,7 +354,7 @@ export default function PatientRecordForm({
                   update('allergySummary', event.target.value)
                 }
                 className={fieldClassName}
-                placeholder="无已知过敏，或填写过敏原与既往反应"
+                placeholder="无重要健康信息，或填写需要老师知晓的医学情况"
               />
             </label>
           </div>

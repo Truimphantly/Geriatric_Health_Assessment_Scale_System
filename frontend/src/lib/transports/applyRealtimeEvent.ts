@@ -498,7 +498,7 @@ export function applyRealtimeEvent(event: SseEnvelope): void {
       const reason = value(
         event.payload,
         'reason',
-        '患者请求护士协助'
+        '学生请求心理老师协助'
       );
       const requestSource = value(
         event.payload,

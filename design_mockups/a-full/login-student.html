@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>A风格完整样机 · 学生端登录 — 心晴伙伴</title>
+<style>
+:root{
+  --bg:#FFF6EC; --card:#FFFFFF; --ink:#2A2320; --ink-soft:#5A5048; --ink-dim:#8A7E73;
+  --mint:#7FDBB6; --mint-deep:#2E8B6A; --peach:#FFB5A7; --lemon:#FFD66B; --sky:#A9C9DE;
+  --bd:2.5px;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:"Microsoft YaHei","PingFang SC",system-ui,sans-serif;min-height:100vh;display:grid;place-items:center;padding:36px 20px}
+.wrap{max-width:1020px;width:100%}
+a.back{display:inline-flex;align-items:center;gap:6px;font-size:13.5px;font-weight:800;color:var(--ink);text-decoration:none;margin-bottom:18px;border:var(--bd) solid var(--ink);background:var(--card);border-radius:999px;padding:7px 16px;box-shadow:3px 3px 0 var(--ink)}
+
+.grid{display:grid;grid-template-columns:1.1fr .9fr;gap:24px;align-items:stretch}
+.form-card{background:var(--card);border:3px solid var(--ink);border-radius:24px;padding:30px 32px;box-shadow:7px 7px 0 var(--mint)}
+.form-card h1{font-size:26px;font-weight:900}
+.form-card .s{margin-top:8px;color:var(--ink-soft);font-size:14px;line-height:1.8}
+form{margin-top:22px}
+label{display:block;font-weight:900;font-size:13px;margin-bottom:8px}
+.inp{display:flex;align-items:center;gap:10px;border:var(--bd) solid var(--ink);border-radius:14px;background:var(--bg);padding:0 16px;margin-bottom:16px}
+.inp span{font-size:17px}
+.inp input{flex:1;border:none;outline:none;font:inherit;font-size:15px;font-weight:700;padding:13px 0;background:transparent}
+.inp input::placeholder{color:#B9AC9C;font-weight:500}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.go{margin-top:8px;width:100%;border:var(--bd) solid var(--ink);background:var(--mint);border-radius:16px;font-weight:900;font-size:16px;padding:14px;cursor:pointer;box-shadow:5px 5px 0 var(--ink)}
+.go:hover{transform:translate(-1px,-1px);box-shadow:6px 6px 0 var(--ink)}
+.hint{margin-top:14px;font-size:12px;color:var(--ink-dim);font-weight:700;line-height:1.8}
+.hint b{color:var(--mint-deep)}
+.altern{margin-top:18px;border-top:2.5px dashed #EADCDC;padding-top:16px;display:flex;gap:12px;align-items:center}
+.qr-btn{border:var(--bd) solid var(--ink);background:var(--lemon);border-radius:14px;font-weight:900;font-size:13.5px;padding:11px 18px;cursor:pointer;box-shadow:3px 3px 0 var(--ink)}
+
+/* 家属协助 */
+.who{margin-top:16px;display:grid;grid-template-columns:1fr 1fr 1.3fr;gap:10px}
+.w{border:var(--bd) solid var(--ink);border-radius:14px;background:var(--card);padding:12px 10px;text-align:center;font-weight:900;font-size:13px;cursor:pointer}
+.w.on{background:var(--sky)}
+
+/* 右侧小晴 */
+.buddy{background:var(--mint);border:3px solid var(--ink);border-radius:24px;box-shadow:7px 7px 0 var(--peach);position:relative;overflow:hidden;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:28px}
+.buddy .pat{position:absolute;inset:0;background-image:radial-gradient(var(--card) 8%,transparent 9%);background-size:24px 24px;opacity:.32}
+.face{width:150px;height:150px;position:relative;z-index:1}
+.say{position:relative;z-index:1;margin-top:16px;background:var(--card);border:var(--bd) solid var(--ink);border-radius:16px;padding:13px 18px;font-weight:800;font-size:14px;line-height:1.7;text-align:center;box-shadow:3px 3px 0 var(--ink);max-width:230px}
+.qr{position:relative;z-index:1;margin-top:14px;background:var(--card);border:var(--bd) dashed var(--ink);border-radius:14px;padding:12px;display:grid;place-items:center}
+.qr svg{width:110px;height:110px}
+footer{margin-top:22px;text-align:center;font-size:12px;color:var(--ink-dim);font-weight:700}
+@media(max-width:920px){.grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <a class="back" href="login.html">‹ 返回入口</a>
+
+  <div class="grid">
+    <div class="form-card">
+      <h1>嘘，先认一下身份 🙋</h1>
+      <p class="s">用心理老师发给你的上个任务号进来。后四位来自你登记的证件号，只有你知道。</p>
+
+      <form>
+        <label>任务号</label>
+        <div class="inp"><span>🎫</span><input value="TASK-68494A8B35B1"/></div>
+
+        <div class="row2">
+          <div>
+            <label>证件后四位</label>
+            <div class="inp"><span>🪪</span><input placeholder="如 2889" maxlength="4" value="2889"/></div>
+          </div>
+          <div>
+            <label>你是？</label>
+            <div class="who" style="margin-top:2px">
+              <div class="w on">本人</div><div class="w">家属</div><div class="w" style="font-size:11px">代聊的同学</div>
+            </div>
+          </div>
+        </div>
+
+        <button class="go">进入小晴 →</button>
+        <p class="hint">找不着任务号？让老师重新发一次，或者<b>扫 TA 出示的二维码</b>（一分有效）。进错人的门我们认不出来，所以信息要你自己核对。</p>
+      </form>
+
+      <div class="altern">
+        <button class="qr-btn">📷 扫码进入</button>
+        <p style="font-size:12.5px;color:var(--ink-dim);font-weight:700;line-height:1.75">老师工作台一键生成<br/>扫码令牌 · 300 秒有效</p>
+      </div>
+    </div>
+
+    <div class="buddy">
+      <div class="pat"></div>
+      <svg class="face" viewBox="0 0 200 200">
+        <circle cx="100" cy="100" r="96" fill="#FFF9F2" stroke="#2A2320" stroke-width="4"/>
+        <g><circle cx="70" cy="90" r="9" fill="#2A2320"/><circle cx="130" cy="90" r="9" fill="#2A2320"/><circle cx="73" cy="86" r="3" fill="#FFF9F2"/><circle cx="133" cy="86" r="3" fill="#FFF9F2"/></g>
+        <ellipse cx="52" cy="112" rx="10" ry="6.5" fill="#FFB5A7"/><ellipse cx="148" cy="112" rx="10" ry="6.5" fill="#FFB5A7"/>
+        <path d="M86 112 q14 12 28 0" fill="none" stroke="#2A2320" stroke-width="4" stroke-linecap="round"/>
+        <circle cx="100" cy="34" r="9" fill="#7FDBB6" stroke="#2A2320" stroke-width="3"/>
+        <line x1="100" y1="43" x2="100" y2="56" stroke="#2A2320" stroke-width="3"/>
+      </svg>
+      <div class="say">我是小晴～进来聊聊吧。答题慢慢来，不赶时间——反正我想陪你的时候，一直都在 ☀️</div>
+      <div class="qr">
+        <svg viewBox="0 0 40 40"><rect x="2" y="2" width="11" height="11" fill="#2A2320"/><rect x="5" y="5" width="5" height="5" fill="#FFF6EC"/><rect x="27" y="2" width="11" height="11" fill="#2A2320"/><rect x="30" y="5" width="5" height="5" fill="#FFF6EC"/><rect x="2" y="27" width="11" height="11" fill="#2A2320"/><rect x="5" y="30" width="5" height="5" fill="#FFF6EC"/><rect x="16" y="5" width="3" height="3" fill="#2A2320"/><rect x="21" y="8" width="3" height="3" fill="#2A2320"/><rect x="16" y="14" width="8" height="3" fill="#2A2320"/><rect x="16" y="20" width="3" height="3" fill="#2A2320"/><rect x="22" y="23" width="3" height="3" fill="#2A2320"/><rect x="16" y="27" width="8" height="8" fill="#2A2320"/><rect x="27" y="27" width="3" height="3" fill="#2A2320"/><rect x="27" y="33" width="8" height="3" fill="#2A2320"/><rect x="31" y="27" width="3" height="3" fill="#2A2320"/></svg>
+      </div>
+    </div>
+  </div>
+
+  <footer>登录即表示同意本次评估的知情同意条款 · 进门后会先给你看一遍（可以慢慢读）</footer>
+</div>
+</body>
+</html>

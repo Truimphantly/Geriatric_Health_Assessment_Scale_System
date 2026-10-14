@@ -16,9 +16,9 @@ import type { ConsentClause, ConsentProgress } from '@/lib/types';
 const initialClauses: ConsentClause[] = [
   {
     id: 'consent-1',
-    clauseCode: 'IDENTITY',
-    clauseName: '身份与信息核对',
-    patientContent: '检查、治疗和用药前，医护人员会核对您的姓名、腕带和住院信息，请您主动配合。',
+    clauseCode: 'ASSESSMENT_SCOPE',
+    clauseName: '评估说明',
+    patientContent: '这次对话是一次心理状态了解，不是考试，小晴不会给你贴标签或者下诊断，最后会由心理老师人工看一遍。',
     importanceLevel: 'important',
     mandatoryDelivery: true,
     explicitConfirmationRequired: true,
@@ -28,9 +28,9 @@ const initialClauses: ConsentClause[] = [
   },
   {
     id: 'consent-2',
-    clauseCode: 'SAFETY',
-    clauseName: '护理安全',
-    patientContent: '如您行动不便、头晕或夜间需要下床，请先使用呼叫铃，不要独自下床。',
+    clauseCode: 'CONFIDENTIALITY',
+    clauseName: '保密与例外',
+    patientContent: '你说的话小晴会替你保密；只有当你或别人遇到危险时，小晴才会告诉心理老师来帮你，这一点提前和你说清楚。',
     importanceLevel: 'critical',
     mandatoryDelivery: true,
     explicitConfirmationRequired: true,
@@ -42,7 +42,7 @@ const initialClauses: ConsentClause[] = [
     id: 'consent-3',
     clauseCode: 'PRIVACY',
     clauseName: '隐私与数据使用',
-    patientContent: '本次回答用于心理评估，AI整理结果由心理老师复核，不会上传真实信息。',
+    patientContent: '本次回答只用于心理评估与必要的支持安排，由心理老师复核；不会给你贴标签，也不会随便给别人看。',
     importanceLevel: 'important',
     mandatoryDelivery: true,
     explicitConfirmationRequired: true,
@@ -203,7 +203,7 @@ export default function PatientConsentPage() {
       audio.addEventListener('error', () => {
         setPlaying(false);
         audioRef.current = null;
-        setError('条款音频暂时无法播放，请稍后重试或联系护士');
+        setError('条款音频暂时无法播放，请稍后重试或找心理老师');
       });
       try {
         await audio.play();
@@ -233,7 +233,7 @@ export default function PatientConsentPage() {
             className="rounded-2xl border border-amber-200 bg-amber-50 p-4 text-sm leading-6 text-amber-800"
           >
             <PatientIcon name="warning" className="mr-2 inline h-5 w-5" />
-            {error || '知情同意内容暂不可用，请联系护士处理。'}
+            {error || '知情同意内容暂不可用，请联系心理老师处理。'}
           </div>
         </div>
       </PatientLayout>
@@ -307,12 +307,12 @@ export default function PatientConsentPage() {
       await careRepository.submitConsent(progress);
       setClauses(nextClauses);
       saveConsent(progress);
-      setError('已通知护士进行人工解释，当前进度已保存。');
+      setError('已通知心理老师来为你解释，当前进度已保存。');
     } catch (submitError) {
       setError(
         submitError instanceof Error
           ? submitError.message
-          : '通知护士失败，请重试'
+          : '通知心理老师失败，请重试'
       );
     } finally {
       handoffSubmittingRef.current = false;
@@ -504,7 +504,7 @@ export default function PatientConsentPage() {
                 onClick={() => void needExplanation()}
             >
               <PatientIcon name="nurse" className="h-5 w-5" />
-              {submitting ? '正在通知' : '我不理解，请找护士'}
+              {submitting ? '正在通知' : '我不太明白，请老师解释'}
             </button>
             <button
               type="button"

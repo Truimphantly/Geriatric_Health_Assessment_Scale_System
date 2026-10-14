@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>A风格完整样机 · 家长端登录 — 心晴伙伴</title>
+<style>
+:root{
+  --bg:#FFF6EC; --card:#FFFFFF; --ink:#2A2320; --ink-soft:#5A5048; --ink-dim:#8A7E73;
+  --mint:#7FDBB6; --mint-deep:#2E8B6A; --peach:#FFB5A7; --lemon:#FFD66B; --sky:#A9C9DE;
+  --bd:2.5px;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:"Microsoft YaHei","PingFang SC",system-ui,sans-serif;min-height:100vh;display:grid;place-items:center;padding:36px 20px}
+.wrap{max-width:1000px;width:100%}
+a.back{display:inline-flex;align-items:center;gap:6px;font-size:13.5px;font-weight:800;color:var(--ink);text-decoration:none;border:var(--bd) solid var(--ink);background:var(--card);border-radius:999px;padding:7px 16px;box-shadow:3px 3px 0 var(--ink);margin-bottom:26px}
+.grid{display:grid;grid-template-columns:1fr .85fr;gap:24px;align-items:stretch}
+.card{background:var(--card);border:3px solid var(--ink);border-radius:24px;padding:32px;box-shadow:7px 7px 0 var(--sky)}
+h1{font-size:24px;font-weight:900}
+.sub{margin-top:8px;color:var(--ink-soft);font-size:14px;line-height:1.8}
+form{margin-top:20px}
+label{display:block;font-weight:900;font-size:13px;margin-bottom:8px}
+.inp{display:flex;align-items:center;gap:10px;border:var(--bd) solid var(--ink);border-radius:14px;background:var(--bg);padding:0 16px;margin-bottom:14px}
+.inp span{font-size:17px}
+.inp input{flex:1;border:none;outline:none;font:inherit;font-size:15px;font-weight:700;padding:13px 0;background:transparent}
+.inp .code{border:none;background:var(--lemon);font-weight:900;font-size:12.5px;border-radius:999px;padding:7px 14px;cursor:pointer;white-space:nowrap}
+.go{margin-top:8px;width:100%;border:var(--bd) solid var(--ink);background:var(--sky);border-radius:16px;font-weight:900;font-size:16px;padding:14px;cursor:pointer;box-shadow:5px 5px 0 var(--ink)}
+.go:hover{transform:translate(-1px,-1px);box-shadow:6px 6px 0 var(--ink)}
+.p{margin-top:14px;font-size:12px;color:var(--ink-dim);font-weight:700;line-height:1.8}
+
+/* 会给你什么 */
+.why{background:var(--card);border:3px solid var(--ink);border-radius:24px;box-shadow:7px 7px 0 var(--lemon);padding:26px 28px;position:relative}
+.why .stick{position:absolute;top:-15px;right:26px;background:var(--lemon);border:var(--bd) solid var(--ink);border-radius:12px;padding:4px 12px;font-weight:900;font-size:12px;transform:rotate(3deg);box-shadow:3px 3px 0 var(--ink)}
+.why h3{font-size:16.5px;font-weight:900}
+.why .its{margin-top:14px;display:grid;gap:10px}
+.why .it{background:var(--bg);border:var(--bd) solid var(--ink);border-radius:14px;padding:12px 16px;display:flex;gap:12px;align-items:flex-start}
+.why .it .mk{font-size:20px}
+.why .it b{font-size:13.5px;display:block}
+.why .it small{display:block;color:var(--ink-soft);font-size:12px;margin-top:3px;line-height:1.7;font-weight:600}
+.why .bound{margin-top:14px;background:var(--peach);border:var(--bd) solid var(--ink);border-radius:14px;padding:12px 16px;font-size:12.5px;font-weight:800;line-height:1.8}
+@media(max-width:920px){.grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <a class="back" href="login.html">‹ 返回入口</a>
+
+  <div class="grid">
+    <div class="card">
+      <h1>家长端 · 手机号登录 🏠</h1>
+      <p class="sub">学校心理老师或系统会向你登记的手机号发送关键通知。日常评估不会打扰你——只在需要监护人知情/同意时出现。</p>
+
+      <form>
+        <label>登记手机号</label>
+        <div class="inp"><span>📱</span><input value="139****9972"/></div>
+
+        <label>短信验证码</label>
+        <div class="inp">
+          <span>✉️</span><input placeholder="六位验证码" value=""/>
+          <button class="code" type="button">获取验证码</button>
+        </div>
+
+        <button class="go">查看我的通知 →</button>
+        <p class="p">号码来自孩子档案里的监护人登记项 · 只有法律监护人可绑定 · 匿名访客不能查看任何内容</p>
+      </form>
+    </div>
+
+    <div class="why">
+      <span class="stick">本期最小可用</span>
+      <h3>进来后你能做什么</h3>
+      <div class="its">
+        <div class="it"><span class="mk">📄</span><div><b>签知情同意书</b><small>评估说明、联系监护人、转介去向、数据使用——四类条款在线签署，随时补签</small></div></div>
+        <div class="it"><span class="mk">🔔</span><div><b>接收需要家长知晓的通知</b><small>仅限安全与求助类；孩子日常聊天内容不会推送给你</small></div></div>
+        <div class="it"><span class="mk">🧑‍🏫</span><div><b>和学校约面谈/转介时间</b><small>确认本地资源（心理老师 / 专业机构）后约定时间</small></div></div>
+      </div>
+      <div class="bound">家长端永远看不到：日记与小晴的日常对话原文。看到的是"发生了什么、需要你做什么"，而不是"孩子说了什么"。</div>
+    </div>
+  </div>
+</div>
+</body>
+</html>

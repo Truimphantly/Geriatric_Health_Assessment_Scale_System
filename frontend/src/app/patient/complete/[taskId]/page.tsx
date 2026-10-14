@@ -28,15 +28,15 @@ export default function PatientCompletePage() {
 
         <h1 className="mt-1 text-[36px] font-black text-[#3e241c]">评估已完成</h1>
         <p className="mt-2 text-[16px] text-foreground-muted">
-          感谢您的配合，结果已提交护士复核
+          谢谢你今天的坦诚，结果已交给心理老师复核
         </p>
 
         <div className="mt-5 space-y-3 text-left">
           {[
             {
               icon: 'nurse' as const,
-              title: '护士会复核',
-              detail: '护士会尽快查看并复核您的评估结果。',
+              title: '心理老师会复核',
+              detail: '心理老师会尽快看这份记录，需要时来找你聊聊。',
               tone: 'bg-[#e5f5f1] text-[#329879]',
             },
             {
@@ -76,7 +76,7 @@ export default function PatientCompletePage() {
           onClick={() => router.push('/patient/home')}
           className="patient-primary-button mt-5 w-full"
         >
-          返回住院服务
+          返回首页
         </button>
         <button
           type="button"
@@ -92,7 +92,7 @@ export default function PatientCompletePage() {
             {task?.consentRequired
               ? consent?.decision === 'agreed'
                 ? '知情同意：已确认并完成签名'
-                : '知情同意：等待护士进一步处理'
+                : '知情同意：等心理老师进一步处理'
               : '本任务不要求知情同意签名'}
           </p>
         </div>

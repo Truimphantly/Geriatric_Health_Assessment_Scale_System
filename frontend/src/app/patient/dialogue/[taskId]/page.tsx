@@ -62,7 +62,7 @@ function buildScriptResult(answerIndex: number, content: string): ScriptResult {
   if (answerIndex === 0) {
     return {
       stage: 'introduce',
-      content: '谢谢您的配合。我是AI心理陪伴助手小晴，本次对话会由心理老师复核。首先请告诉我您的年龄。',
+      content: '你好呀，我是小晴～今天咱们随便聊聊最近的状态，没有对错，你说什么我都保密。先聊聊最近睡得怎么样？',
       answer: {
         questionId: 'ready',
         questionCode: 'READY',
@@ -70,120 +70,132 @@ function buildScriptResult(answerIndex: number, content: string): ScriptResult {
         answerText: normalized,
         sourceMessageIds: [],
         extractionConfidence: 0.99,
-        corrected: false,
-      },
+        corrected: false},
     };
   }
   if (answerIndex === 1) {
-    const age = Number.parseInt(normalized, 10);
+    const roughSleep = /差|不好|睡不着|失眠|难|浅|少/.test(normalized);
     return {
       stage: 'communicate',
-      content: '已记录。请问您是否对药物或食物过敏？如果有，请告诉我具体名称和发生过的反应。',
+      content: '记下啦 ✓（睡不好不是矫情，是身体在提醒你需要注意了）那最近两周，有没有觉得做什么都提不起劲、没什么意思？',
       answer: {
-        questionId: 'age',
-        questionCode: 'AGE',
-        questionText: '年龄',
-        answerNumber: Number.isNaN(age) ? undefined : age,
-        answerText: Number.isNaN(age) ? normalized : undefined,
+        questionId: 'sleep',
+        questionCode: 'SLEEP',
+        questionText: '睡眠情况（入睡难/睡不安稳/睡得过多）',
+        answerText: normalized,
         sourceMessageIds: [],
-        extractionConfidence: Number.isNaN(age) ? 0.72 : 0.98,
+        extractionConfidence: 0.93,
         corrected: false,
       },
+      education: roughSleep
+        ? {
+            title: '睡眠小卡片',
+            content: '睡前半小时放下手机、把房间灯光调暗一点点；白天足够运动能帮夜里更快关机。如果连续两周都睡不好，值得告诉老师或家长。',
+            priority: 'medium',
+          }
+        : undefined,
     };
   }
   if (answerIndex === 2) {
-    const hasAllergy = /有|过敏|青霉素|头孢|食物/.test(normalized);
+    const low = /低|难过|想哭|没意思|空|烦|压/.test(normalized);
     return {
       stage: 'ask',
-      content: hasAllergy
-        ? '我已记录您的过敏信息。如曾出现呼吸困难、喉头发紧、意识不清或需要急救，请立即告诉护士。接下来请问您下床或行走时是否需要他人搀扶或陪同？'
-        : '好的，已记录目前没有明确过敏史。请问您下床或行走时是否需要他人搀扶或陪同？',
+      content: '谢谢你说我认真听着。这段时间，看起来是不是比平时更容易紧张、担心、或者脑子停不下来么？比如考试周？',
       answer: {
-        questionId: 'allergy',
-        questionCode: 'ALLERGY',
-        questionText: '药物或食物过敏史',
+        questionId: 'interest',
+        questionCode: 'INTEREST',
+        questionText: '做事提不起劲或没有兴趣',
         answerText: normalized,
         sourceMessageIds: [],
-        extractionConfidence: 0.95,
+        extractionConfidence: 0.92,
         corrected: false,
       },
-      education: hasAllergy
+      education: low
         ? {
-            title: '过敏安全提醒',
-            content: '以后每次就医、检查和用药前，请主动告诉医生和护士您的具体过敏物及过敏表现。',
-            priority: 'high',
+            title: '情绪小卡片',
+            content: '情绪波动是正常反应，不是脆弱。试着给情绪起个名字（烦躁、委屈、紧张），往往比硬压下去更轻松。',
+            priority: 'medium',
           }
         : undefined,
     };
   }
   if (answerIndex === 3) {
+    const worried = /担|紧张|怕|考|评|烦/.test(normalized);
     return {
       stage: 'ask',
-      content: '请问您最近一年是否发生过跌倒或坠床？夜间起床时会不会头晕或站立不稳？',
+      content: '这种紧张感很多人都有，你并不是一个人。那最近有没有觉得疲倦、没精神，做什么都没力气？',
       answer: {
-        questionId: 'mobility',
-        questionCode: 'MOBILITY',
-        questionText: '下床或行走协助需求',
+        questionId: 'worry',
+        questionCode: 'WORRY',
+        questionText: '感到紧张、担心或难以放松',
+        answerText: normalized,
+        sourceMessageIds: [],
+        extractionConfidence: 0.9,
+        corrected: false,
+      },
+      education: worried
+        ? {
+            title: '压力小卡片',
+            content: '压力大时把任务拆小、一次只做一件；给自己留出休息和喜欢的事，能慢慢变得可承受。寻求帮助也是一种能力。',
+            priority: 'medium',
+          }
+        : undefined,
+    };
+  }
+  if (answerIndex === 4) {
+    const low = /提不起|没力|累|没精神|沉/.
+      test(normalized);
+    return {
+      stage: 'respond',
+      content: '记下啦 ✓ 最后一个话题，想问问你和身边的人：这段时间有没有觉得做什么都没意思、或者心里闷闷说不出来？愿意说多少都可以。',
+      answer: {
+        questionId: 'fatigue',
+        questionCode: 'FATIGUE',
+        questionText: '疲倦或没有活力',
         answerText: normalized,
         sourceMessageIds: [],
         extractionConfidence: 0.91,
         corrected: false,
       },
-    };
-  }
-  if (answerIndex === 4) {
-    const hasFallRisk = /有|跌|摔|头晕|不稳|需要/.test(normalized);
-    return {
-      stage: 'respond',
-      content: '谢谢您说明。接下来想了解生活习惯：您目前是否吸烟？如果吸烟，大约每天多少支？',
-      answer: {
-        questionId: 'fall_history',
-        questionCode: 'FALL_HISTORY',
-        questionText: '跌倒史与夜间下床风险',
-        answerText: normalized,
-        sourceMessageIds: [],
-        extractionConfidence: 0.94,
-        corrected: false,
-      },
-      education: hasFallRisk
+      education: low
         ? {
-            title: '防跌倒宣教',
-            content: '夜间下床前请先按呼叫铃，穿防滑鞋，并等待护士或家属协助。',
+            title: '低落小卡片',
+            content: '持续提不起劲是需要被认真对待的信号，不是矫情。愿意说出来本身就是很重要的一步，也可以找信任的大人一起想办法。',
             priority: 'high',
           }
         : undefined,
     };
   }
   if (answerIndex === 5) {
-    const smokes = /吸|支|烟|抽/.test(normalized) && !/不吸|没有|戒/.test(normalized);
+    const heavy = /没意思|累|闷|说不|低|压/.test(normalized);
     return {
       stage: 'ask',
-      content: '最后，请告诉我目前最主要的不舒服、担心，或者最希望护士帮助解决的问题。',
+      content: '谢谢你的信任，这些我都记准了（可以随时改）。如果以后遇到难处，你希望先找谁聊聊？小晴也可以帮你递求助卡片给心理老师。',
       answer: {
-        questionId: 'smoking',
-        questionCode: 'SMOKING',
-        questionText: '吸烟情况',
+        questionId: 'support',
+        questionCode: 'SUPPORT',
+        questionText: '支持资源与求助意愿',
         answerText: normalized,
         sourceMessageIds: [],
-        extractionConfidence: 0.93,
+        extractionConfidence: 0.89,
         corrected: false,
       },
-      education: smokes
+      education: heavy
         ? {
-            title: '住院禁烟提醒',
-            content: '病区为无烟环境。住院期间请不要在病房、卫生间或楼梯间吸烟，如有戒烟需求可告诉护士。',
-            priority: 'medium',
+            title: '求助小卡片',
+            content: '求助不是小题大做。12356 心理援助热线和 12355 青少年服务台都有人接；教室里的心理老师也是你可以敲门的地方。',
+            priority: 'high',
           }
         : undefined,
     };
   }
   return {
     stage: 'exit',
-    content: '感谢您的配合。本次评估问题已经完成，我已整理您的回答并提交给护士复核。接下来请完成知情同意确认。',
+    content: '今天聊到这里，辛苦你跟小晴说了这么多。我会把记录整理给心理老师看（只给他们必要了解的部分）。接下来请完成知情同意确认。',
     answer: {
       questionId: 'symptoms',
       questionCode: 'SYMPTOMS',
-      questionText: '主要不适、担心与帮助需求',
+      questionText: '主要困扰与帮助需求',
       answerText: normalized,
       sourceMessageIds: [],
       extractionConfidence: 0.9,
@@ -578,7 +590,7 @@ export default function PatientDialoguePage() {
     if (!latestSession) return;
     const answered = Math.min(patientAnswerCount + 1, totalQuestions);
     const summary = result.complete
-      ? '患者已完成入院评估，系统记录了年龄、过敏史、活动能力、跌倒风险、吸烟情况以及主要不适，需护士复核。'
+      ? '学生完成了本轮心理评估对话，小晴已整理回答，等待心理老师复核。'
       : latestSession.aiSummary;
     setSession(taskId, {
       ...latestSession,
@@ -616,7 +628,7 @@ export default function PatientDialoguePage() {
   };
 
   const askNurse = async () => {
-    const reason = '患者在AI对话评估中主动请求护士协助';
+    const reason = '学生在小晴对话中主动呼叫心理老师';
     try {
       const response = await requestPatientHandoff(reason);
       if (!response) return;
@@ -631,8 +643,8 @@ export default function PatientDialoguePage() {
     } catch (handoffError) {
       setConnectionError(
         handoffError instanceof Error
-          ? `呼叫护士失败：${handoffError.message}`
-          : '呼叫护士失败'
+          ? `呼叫心理老师失败：${handoffError.message}`
+          : '呼叫心理老师失败'
       );
       return;
     }
@@ -642,7 +654,7 @@ export default function PatientDialoguePage() {
     progress: Parameters<typeof saveConsent>[0]
   ) => {
     if (progress.decision === 'needs_explanation') {
-      const reason = '患者对知情同意内容需要护士人工解释';
+      const reason = '学生对知情同意内容需要老师人工解说';
       const response = await requestPatientHandoff(reason, 'explain_consent');
       if (response) {
         applyRealtimeEvent(
@@ -959,10 +971,10 @@ export default function PatientDialoguePage() {
           onClick={() => void askNurse()}
           disabled={isHandoffSubmitting}
           className="patient-touch-button min-w-[78px] gap-1 rounded-full bg-primary px-3 text-white disabled:opacity-50"
-          aria-label={isHandoffSubmitting ? '正在呼叫护士' : '找护士'}
+          aria-label={isHandoffSubmitting ? '正在呼叫心理老师' : '呼叫心理老师'}
         >
           <PatientIcon name="nurse" className="h-5 w-5" />
-          <span className="text-sm font-bold">找护士</span>
+          <span className="text-sm font-black">呼叫心理老师</span>
         </button>
       }
     >
@@ -1063,7 +1075,7 @@ export default function PatientDialoguePage() {
                   </p>
                   {readOnly ? (
                     <p className="mt-2 text-xs text-foreground-muted">
-                      {item.event.handled ? '患者已了解' : '历史风险记录'}
+                      {item.event.handled ? '学生已了解' : '历史提示记录'}
                     </p>
                   ) : (
                     <button
@@ -1191,7 +1203,7 @@ export default function PatientDialoguePage() {
               role="status"
               className="mt-3 rounded-2xl border border-red-200 bg-red-50 px-4 py-3 text-sm leading-6 text-red-800"
             >
-              字段抽取需要医护人工处理：{manualInterventionReason}
+              有一条记录需要心理老师人工看看：{manualInterventionReason}
               。对话仍可继续，人工填写结果将在后续请求中生效。
             </div>
           )}
@@ -1231,7 +1243,7 @@ export default function PatientDialoguePage() {
               <div className="min-w-0 flex-1">
                 <p className="font-bold">本次评估已提交，当前为只读查看</p>
                 <p className="text-xs text-foreground-muted">
-                  如需补充或修改，请联系责任护士。
+                  如需补充或修改，请联系你的心理老师。
                 </p>
               </div>
               <button
@@ -1252,7 +1264,7 @@ export default function PatientDialoguePage() {
                 <p className="font-bold">AI 评估已完成</p>
                 <p className="text-xs text-foreground-muted">
                   {runtimeConfig.dataMode === 'api'
-                    ? '结果已提交护士复核'
+                    ? '结果已提交心理老师复核'
                     : '下一步完成知情同意确认'}
                 </p>
               </div>

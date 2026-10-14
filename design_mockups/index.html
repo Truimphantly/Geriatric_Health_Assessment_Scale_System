@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>心晴伙伴 · 风格选择间</title>
+<style>
+:root{--paper:#FFF6EC;--ink:#2A2320}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:var(--paper);color:var(--ink);font-family:"Microsoft YaHei","PingFang SC",system-ui,sans-serif;min-height:100vh;display:grid;place-items:center;padding:40px 20px}
+.wrap{max-width:1020px;width:100%}
+h1{font-size:34px;font-weight:900}
+h1 i{font-style:normal;background:linear-gradient(transparent 62%,#FFD66B 62%)}
+p.desc{margin-top:10px;color:#6E6355;font-size:15px;line-height:1.9;max-width:46em}
+.grid{margin-top:32px;display:grid;grid-template-columns:repeat(2,1fr);gap:20px}
+a.card{display:block;background:#fff;border:3px solid var(--ink);border-radius:22px;padding:24px;text-decoration:none;color:var(--ink);box-shadow:6px 6px 0 var(--ink)}
+a.card:hover{transform:translate(-2px,-2px);box-shadow:8px 8px 0 var(--ink)}
+.card h2{font-size:21px;font-weight:900;display:flex;align-items:center;gap:10px}
+.card h2 .swatches{margin-left:auto;display:flex;gap:5px}
+.card h2 .swatches i{width:22px;height:22px;border-radius:50%;border:2px solid var(--ink)}
+.card p{margin-top:10px;font-size:14px;line-height:1.8;color:#5A5048}
+.card .mat{margin-top:12px;background:#FFF9F0;border:2px dashed #C9BCA8;border-radius:12px;padding:10px 14px;font-size:12.5px;color:#7A6E60;line-height:1.7}
+@media(max-width:860px){.grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>挑一个，<i>我们把它做成整个系统</i></h1>
+  <p class="desc">四版都使用同一批真实内容（小晴开场、PHQ-A 任务、心理老师介入卡、情绪记录），只换风格皮肤。点开看看，选中告诉我字母即可；也可以说"A 的配色 + B 的纸纹"这种混搭。选中后我先把选中的风格做成完整静态样机给你确认，再铺到全前端。</p>
+
+  <div class="grid">
+    <a class="card" href="style-a-cartoon.html">
+      <h2>A · 卡通治愈贴纸风 <span class="swatches"><i style="background:#7FDBB6"></i><i style="background:#FFB5A7"></i><i style="background:#FFD66B"></i></span></h2>
+      <p>奶油底 + 薄荷主色 + 粗描边贴纸。Duolingo×LINE 好友的气质，活泼治愉但不幼稚，桌宠屏幕同款效果最好。</p>
+      <div class="mat">需要你找的素材：小晴卡通形象（3-5 个表情变体）、贴纸装饰包、可选奖励贴图</div>
+    </a>
+
+    <a class="card" href="style-b-journal.html">
+      <h2>B · 手账本子风 <span class="swatches"><i style="background:#F6D866"></i><i style="background:#A9C9DE"></i><i style="background:#EAA9A2"></i></span></h2>
+      <p>牛皮纸点阵 + 胶带贴纸 + 手写批注。整个系统像一本你自己的情绪手账，最有"被人认真做过"的温度。</p>
+      <div class="mat">需要你找的素材：手写风中文能用的字体、纸纹/胶带素材图、心情贴纸印张</div>
+    </a>
+
+    <a class="card" href="style-c-comic.html">
+      <h2>C · 日系青春漫画风 <span class="swatches"><i style="background:#2FA4C0"></i><i style="background:#1C1C1A"></i><i style="background:#FFEFC8"></i></span></h2>
+      <p>大留白 + 青蓝主色 + 黑白线稿 + 网点。像一本青春漫画连载，最有"少年被认真对待"的叙事感，风格差异化最强。</p>
+      <div class="mat">需要你找的素材：小晴黑白线稿分镜（可用 3-4 帧）、漫画速度线、网点纹理</div>
+    </a>
+
+    <a class="card" href="style-d-night.html">
+      <h2>D · 深夜耳机厅风 <span class="swatches"><i style="background:#101418"></i><i style="background:#4ADE89"></i><i style="background:#FFC76B"></i></span></h2>
+      <p>深蓝黑底 + 发光语音波形 + 乐高双层卡片。夜间使用最舒服，桌宠 LED 屏几乎零成本复用，少年感最接近你硬件的机器人气质。</p>
+      <div class="mat">需要你找的素材：暗色背景图（可选）、波形动效的 AU 参考截图</div>
+    </a>
+  </div>
+</div>
+</body>
+</html>

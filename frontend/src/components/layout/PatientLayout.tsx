@@ -96,7 +96,7 @@ export default function PatientLayout({
                   { href: '/patient/tasks', label: '任务', icon: 'nav-tasks' },
                   {
                     href: '/patient/assistant',
-                    label: '住院助手',
+                    label: '小晴助手',
                     icon: 'nav-assistant',
                   },
                 ] as Array<{

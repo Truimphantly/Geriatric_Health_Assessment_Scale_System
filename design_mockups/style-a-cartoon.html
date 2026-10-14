@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>风格A · 卡通治愈贴纸风 — 心晴伙伴</title>
+<style>
+:root{
+  --bg:#FFF6EC; --mint:#7FDBB6; --mint-deep:#3FA987; --peach:#FFB5A7; --lemon:#FFD66B;
+  --ink:#2A2320; --card:#FFFFFF; --danger:#F0716B;
+  --radius:24px;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:"Microsoft YaHei","PingFang SC",system-ui,sans-serif;-webkit-font-smoothing:antialiased;min-height:100vh}
+.wrap{max-width:1180px;margin:0 auto;padding:28px 24px 80px}
+
+/* ── 顶部：贴纸风导航 ── */
+.top{display:flex;align-items:center;gap:14px;margin-bottom:34px}
+.logo{display:flex;align-items:center;gap:10px;font-weight:900;font-size:22px}
+.logo .dot{width:34px;height:34px;border-radius:50%;background:var(--mint);border:2.5px solid var(--ink);display:grid;place-items:center;font-size:15px}
+.pill{margin-left:auto;display:flex;gap:10px}
+.pill a{background:var(--card);border:2.5px solid var(--ink);border-radius:999px;padding:8px 18px;font-weight:700;font-size:14px;box-shadow:3px 3px 0 var(--ink);text-decoration:none;color:var(--ink)}
+.pill a:hover{transform:translate(-1px,-1px);box-shadow:4px 4px 0 var(--ink)}
+
+/* ── 主题样板：小晴问候 + 对话页 组合 ── */
+.hero{display:grid;grid-template-columns:1.05fr .95fr;gap:26px;align-items:stretch}
+.hero-main{background:var(--card);border:3px solid var(--ink);border-radius:var(--radius);padding:34px 36px;box-shadow:8px 8px 0 var(--lemon);position:relative}
+.sticker{position:absolute;top:-16px;right:-14px;background:var(--peach);border:2.5px solid var(--ink);border-radius:14px;padding:6px 12px;font-weight:900;font-size:13px;transform:rotate(6deg);box-shadow:3px 3px 0 var(--ink)}
+.hero-main h1{font-size:40px;line-height:1.25;font-weight:900;letter-spacing:.5px}
+.hero-main h1 em{font-style:normal;background:linear-gradient(transparent 62%,var(--lemon) 62%);padding:0 4px}
+.hero-main p{margin-top:14px;font-size:16px;line-height:1.8;color:#5A5048;max-width:34em}
+.btn-row{margin-top:26px;display:flex;gap:14px;flex-wrap:wrap}
+.btn-main{background:var(--mint);border:2.5px solid var(--ink);border-radius:999px;padding:13px 30px;font-weight:900;font-size:16px;box-shadow:4px 4px 0 var(--ink);cursor:pointer}
+.btn-main:hover{transform:translate(-1px,-1px);box-shadow:5px 5px 0 var(--ink)}
+.btn-ghost{background:var(--card);border:2.5px solid var(--ink);border-radius:999px;padding:13px 26px;font-weight:700;font-size:15px;cursor:pointer}
+.mic-note{margin-top:18px;font-size:13px;color:#8A7E73;font-weight:600}
+
+/* 小晴形象卡 */
+.buddy{background:var(--mint);border:3px solid var(--ink);border-radius:var(--radius);box-shadow:8px 8px 0 var(--peach);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:30px;position:relative;overflow:hidden}
+.buddy .pattern{position:absolute;inset:0;background-image:radial-gradient(var(--card) 8%,transparent 9%);background-size:26px 26px;opacity:.35}
+.buddy-face{width:170px;height:170px;position:relative;z-index:1}
+.bubble{position:relative;z-index:1;margin-top:18px;background:var(--card);border:2.5px solid var(--ink);border-radius:18px;padding:12px 20px;font-weight:800;font-size:15px;box-shadow:3px 3px 0 var(--ink)}
+.bubble::before{content:"";position:absolute;top:-12px;left:38px;width:18px;height:18px;background:var(--card);border:2.5px solid var(--ink);border-bottom:none;border-right:none;transform:rotate(52deg)}
+
+/* ── 任务与进度 ── */
+.grid2{display:grid;grid-template-columns:1.15fr .85fr;gap:26px;margin-top:32px}
+.card{background:var(--card);border:3px solid var(--ink);border-radius:var(--radius);padding:26px 28px;box-shadow:6px 6px 0 var(--ink)}
+.card h3{font-size:19px;font-weight:900;display:flex;align-items:center;gap:10px}
+.badge{display:inline-block;background:var(--lemon);border:2px solid var(--ink);border-radius:999px;font-size:12px;font-weight:900;padding:3px 12px}
+.task-item{display:flex;align-items:center;gap:14px;margin-top:18px;background:var(--bg);border:2.5px solid var(--ink);border-radius:18px;padding:14px 18px}
+.task-item .emoji{font-size:24px}
+.task-item b{font-size:15px}
+.task-item small{display:block;color:#8A7E73;font-size:12.5px;margin-top:3px;font-weight:600}
+.progress{margin-left:auto;display:flex;align-items:center;gap:8px}
+.bar{width:86px;height:12px;border:2px solid var(--ink);border-radius:999px;background:var(--card);overflow:hidden}
+.bar i{display:block;height:100%;background:var(--mint)}
+.progress span{font-size:12px;font-weight:900;white-space:nowrap}
+
+/* 危机关怀卡 */
+.crisis{background:var(--danger);border:3px solid var(--ink);border-radius:var(--radius);padding:24px 26px;color:#fff;box-shadow:6px 6px 0 var(--ink);margin-top:32px;position:relative}
+.crisis h3{font-weight:900;font-size:18px;display:flex;gap:10px;align-items:center}
+.crisis p{margin-top:10px;font-size:14.5px;line-height:1.75;font-weight:600;max-width:44em}
+.crisis .chip{float:right;background:#fff;color:var(--danger);border:2px solid var(--ink);border-radius:999px;padding:4px 14px;font-size:12px;font-weight:900}
+
+/* 情绪日历 */
+.mood{margin-top:26px}
+.mood-row{display:flex;gap:10px;margin-top:16px;flex-wrap:wrap}
+.mood-pill{width:52px;height:52px;border-radius:16px;border:2.5px solid var(--ink);background:var(--bg);display:grid;place-items:center;font-size:22px}
+.mood-pill.on{background:var(--lemon)}
+.mood-pill:hover{transform:scale(1.08)}
+footer{margin-top:44px;text-align:center;font-size:13px;color:#8A7E73;font-weight:700}
+em.hl{background:linear-gradient(transparent 58%,var(--peach) 58%);font-style:normal;font-weight:900}
+@media(max-width:860px){.hero,.grid2{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="top">
+    <div class="logo"><span class="dot">☀︎</span>心晴伙伴</div>
+    <div class="pill"><a href="#">小晴聊天</a><a href="#">情绪手账</a><a href="#">我的老师</a></div>
+  </div>
+
+  <div class="hero">
+    <div class="hero-main">
+      <span class="sticker">今天也是被接住的一天 ✌</span>
+      <h1>把心情说出来，<em>就算完成了一件大事</em></h1>
+      <p>小晴是陪聊天的 AI 伙伴，不是老师也不是医生。她说的话保密——除非遇到危险，她会陪你一起找信得过的大人。</p>
+      <div class="btn-row">
+        <button class="btn-main">🎙 开始语音聊天</button>
+        <button class="btn-ghost">先用打字</button>
+      </div>
+      <p class="mic-note">麦克风只在你按下时打开，随时可以打字替代</p>
+    </div>
+
+    <div class="buddy">
+      <div class="pattern"></div>
+      <svg class="buddy-face" viewBox="0 0 200 200" aria-label="小晴">
+        <defs><clipPath id="c"><circle cx="100" cy="100" r="96"/></clipPath></defs>
+        <circle cx="100" cy="100" r="96" fill="#FFF9F2" stroke="#2A2320" stroke-width="4"/>
+        <g clip-path="url(#c)">
+          <!-- 身体 -->
+          <path d="M100 150 q0 0 -45 45 h90 q-45 -45 -45 -45" fill="#FFF9F2" stroke="#2A2320" stroke-width="4"/>
+          <!-- 电池耳 -->
+          <line x1="18" y1="96" x2="38" y2="96" stroke="#2A2320" stroke-width="4"/><circle cx="12" cy="96" r="7" fill="#FFB5A7" stroke="#2A2320" stroke-width="3"/>
+          <line x1="182" y1="96" x2="162" y2="96" stroke="#2A2320" stroke-width="4"/><circle cx="188" cy="96" r="7" fill="#FFB5A7" stroke="#2A2320" stroke-width="3"/>
+          <!-- 眼睛 -->
+          <circle cx="66" cy="92" r="10" fill="#2A2320"/><circle cx="134" cy="92" r="10" fill="#2A2320"/>
+          <circle cx="69" cy="88" r="3.4" fill="#FFF6EC"/><circle cx="137" cy="88" r="3.4" fill="#FFF6EC"/>
+          <!-- 腮红+嘴 -->
+          <ellipse cx="52" cy="118" rx="11" ry="7" fill="#FFB5A7"/><ellipse cx="148" cy="118" rx="11" ry="7" fill="#FFB5A7"/>
+          <path d="M86 116 q14 12 28 0" fill="none" stroke="#2A2320" stroke-width="4" stroke-linecap="round"/>
+          <!-- 屏幕纹 -->
+          <circle cx="100" cy="34" r="9" fill="#7FDBB6" stroke="#2A2320" stroke-width="3"/>
+          <path d="M79 55 q21 12 42 0" fill="none" stroke="#2A2320" stroke-width="3"/>
+        </g>
+      </svg>
+      <div class="bubble">嗨，我是小晴！今天想先聊聊「睡眠」还是「考试」呀？</div>
+    </div>
+  </div>
+
+  <div class="grid2">
+    <div class="card">
+      <h3>今天的任务包 <span class="badge">进行中</span></h3>
+      <div class="task-item">
+        <span class="emoji">🌙</span>
+        <div><b>PHQ-A · 青少年情绪小测</b><small>9 道封口题 · 约 4 分钟，随时可以停</small></div>
+        <div class="progress"><div class="bar"><i style="width:33%"></i></div><span>3/9</span></div>
+      </div>
+      <div class="task-item">
+        <span class="emoji">🔎</span>
+        <div><b>ASQ · 安全小确认</b><small>4 道快问 · 心理老师会亲自看</small></div>
+        <div class="progress"><div class="bar"><i style="width:25%"></i></div><span>1/4</span></div>
+      </div>
+      <div class="task-item" style="background:var(--peach)">
+        <span class="emoji">👩‍🏫</span>
+        <div><b>心理老师收到你的求助</b><small>16:28 已上报 · 她会尽快来找你</small></div>
+        <div class="progress"><span>待见面</span></div>
+      </div>
+    </div>
+
+    <div>
+      <div class="card">
+        <h3>本周心情贴纸</h3>
+        <div class="mood-row">
+          <div class="mood-pill on">😄</div><div class="mood-pill on">😴</div><div class="mood-pill on">😮‍💨</div><div class="mood-pill">🌧</div><div class="mood-pill">⛈</div><div class="mood-pill">🌈</div>
+        </div>
+        <p style="margin-top:16px;font-size:14px;line-height:1.8;color:#5A5048;font-weight:600">连戳两下任意格子可以写一句话理由，<em class="hl">写过的都不丢</em>，攒满 7 天有小晴贴画。</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="crisis">
+    <span class="chip">安全优先</span>
+    <h3>🧑‍⚕️ 心理老师正在赶来</h3>
+    <p>你说的每一句难过的话，都会被认真处理。现在不用继续回答问题，可以先做三次慢呼吸；如果此刻感到危险，随时按屏幕上的「呼叫心理老师」。</p>
+  </div>
+
+  <footer>心晴伙伴 · 内容保密说明：除危险情形外，和小晴说的内容不会让其他同学看到</footer>
+</div>
+</body>
+</html>

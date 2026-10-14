@@ -54,7 +54,7 @@ export default function HandoffHistoryCard({
         <div className="min-w-0 flex-1">
           <div className="flex flex-wrap items-center gap-2">
             <p className="font-semibold">
-              {requestSource === 'patient' ? '患者主动呼叫护士' : 'AI工具呼叫护士'}
+              {requestSource === 'patient' ? '我主动呼叫了心理老师' : 'AI 伙伴呼叫心理老师'}
             </p>
             <span
               className={`rounded-full px-2 py-0.5 text-xs ${
@@ -87,7 +87,7 @@ export default function HandoffHistoryCard({
           {toolResult && (
             <p className="mt-2 text-sm leading-6">
               <span className="text-foreground-muted">工具结果：</span>
-              {toolResult.success ? '已创建护士协助请求' : text(toolResult.message)}
+              {toolResult.success ? '已创建心理老师协助请求' : text(toolResult.message)}
               {text(toolResult.request_id)
                 ? `（请求编号 ${text(toolResult.request_id)}）`
                 : ''}

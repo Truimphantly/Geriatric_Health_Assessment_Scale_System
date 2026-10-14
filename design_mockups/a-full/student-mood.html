@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>A风格完整样机 · 学生端情绪手账 — 心晴伙伴</title>
+<style>
+:root{
+  --bg:#FFF6EC; --card:#FFFFFF; --ink:#2A2320; --ink-soft:#5A5048; --ink-dim:#8A7E73;
+  --mint:#7FDBB6; --mint-deep:#2E8B6A; --peach:#FFB5A7; --lemon:#FFD66B; --sky:#A9C9DE;
+  --bd:2.5px;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:"Microsoft YaHei","PingFang SC",system-ui,sans-serif;min-height:100vh}
+.wrap{max-width:1100px;margin:0 auto;padding:24px 22px 60px}
+
+.top{display:flex;align-items:center;gap:12px;margin-bottom:28px}
+.logo{display:flex;align-items:center;gap:10px;font-weight:900;font-size:20px}
+.logo .dot{width:32px;height:32px;border-radius:11px;background:var(--mint);border:var(--bd) solid var(--ink);display:grid;place-items:center}
+.nav{margin-left:auto;display:flex;gap:10px}
+.nav a{border:var(--bd) solid var(--ink);border-radius:999px;padding:8px 18px;font-weight:800;font-size:13.5px;text-decoration:none;color:var(--ink);background:var(--card);box-shadow:3px 3px 0 var(--ink)}
+.nav a.on{background:var(--peach)}
+
+.hero{display:grid;grid-template-columns:1fr .58fr;gap:26px}
+.title-grid{background:var(--card);border:3px solid var(--ink);border-radius:24px;padding:28px 30px;box-shadow:7px 7px 0 var(--peach)}
+.title-grid h1{font-size:31px;font-weight:900;line-height:1.4}
+.title-grid h1 em{font-style:normal;background:linear-gradient(transparent 60%,var(--lemon) 60%);padding:0 3px}
+.title-grid p{margin-top:14px;color:var(--ink-soft);font-size:14.5px;line-height:1.95}
+.streak{display:inline-flex;align-items:center;gap:8px;margin-top:16px;background:var(--lemon);border:var(--bd) solid var(--ink);border-radius:999px;padding:7px 16px;font-weight:900;font-size:13.5px;box-shadow:3px 3px 0 var(--ink)}
+
+.week{background:var(--card);border:3px solid var(--ink);border-radius:24px;padding:22px;box-shadow:7px 7px 0 var(--sky)}
+.week h3{font-weight:900;font-size:15px}
+.cells{display:grid;grid-template-columns:repeat(7,1fr);gap:8px;margin-top:14px}
+.cell{aspect-ratio:1;border:var(--bd) solid var(--ink);border-radius:16px;display:grid;place-items:center;font-size:20px;cursor:pointer;background:var(--bg)}
+.cell.f1{background:var(--lemon)}
+.cell.f2{background:var(--mint)}
+.cell.f3{background:var(--peach)}
+.cell:hover{transform:scale(1.08)}
+.week .legend{margin-top:12px;font-size:12px;color:var(--ink-dim);font-weight:700;line-height:1.7}
+
+/* 情绪大格 */
+.mood-row{margin-top:30px;display:grid;grid-template-columns:1fr .75fr;gap:24px}
+.today{background:var(--card);border:3px solid var(--ink);border-radius:24px;padding:24px 26px;box-shadow:6px 6px 0 var(--ink)}
+.today h3{font-weight:900;font-size:17px;display:flex;gap:8px;align-items:center}
+.moods{display:flex;gap:10px;margin-top:16px;flex-wrap:wrap}
+.m{width:56px;height:56px;border:var(--bd) solid var(--ink);border-radius:18px;background:var(--bg);display:grid;place-items:center;font-size:24px;cursor:pointer}
+.m:hover{transform:scale(1.1);background:var(--lemon)}
+.m.on{background:var(--lemon);box-shadow:3px 3px 0 var(--ink)}
+.today .say{margin-top:16px;display:flex;gap:10px}
+.say input{flex:1;border:var(--bd) solid var(--ink);border-radius:14px;padding:12px 16px;font:inherit;font-size:13.5px;background:var(--bg);outline:none}
+.say .btn{border:none;border-radius:14px;background:var(--mint);font-weight:900;font-size:13.5px;padding:12px 20px;cursor:pointer;border:var(--bd) solid var(--ink);box-shadow:3px 3px 0 var(--ink)}
+
+/* 小晴周报贴纸 */
+.report{background:var(--lemon);border:3px solid var(--ink);border-radius:24px;padding:24px 26px;box-shadow:7px 7px 0 var(--ink);transform:rotate(-0.6deg);position:relative}
+.report .corner{position:absolute;top:-13px;right:20px;background:var(--peach);border:var(--bd) solid var(--ink);border-radius:12px;padding:4px 12px;font-weight:900;font-size:12px;transform:rotate(4deg)}
+.report h3{font-weight:900;font-size:16px}
+.report p{margin-top:10px;font-size:13.5px;line-height:1.9;color:#4A3F10}
+.report .pts{margin-top:12px;display:grid;gap:8px}
+.report .pts div{background:#FFF9F0;border:var(--bd) solid var(--ink);border-radius:12px;padding:9px 14px;font-size:12.5px;font-weight:700}
+
+/* 手账条目 */
+.days{margin-top:26px;display:grid;gap:14px}
+.day{background:var(--card);border:var(--bd) solid var(--ink);border-radius:20px;padding:16px 20px;display:flex;gap:14px;align-items:flex-start;box-shadow:4px 4px 0 var(--card),6px 6px 0 #EADCDC}
+.day .d{font-weight:900;font-size:13px;background:var(--sky);border:var(--bd) solid var(--ink);border-radius:12px;padding:6px 10px;white-space:nowrap}
+.day b{font-size:14px}
+.day p{font-size:12.5px;color:var(--ink-soft);margin-top:3px;line-height:1.7}
+.day .mood{margin-left:auto;font-size:20px}
+
+footer{margin-top:36px;text-align:center;font-size:12.5px;color:var(--ink-dim);font-weight:700}
+@media(max-width:900px){.hero,.mood-row{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="top">
+    <div class="logo"><span class="dot">☀︎</span>心晴伙伴</div>
+    <div class="nav"><a href="#">小晴聊天</a><a href="#">我的任务</a><a class="on" href="#">情绪手账</a></div>
+  </div>
+
+  <div class="hero">
+    <div class="title-grid">
+      <h1>每天一格，<em>心情不再存丢</em></h1>
+      <p>点一下今天的格子，挑个表情，写不写理由都行。写下的东西小晴会替你封存好——这是给你自己的回忆，也是以后聊情绪时的素材。</p>
+      <div class="streak">🔥 连续记录 12 天 · 全班只有不放弃的人在坚持</div>
+    </div>
+    <div class="week">
+      <h3>十月第二周（今天 · 10.14）</h3>
+      <div class="cells">
+        <div class="cell f1">😄</div><div class="cell f2">😴</div><div class="cell f3">🫠</div><div class="cell">·</div><div class="cell f2">🌤</div><div class="cell f3">😐</div><div class="cell" style="background:var(--mint)">?</div>
+      </div>
+      <p class="legend">盖满 7 天 = 解锁一张小晴贴纸。上期已解锁：「写作业也不迟的那个你」。</p>
+    </div>
+  </div>
+
+  <div class="mood-row">
+    <div class="today">
+      <h3>给今天打个标 ✍️</h3>
+      <div class="moods">
+        <div class="m">😄</div><div class="m on">😐</div><div class="m">🫠</div><div class="m">😮‍💨</div><div class="m">🌧</div><div class="m">⛈</div><div class="m">🌈</div><div class="m">🥰</div>
+      </div>
+      <div class="say">
+        <input placeholder="想写一句吗？写什么都行…（也可以不写）" value="被爸妈念了一晚上，但小晴的到来让我舒服了点"/>
+        <button class="btn">存一页</button>
+      </div>
+    </div>
+
+    <div class="report">
+      <span class="corner">小晴周报贴纸</span>
+      <h3>本周小晴看见了什么</h3>
+      <p>没有评判，只有留意。你愿意的话，聊天时可以再展开说说。</p>
+      <div class="pts">
+        <div>🌙 睡眠话题出现 <b>5</b> 次 —— 你最近在熬自己</div>
+        <div>📖 考试话题出现 <b>4</b> 次 —— 压力是有源头的</div>
+        <div>🌈 你说过一次「还行」—— 那也值得被记住</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-t" style="font-weight:900;font-size:18px;margin:28px 0 12px">最近的手账页</div>
+  <div class="days">
+    <div class="day"><span class="d">10.13</span><div><b>第三天和爸妈聊考试，吼了两句</b><p>小晴：被理解需要时间，你已经做得很好了——别把大人的慌张当成你的失败。</p></div><span class="mood">🌧</span></div>
+    <div class="day"><span class="d">10.11</span><div><b>体育课洗澡饭回，睡得真香</b><p>小晴：记下这个！运动是睡眠的好朋友，这页以后会常用。</p></div><span class="mood">🌤</span></div>
+    <div class="day"><span class="d">10.09</span><div><b>上午数学反馈，被点名说下滑</b><p>小晴：下滑不等于完蛋。我们把它变成下一次的“上升从哪里开始”。</p></div><span class="mood">🫠</span></div>
+  </div>
+
+  <footer>心晴伙伴 · 手账只有你能翻（危险求助信息除外）· 让老师放心知道的是“需要帮助”，而不是“日记内容”</footer>
+</div>
+</body>
+</html>

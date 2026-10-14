@@ -15,9 +15,9 @@ import { useUserStore } from '@/lib/stores/useUserStore';
 import type { CareTask } from '@/lib/types';
 
 const statusLabels: Record<CareTask['taskStatus'], string> = {
-  pending: '待完成',
+  pending: '待开始',
   in_progress: '进行中',
-  pending_review: '等待护士复核',
+  pending_review: '等待老师复核',
   completed: '已完成',
   cancelled: '已取消',
 };
@@ -70,34 +70,30 @@ export default function PatientTasksPage() {
     const percentage = Math.round((current / Math.max(total, 1)) * 100);
 
     return (
-      <article key={task.id} className="patient-card-soft p-4">
+      <article key={task.id} className="patient-card-soft relative p-4">
         <div className="flex items-start gap-3">
-          <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-[#ff795c] to-[#ff5235] text-white">
-            <PatientIcon
-              name={task.collectionMode === 'ai_dialogue' ? 'nav-assistant' : 'clipboard'}
-              className="h-7 w-7"
-            />
+          <span className="grid h-12 w-12 shrink-0 place-items-center rounded-2xl border-[2.5px] border-[var(--ink)] bg-[var(--accent-sky)] text-[22px]">
+            {task.collectionMode === 'ai_dialogue' ? '💬' : '📝'}
           </span>
           <div className="min-w-0 flex-1">
             <div className="flex flex-wrap items-center gap-2">
               <h2 className="text-[20px] font-black">{task.taskType}</h2>
-              <span className="rounded-full border border-[#9bd9dc] bg-[#e8f7f8] px-2 py-0.5 text-xs font-bold text-[#24898f]">
-                {task.collectionMode === 'ai_dialogue' ? 'AI 对话' : '传统问卷'}
+              <span className="rounded-full border-2 border-[var(--ink)] bg-[var(--accent-lemon)] px-2 py-0.5 text-xs font-black">
+                {task.collectionMode === 'ai_dialogue' ? '小晴对话' : '传统问卷'}
               </span>
             </div>
-            <p className="mt-1 text-sm text-foreground-muted">
-              {task.scaleNames?.length ?? 1} 项量表 · 责任护士 {task.assignedNurseName}
+            <p className="mt-1 text-sm font-semibold text-foreground-muted">
+              {task.scaleNames?.length ?? 1} 份量表 · 负责 {task.assignedNurseName}
             </p>
           </div>
-          <span aria-hidden="true" className="mt-0.5 text-3xl leading-none text-[#796f68]">
+          <span aria-hidden="true" className="mt-0.5 text-3xl font-black leading-none text-foreground-placeholder">
             ›
           </span>
         </div>
 
         {task.handoffRequired && (
-          <div className="mt-3 flex gap-2 rounded-2xl border border-amber-200 bg-amber-50 p-3 text-sm leading-6 text-amber-800">
-            <PatientIcon name="nurse" className="mt-0.5 h-5 w-5" />
-            <span>护士正在处理：{task.handoffReason}</span>
+          <div className="mt-3 border-2 border-dashed border-[#ef6a63] bg-[#ffefee] p-3 text-sm font-semibold leading-6 text-[#a24c46]">
+            🧑‍🏫 心理老师正在处理一个重要的提醒（今天）。可以先休息，有事随时呼叫。
           </div>
         )}
 
@@ -108,7 +104,7 @@ export default function PatientTasksPage() {
               <span className="mx-1 text-foreground-muted">/</span>
               {total}
             </p>
-            <span className="rounded-full bg-[#ffe1d1] px-3 py-1 text-xs font-bold text-primary">
+            <span className="rounded-full border-2 border-[var(--ink)] bg-[var(--accent-sky)] px-3 py-1 text-xs font-black">
               {statusLabels[task.taskStatus]}
             </span>
           </div>
@@ -119,9 +115,9 @@ export default function PatientTasksPage() {
             />
           </div>
           <div className="mt-3 flex items-center justify-between gap-3">
-            <p className="flex items-center gap-1.5 text-sm text-foreground-muted">
+            <p className="flex items-center gap-1.5 text-sm font-semibold text-foreground-muted">
               <PatientIcon name="clock" className="h-[18px] w-[18px]" />
-              预计 10–15 分钟
+              大约 10 分钟，随时可以停
             </p>
             <Link
               href={`/patient/tasks/${task.id}`}
@@ -139,18 +135,18 @@ export default function PatientTasksPage() {
     <Link
       key={task.id}
       href={`/patient/tasks/${task.id}`}
-      className="flex min-h-16 items-center gap-3 border-b border-border px-4 last:border-b-0"
+      className="flex min-h-16 items-center gap-3 border-b-2 border-dashed border-[#eadfd0] px-4 last:border-b-0"
     >
-      <span className="grid h-8 w-8 shrink-0 place-items-center rounded-full bg-[#4ba7a3] text-white">
-        <PatientIcon name="check-circle" className="h-5 w-5" />
+      <span className="grid h-8 w-8 shrink-0 place-items-center rounded-full border-2 border-[var(--ink)] bg-[var(--accent-peach)] text-sm">
+        ✓
       </span>
       <span className="min-w-0 flex-1 truncate text-[16px] font-bold">
         {task.taskType}
       </span>
-      <span className="text-sm text-[#7d8c82]">
+      <span className="text-sm font-semibold text-[#8b8378]">
         {task.taskStatus === 'pending_review' ? '待复核' : '已完成'}
       </span>
-      <span aria-hidden="true" className="text-2xl leading-none text-[#918a85]">
+      <span aria-hidden="true" className="text-2xl font-black leading-none text-[#b9ac9c]">
         ›
       </span>
     </Link>
@@ -160,29 +156,27 @@ export default function PatientTasksPage() {
     <PatientLayout showNavigation>
       <div className="px-[18px] pb-4 pt-7">
         <div className="relative">
-          <h1 className="text-[29px] font-black text-[#3e1f18]">我的护理任务</h1>
-          <span className="absolute -right-1 -top-3 flex h-16 w-16 items-center justify-center rounded-3xl bg-[#fff0df] text-[#ed8b4d]">
-            <PatientIcon name="clipboard" className="h-9 w-9" />
-          </span>
+          <h1 className="text-[29px] font-black text-foreground">今天的小晴任务</h1>
+          <span className="patient-sticker-tag absolute -right-1 -top-2">没有对错题</span>
         </div>
 
         <section className="patient-card mt-8 flex items-center gap-4 px-4 py-4">
-          <span className="grid h-14 w-14 shrink-0 place-items-center rounded-full bg-[#fff0df] text-[#e98345]">
-            <PatientIcon name="document" className="h-7 w-7" />
+          <span className="grid h-14 w-14 shrink-0 place-items-center rounded-2xl border-[2.5px] border-[var(--ink)] bg-[var(--accent-lemon)] text-[26px]">
+            ☀️
           </span>
           <p className="text-lg font-black">
-            本次住院
+            今天还有
             <span className="mx-2 text-[32px] text-primary">
               {taskGroups.unfinished.length}
             </span>
-            项待完成
+            份聊天等着完成
           </p>
         </section>
 
         {loadError && (
           <div
             role="alert"
-            className="mt-4 rounded-2xl border border-red-200 bg-red-50 p-3 text-sm text-red-700"
+            className="mt-4 rounded-2xl border-2 border-[#ef6a63] bg-[#ffefee] p-3 text-sm font-semibold text-[#a24c46]"
           >
             {loadError}
           </div>
@@ -191,11 +185,11 @@ export default function PatientTasksPage() {
         {tasks.length === 0 ? (
           <PatientState
             kind={loadError ? 'voice-error' : 'empty-tasks'}
-            title={loadError ? '护理任务加载失败' : '当前没有护理任务'}
+            title={loadError ? '任务加载失败了' : '现在没有要完成的任务'}
             description={
               loadError
-                ? '请检查网络后重试；如果问题持续，请联系责任护士。'
-                : '新任务会在医护端准备完成后显示。'
+                ? '检查一下网络再试试；还不行就找你的心理老师。'
+                : '老师准备好了就会出现，出现前先休息一下。'
             }
             className="mt-5"
           />
@@ -205,9 +199,9 @@ export default function PatientTasksPage() {
               <section aria-labelledby="active-task-heading">
                 <h2
                   id="active-task-heading"
-                  className="mb-3 text-[18px] font-bold text-foreground-muted"
+                  className="mb-3 text-[18px] font-black text-foreground"
                 >
-                  进行中
+                  继续完成
                 </h2>
                 <div className="space-y-4">
                   {taskGroups.unfinished.map(renderActiveTask)}
@@ -219,11 +213,11 @@ export default function PatientTasksPage() {
               <section aria-labelledby="completed-task-heading">
                 <h2
                   id="completed-task-heading"
-                  className="mb-3 text-[18px] font-bold text-foreground-muted"
+                  className="mb-3 text-[18px] font-black text-foreground"
                 >
-                  已完成
+                  已经完成
                 </h2>
-                <div className="patient-card overflow-hidden">
+                <div className="patient-card-sticker overflow-hidden">
                   {taskGroups.completed.map(renderCompletedTask)}
                 </div>
               </section>
@@ -233,7 +227,7 @@ export default function PatientTasksPage() {
               <section aria-labelledby="cancelled-task-heading">
                 <h2
                   id="cancelled-task-heading"
-                  className="mb-3 text-[18px] font-bold text-foreground-muted"
+                  className="mb-3 text-[18px] font-black text-foreground"
                 >
                   已取消
                 </h2>

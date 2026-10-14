@@ -94,7 +94,7 @@ function getMonitorEventName(event: {
   if (typeof actionLabel === 'string' && actionLabel.trim()) {
     return actionLabel.trim();
   }
-  return event.title.replace(/^需要护士协助/, '').trim() || '护士协助';
+  return event.title.replace(/^需要心理老师/, '').trim() || '心理支持';
 }
 
 export default function NurseMonitorDetailPage() {
@@ -954,7 +954,7 @@ export default function NurseMonitorDetailPage() {
                     <div className="min-w-0 flex-1">
                       <div className="flex flex-wrap items-center gap-2">
                         <span className="font-semibold">
-                          {request.requestSource === 'agent' ? 'AI 请求护士协助' : '患者主动呼叫护士'}
+                          {request.requestSource === 'agent' ? 'AI 请求心理老师' : '学生主动呼叫老师'}
                         </span>
                         <Badge variant={request.urgency === 'urgent' ? 'danger' : 'warning'} size="sm">
                           {request.urgency === 'urgent' ? '紧急' : '待处理'}

@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>A风格完整样机 · 学生端任务页 — 心晴伙伴</title>
+<style>
+:root{
+  --bg:#FFF6EC; --card:#FFFFFF; --ink:#2A2320; --ink-soft:#5A5048; --ink-dim:#8A7E73;
+  --mint:#7FDBB6; --mint-deep:#2E8B6A; --peach:#FFB5A7; --lemon:#FFD66B; --sky:#A9C9DE;
+  --bd:2.5px;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:"Microsoft YaHei","PingFang SC",system-ui,sans-serif;min-height:100vh}
+.wrap{max-width:1100px;margin:0 auto;padding:22px 22px 60px}
+
+.top{display:flex;align-items:center;gap:12px;margin-bottom:26px}
+.logo{display:flex;align-items:center;gap:10px;font-weight:900;font-size:20px}
+.logo .dot{width:32px;height:32px;border-radius:11px;background:var(--mint);border:var(--bd) solid var(--ink);display:grid;place-items:center}
+.big{margin-left:auto;width:40px;height:40px;border-radius:14px;border:var(--bd) solid var(--ink);background:var(--sky);display:grid;place-items:center;font-size:18px}
+
+.hero-grid{display:grid;grid-template-columns:1fr .62fr;gap:24px}
+.welcome{background:var(--card);border:3px solid var(--ink);border-radius:24px;padding:28px 30px;box-shadow:7px 7px 0 var(--lemon);position:relative}
+.welcome .sticker{position:absolute;top:-15px;right:-13px;background:var(--peach);border:var(--bd) solid var(--ink);border-radius:13px;padding:5px 12px;font-weight:900;font-size:12.5px;transform:rotate(5deg);box-shadow:3px 3px 0 var(--ink)}
+.welcome h1{font-size:32px;line-height:1.35;font-weight:900}
+.welcome h1 em{font-style:normal;background:linear-gradient(transparent 60%,var(--mint) 60%);padding:0 4px}
+.welcome p{margin-top:12px;color:var(--ink-soft);font-size:14.5px;line-height:1.9}
+.start{margin-top:20px;display:flex;gap:12px;align-items:center}
+.btn{border:var(--bd) solid var(--ink);border-radius:999px;font-weight:900;font-size:15px;padding:12px 26px;cursor:pointer;background:var(--mint);box-shadow:4px 4px 0 var(--ink)}
+.btn:hover{transform:translate(-1px,-1px);box-shadow:5px 5px 0 var(--ink)}
+.btn.plain{background:var(--card);font-weight:700;font-size:14px}
+.mini{font-size:12px;color:var(--ink-dim);font-weight:700}
+
+/* 侧栏：小晴状态 */
+.buddy-sq{background:var(--mint);border:3px solid var(--ink);border-radius:24px;box-shadow:7px 7px 0 var(--peach);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:22px;position:relative;overflow:hidden}
+.buddy-sq .pat{position:absolute;inset:0;background-image:radial-gradient(var(--card) 8%,transparent 9%);background-size:24px 24px;opacity:.32}
+.face-lg{width:120px;height:120px;position:relative;z-index:1}
+.say{position:relative;z-index:1;margin-top:12px;background:var(--card);border:var(--bd) solid var(--ink);border-radius:14px;padding:10px 14px;font-size:13px;font-weight:800;text-align:center;max-width:210px;line-height:1.6;box-shadow:3px 3px 0 var(--ink)}
+
+/* 今日任务 */
+.section-t{font-weight:900;font-size:19px;margin:34px 0 14px;display:flex;align-items:center;gap:10px}
+.section-t .tag{font-size:11.5px;font-weight:900;background:var(--lemon);border:var(--bd) solid var(--ink);border-radius:999px;padding:3px 11px}
+.tasks{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+.task{background:var(--card);border:3px solid var(--ink);border-radius:22px;padding:22px 24px;box-shadow:6px 6px 0 var(--ink);position:relative}
+.task .raw{position:absolute;top:-14px;left:18px;border:var(--bd) solid var(--ink);border-radius:999px;padding:4px 14px;font-size:12px;font-weight:900;background:var(--bg)}
+.task .raw.go{background:var(--mint)}
+.task .raw.wait{background:var(--bg);color:var(--ink-dim)}
+.task h3{font-size:17px;font-weight:900;margin-top:8px}
+.task small{display:block;color:var(--ink-dim);font-size:12.5px;font-weight:600;margin-top:4px;line-height:1.6}
+.bar{margin-top:16px;height:14px;border:var(--bd) solid var(--ink);border-radius:999px;background:var(--bg);overflow:hidden}
+.bar i{display:block;height:100%;background:var(--mint)}
+progress-line{margin-top:8px}
+.task .below{margin-top:10px;display:flex;align-items:center;gap:8px}
+.task .below b{font-size:13px}
+.task .below .emoji{font-size:20px}
+.task.new{border-style:dashed;box-shadow:none;background:transparent}
+.task.new h3{color:var(--ink-dim)}
+.task.new .bigp{margin:20px 0 0 auto;width:46px;height:46px;border-radius:16px;border:var(--bd) dashed var(--ink-dim);display:grid;place-items:center;font-size:22px;color:var(--ink-dim)}
+
+/* 已记录信息 */
+.record{background:var(--card);border:3px solid var(--ink);border-radius:22px;padding:22px 24px;box-shadow:6px 6px 0 var(--sky)}
+.record h3{font-size:16px;font-weight:900}
+.record p.tip{font-size:12.5px;color:var(--ink-dim);font-weight:600;margin-top:4px}
+.fields{margin-top:14px;display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.fields .f{background:var(--bg);border:var(--bd) solid var(--ink);border-radius:14px;padding:10px 14px}
+.fields .f small{display:block;font-size:11px;color:var(--ink-dim);font-weight:700}
+.fields .f b{font-size:13.5px}
+.fields .f.edit{border-style:dashed;color:var(--ink-dim)}
+
+footer{margin-top:38px;text-align:center;font-size:12.5px;color:var(--ink-dim);font-weight:700}
+@media(max-width:900px){.hero-grid,.tasks,.fields{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="top">
+    <div class="logo"><span class="dot">☀︎</span>心晴伙伴</div>
+    <div class="big">🙋</div>
+  </div>
+
+  <div class="hero-grid">
+    <div class="welcome">
+      <span class="sticker">被接住的一天 ✌</span>
+      <h1>今天还剩 <em>9 题</em>，聊完就自由啦</h1>
+      <p>都是些“最近怎么样”的问题，没有对错。说不下去可以跳过，答完的也能改。语音打字都行，小晴陪着你。</p>
+      <div class="start">
+        <button class="btn">🎙 从上次位置继续</button>
+        <button class="btn plain">看看已经答了哪些</button>
+        <span class="mini">预计 7 分钟，走完 13 题</span>
+      </div>
+    </div>
+
+    <div class="buddy-sq">
+      <div class="pat"></div>
+      <svg class="face-lg" viewBox="0 0 200 200">
+        <circle cx="100" cy="100" r="96" fill="#FFF9F2" stroke="#2A2320" stroke-width="4"/>
+        <g><path d="M74 84 q10 -10 20 0" fill="none" stroke="#2A2320" stroke-width="4" stroke-linecap="round"/><path d="M106 84 q10 -10 20 0" fill="none" stroke="#2A2320" stroke-width="4" stroke-linecap="round"/></g>
+        <ellipse cx="52" cy="112" rx="10" ry="6.5" fill="#FFB5A7"/><ellipse cx="148" cy="112" rx="10" ry="6.5" fill="#FFB5A7"/>
+        <path d="M84 108 q16 14 32 2" fill="none" stroke="#2A2320" stroke-width="4" stroke-linecap="round"/>
+        <circle cx="100" cy="34" r="9" fill="#7FDBB6" stroke="#2A2320" stroke-width="3"/>
+        <line x1="100" y1="43" x2="100" y2="56" stroke="#2A2320" stroke-width="3"/>
+      </svg>
+      <div class="say">休息好了再继续，我都记着呢 ☀️</div>
+    </div>
+  </div>
+
+  <div class="section-t">本次任务包 <span class="tag">进行中</span></div>
+  <div class="tasks">
+    <div class="task">
+      <span class="raw go">进行中</span>
+      <h3>🌙 PHQ-A · 情绪小测</h3>
+      <small>9 道封口题 · 你已经过了 3 题，还有听小晴慢慢读的话约 5 分钟</small>
+      <div class="bar"><i style="width:33%"></i></div>
+      <div class="below">
+        <span class="emoji">๓</span>
+        <b>3 / 9</b>
+        <button class="btn plain" style="margin-left:auto;padding:9px 20px;font-size:13.5px">继续 🎙</button>
+      </div>
+    </div>
+
+    <div class="task">
+      <span class="raw wait">排队中</span>
+      <h3>🛡 ASQ · 安全小确认</h3>
+      <small>4 道快问快答，老师会亲自看这份记录</small>
+      <div class="bar"><i style="width:0%"></i></div>
+      <div class="below"><b style="color:var(--ink-dim)">0 / 4</b></div>
+    </div>
+  </div>
+
+  <div class="section-t">小晴已经帮你记下的</div>
+  <div class="record">
+    <h3>已记录信息 · 9 项</h3>
+    <p class="tip">这些只是草稿，你可以随时让小晴改答案；老师复核后才会变成正式记录。</p>
+    <div class="fields">
+      <div class="f"><small>① 提不起劲、没兴趣</small><b>好几天</b></div>
+      <div class="f"><small>② 心情低落、沮丧</small><b>几乎每天</b></div>
+      <div class="f"><small>③ 睡眠问题</small><b>几乎每天</b></div>
+      <div class="f"><small>④ 疲惫没活力</small><b>几乎每天</b></div>
+      <div class="f edit"><small>⑤ 胃口变化</small><b>等你接着聊…</b></div>
+      <div class="f edit"><small>⑥ 觉得自己很差</small><b>等你接着聊…</b></div>
+    </div>
+  </div>
+
+  <footer>心晴伙伴 · 与小晴说的内容严格保密（危险情形除外）· 由老师人工复核</footer>
+</div>
+</body>
+</html>

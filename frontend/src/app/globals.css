@@ -122,27 +122,35 @@ h1, h2 {
   letter-spacing: -0.02em;
 }
 
-/* 患者端视觉系统：仅在 PatientLayout 内覆盖，避免影响医护端。 */
+/* 患者端视觉系统：A 卡通治愈贴纸风（仅 PatientLayout 内覆盖，医护端不受影响）。 */
 .patient-app {
-  --background: #f7f4ef;
+  --background: #fff6ec;
   --surface: #ffffff;
-  --surface-secondary: #fbf9f5;
-  --foreground: #2f2925;
-  --foreground-muted: #756d66;
-  --foreground-placeholder: #a9a09a;
-  --border: #e8dcd1;
-  --primary: #ff6041;
-  --primary-hover: #df472d;
-  --primary-tint: #fff0e8;
+  --surface-secondary: #fff9f2;
+  --foreground: #2a2320;
+  --foreground-muted: #6b5f53;
+  --foreground-placeholder: #b9ac9c;
+  --border: #eddfc9;
+  /* 贴纸风专色：主行动=薄荷底；强调色=蜜桃/柠檬/天蓝 */
+  --accent-mint: #7fdbb6;
+  --accent-peach: #ffb5a7;
+  --accent-lemon: #ffd66b;
+  --accent-sky: #a9c9de;
+  --ink: #2a2320;
+  --primary: #35a278;
+  --primary-hover: #2e8b6a;
+  --primary-tint: #e2f8ec;
   --success: #3dad82;
-  --warning: #e5a146;
-  --danger: #d95a4a;
-  --info: #5b8def;
+  --warning: #f0b94f;
+  --danger: #ef6a63;
+  --info: #6fa3d8;
   min-height: 100dvh;
   color: var(--foreground);
+  /* 奶油纸底 + 极淡波点纹理（纯色块规则，无铺底渐变） */
   background:
-    radial-gradient(circle at 8% 2%, rgb(255 255 255 / 82%), transparent 24rem),
-    #ebe6de;
+    radial-gradient(circle at 3px 3px, rgb(213 180 138 / 18%) 1.7px, transparent 1.8px),
+    var(--background);
+  background-size: 28px 28px, auto;
   font-family: 'Noto Sans SC', 'PingFang SC', 'Microsoft YaHei', system-ui, sans-serif;
 }
 
@@ -152,6 +160,11 @@ h1, h2 {
   letter-spacing: -0.035em;
 }
 
+/* 贴纸风基础件： Lovely 硬偏移投影 + 墨色描边 */
+.patient-ink {
+  border-color: #2a2320;
+}
+
 .patient-mobile-frame {
   position: relative;
   width: 100%;
@@ -159,10 +172,8 @@ h1, h2 {
   min-height: 100dvh;
   margin-inline: auto;
   overflow-x: clip;
-  background:
-    radial-gradient(circle at 85% 3%, rgb(255 240 227 / 70%), transparent 16rem),
-    var(--background);
-  box-shadow: 0 0 48px rgb(79 57 42 / 14%);
+  background: var(--background);
+  box-shadow: 10px 10px 0 rgb(42 35 32 / 10%);
 }
 
 .patient-page-content {
@@ -183,9 +194,9 @@ h1, h2 {
   align-items: center;
   min-height: 64px;
   padding: max(env(safe-area-inset-top), 6px) 10px 0;
-  border-bottom: 1px solid rgb(232 220 209 / 72%);
-  background: rgb(247 244 239 / 91%);
-  backdrop-filter: blur(18px);
+  border-bottom: 2.5px solid #2a2320;
+  background: rgb(255 246 236 / 97%);
+  backdrop-filter: none;
 }
 
 .patient-topbar-with-right {
@@ -228,10 +239,10 @@ h1, h2 {
   min-height: calc(72px + env(safe-area-inset-bottom));
   margin-inline: auto;
   padding: 8px 16px max(8px, env(safe-area-inset-bottom));
-  border-top: 1px solid rgb(232 220 209 / 80%);
-  background: rgb(255 255 255 / 94%);
-  box-shadow: 0 -10px 28px rgb(94 67 48 / 8%);
-  backdrop-filter: blur(18px);
+  border-top: 2.5px solid #2a2320;
+  background: rgb(255 255 255 / 97%);
+  box-shadow: none;
+  backdrop-filter: none;
 }
 
 .patient-nav-item {
@@ -254,17 +265,46 @@ h1, h2 {
 }
 
 .patient-card {
-  border: 1px solid var(--border);
-  border-radius: 24px;
+  border: 2.5px solid #2a2320;
+  border-radius: 22px;
   background: var(--surface);
-  box-shadow: 0 8px 24px rgb(94 67 48 / 8%);
+  box-shadow: 6px 6px 0 #2a2320;
 }
 
 .patient-card-soft {
-  border: 1px solid #f0d9c6;
+  border: 2.5px solid #2a2320;
   border-radius: 22px;
-  background: linear-gradient(145deg, #fffaf4 0%, #fff3e8 100%);
-  box-shadow: 0 8px 22px rgb(141 76 42 / 8%);
+  background: var(--surface);
+  box-shadow: 7px 7px 0 var(--accent-mint);
+}
+
+/* 贴纸便签：虚线插卡，当周记录/提示卡使用 */
+.patient-card-sticker {
+  border: 2.5px dashed #2a2320;
+  border-radius: 20px;
+  background: #fffbf4;
+  box-shadow: 5px 5px 0 var(--accent-lemon);
+}
+
+/* 贴纸角标签：不透明色块 + 微倾，替代 eyebrow 小字 */
+.patient-sticker-tag {
+  display: inline-block;
+  border: 2.5px solid #2a2320;
+  border-radius: 12px;
+  padding: 4px 13px;
+  font-size: 12px;
+  font-weight: 900;
+  color: #2a2320;
+  background: var(--accent-peach);
+  box-shadow: 2.5px 2.5px 0 #2a2320;
+  transform: rotate(-2.5deg);
+}
+
+/* 荧光笔强调：粗色块标记行内文字（非渐变，纸笔高亮语义） */
+.patient-highlight {
+  background: linear-gradient(transparent 58%, var(--accent-lemon) 58%);
+  font-weight: 800;
+  padding: 0 2px;
 }
 
 .patient-primary-button {
@@ -273,26 +313,29 @@ h1, h2 {
   align-items: center;
   justify-content: center;
   gap: 8px;
-  border-radius: 16px;
-  background: linear-gradient(135deg, #ff6848 0%, #ff5133 100%);
-  color: #fff;
-  font-size: 17px;
-  font-weight: 800;
-  box-shadow: 0 10px 20px rgb(255 86 52 / 20%);
-  transition: filter 160ms ease, transform 160ms ease;
+  border: 2.5px solid #2a2320;
+  border-radius: 999px;
+  background: var(--accent-mint);
+  color: #2a2320;
+  font-size: 16.5px;
+  font-weight: 900;
+  box-shadow: 4px 4px 0 #2a2320;
+  transition: transform 160ms ease, box-shadow 160ms ease;
 }
 
 .patient-primary-button:hover {
-  filter: brightness(.98);
+  transform: translate(-1px, -1px);
+  box-shadow: 5px 5px 0 #2a2320;
 }
 
 .patient-primary-button:active {
-  transform: scale(.985);
+  transform: translate(2px, 2px);
+  box-shadow: 1px 1px 0 #2a2320;
 }
 
 .patient-primary-button:disabled {
   cursor: not-allowed;
-  filter: grayscale(.2);
+  filter: grayscale(.25);
   opacity: .55;
 }
 
@@ -302,37 +345,45 @@ h1, h2 {
   align-items: center;
   justify-content: center;
   gap: 8px;
-  border: 1.5px solid var(--primary);
-  border-radius: 16px;
-  color: var(--primary);
-  font-size: 16px;
-  font-weight: 750;
+  border: 2.5px solid #2a2320;
+  border-radius: 999px;
+  background: var(--surface);
+  color: #2a2320;
+  font-size: 15.5px;
+  font-weight: 700;
+  transition: transform 160ms ease;
+}
+
+.patient-outline-button:hover {
+  transform: translate(-1px, -1px);
 }
 
 .patient-progress-track {
-  height: 8px;
+  height: 14px;
   overflow: hidden;
+  border: 2.5px solid #2a2320;
   border-radius: 999px;
-  background: #eadfd7;
+  background: #ffffff;
 }
 
 .patient-progress-value {
   height: 100%;
   border-radius: inherit;
-  background: linear-gradient(90deg, #ff6848, #ff4f31);
+  background: var(--accent-mint);
   transition: width 300ms ease;
 }
 
 .patient-field {
-  min-height: 58px;
-  border: 1.5px solid #efc9ae;
-  border-radius: 17px;
-  background: rgb(255 255 255 / 82%);
+  min-height: 56px;
+  border: 2.5px solid #2a2320;
+  border-radius: 14px;
+  background: var(--surface);
 }
 
 .patient-field:focus-within {
   border-color: var(--primary);
-  box-shadow: 0 0 0 3px rgb(255 96 65 / 11%);
+  background: var(--surface-secondary);
+  box-shadow: none;
 }
 
 .patient-orb {
@@ -388,34 +439,34 @@ h1, h2 {
 .patient-orb[data-state='connecting'],
 .patient-orb[data-state='listening'],
 .patient-orb[data-state='transcribing'] {
-  --orb-color: #4ba7a3;
-  --orb-soft: #d8f3ef;
+  --orb-color: #4aad8a;
+  --orb-soft: #dff6e9;
 }
 
 .patient-orb[data-state='thinking'] {
-  --orb-color: #5b8def;
-  --orb-soft: #dee8ff;
+  --orb-color: #6f9cc4;
+  --orb-soft: #e8f1f8;
 }
 
 .patient-orb[data-state='speaking'] {
-  --orb-color: #3dad82;
-  --orb-soft: #d7f0e5;
+  --orb-color: #ef8d81;
+  --orb-soft: #ffeae6;
 }
 
 .patient-orb[data-state='error'],
 .patient-orb[data-state='text_fallback'] {
-  --orb-color: #e5a146;
-  --orb-soft: #fff0d8;
+  --orb-color: #e3a83c;
+  --orb-soft: #fff3d6;
 }
 
 .patient-orb[data-state='paused'] {
-  --orb-color: #5b8def;
-  --orb-soft: #dee8ff;
+  --orb-color: #6f9cc4;
+  --orb-soft: #e8f1f8;
 }
 
 .patient-orb[data-state='closed'] {
-  --orb-color: #756d66;
-  --orb-soft: #e8e2dd;
+  --orb-color: #8b8378;
+  --orb-soft: #efe8de;
 }
 
 .patient-orb-face {
@@ -504,7 +555,7 @@ h1, h2 {
   .patient-mobile-frame {
     min-height: calc(100dvh - 32px);
     margin-block: 16px;
-    border: 1px solid rgb(255 255 255 / 85%);
+    border: 2.5px solid #2a2320;
     border-radius: 34px;
   }
 

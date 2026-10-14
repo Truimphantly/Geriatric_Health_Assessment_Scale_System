@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>A风格完整样机 · 医护端工作台 — 心晴伙伴</title>
+<style>
+:root{
+  --bg:#FFF6EC; --card:#FFFFFF; --ink:#2A2320; --ink-soft:#5A5048; --ink-dim:#8A7E73;
+  --mint:#7FDBB6; --mint-deep:#2E8B6A; --peach:#FFB5A7; --lemon:#FFD66B; --sky:#A9C9DE;
+  --amber:#FFC76B; --danger:#F0716B; --danger-soft:#FFDAD6;
+  --bd:2.5px;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:"Microsoft YaHei","PingFang SC",system-ui,sans-serif;min-height:100vh}
+.wrap{max-width:1160px;margin:0 auto;padding:22px 24px 60px}
+
+.top{display:flex;align-items:center;gap:14px;background:var(--card);border:3px solid var(--ink);border-radius:18px;padding:12px 20px;box-shadow:5px 5px 0 var(--lemon);margin-bottom:26px}
+.brand{font-weight:900;font-size:17px;display:flex;align-items:center;gap:9px}
+.brand .dot{width:30px;height:30px;border-radius:10px;background:var(--mint);border:var(--bd) solid var(--ink);display:grid;place-items:center}
+.role{font-size:12px;font-weight:800;background:var(--peach);border:var(--bd) solid var(--ink);border-radius:999px;padding:4px 13px}
+.topnav{margin-left:auto;display:flex;gap:6px}
+.topnav a{font-weight:800;font-size:13.5px;padding:8px 16px;border-radius:12px;text-decoration:none;color:var(--ink)}
+.topnav a.on{background:var(--bg);border:var(--bd) solid var(--ink)}
+
+/* KPI 行 */
+.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
+.kpi{background:var(--card);border:3px solid var(--ink);border-radius:20px;padding:18px 22px;box-shadow:5px 5px 0 var(--sky)}
+.kpi b{font-size:30px;font-weight:900}
+.kpi small{display:block;margin-top:4px;font-size:12.5px;color:var(--ink-dim);font-weight:700}
+.kpi.hot{background:var(--danger-soft);box-shadow:5px 5px 0 var(--danger)}
+.kpi.hot b{color:#A24942}
+
+/* 列表 */
+.section-t{font-weight:900;font-size:18px;margin:30px 0 12px;display:flex;align-items:center;gap:10px}
+.section-t .tag{font-size:11.5px;font-weight:900;background:var(--lemon);border:var(--bd) solid var(--ink);border-radius:999px;padding:3px 11px}
+.section-t input{margin-left:auto;border:var(--bd) solid var(--ink);border-radius:12px;padding:9px 15px;font:inherit;font-size:13px;background:var(--card);width:230px;outline:none}
+table{width:100%;border-collapse:separate;border-spacing:0 10px}
+table tbody tr{background:var(--card)}
+table tbody tr.clickable{cursor:pointer}
+table tbody tr.clickable:hover{transform:scale(1.003)}
+td{padding:13px 16px;border-top:var(--bd) solid var(--ink);border-bottom:var(--bd) solid var(--ink)}
+td:first-child{border-left:var(--bd) solid var(--ink);border-radius:16px 0 0 16px}
+td:last-child{border-right:var(--bd) solid var(--ink);border-radius:0 16px 16px 0}
+.name b{font-size:14.5px}
+.name small{display:block;color:var(--ink-dim);font-size:11.5px;font-weight:700;margin-top:2px}
+.dos{font-size:13px;font-weight:700}
+.scales{font-size:12.5px;color:var(--ink-soft);font-weight:600}
+.pct{display:flex;align-items:center;gap:9px}
+.pct .bar{width:92px;height:12px;border:var(--bd) solid var(--ink);border-radius:999px;background:var(--bg);overflow:hidden}
+.pct .bar i{display:block;height:100%;background:var(--mint)}
+.pct span{font-size:12.5px;font-weight:900}
+.pill{display:inline-block;font-size:11.5px;font-weight:900;padding:5px 13px;border-radius:999px;border:var(--bd) solid var(--ink)}
+.pill.ok{background:var(--mint)}
+.pill.run{background:var(--lemon)}
+.pill.cr{background:var(--danger);color:#fff}
+.pill.rev{background:var(--sky)}
+.tri{color:var(--ink-dim);font-weight:900}
+
+/* 危机条 */
+.alert{margin-top:26px;background:var(--danger-soft);border:2.5px solid var(--danger);border-radius:20px;padding:18px 24px;display:flex;gap:14px;align-items:center;border-style:dashed}
+.alert .mk{font-size:26px}
+.alert b{font-size:14.5px}
+.alert small{display:block;color:#A24C46;font-size:12.5px;font-weight:600;margin-top:3px}
+.alert button{margin-left:auto;border:var(--bd) solid var(--ink);background:var(--danger);color:#fff;font-weight:900;font-size:13.5px;padding:10px 20px;border-radius:12px;cursor:pointer}
+
+footer{margin-top:34px;text-align:center;font-size:12px;color:var(--ink-dim);font-weight:700}
+@media(max-width:960px){.kpis{grid-template-columns:1fr 1fr}}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="top">
+    <div class="brand"><span class="dot">☀︎</span>心晴伙伴</div>
+    <span class="role">心理老师 · 王老师 (N002)</span>
+    <div class="topnav"><a class="on" href="#">工作台</a><a href="#">量表库</a><a href="#">家长信函</a><a href="#">设置</a></div>
+  </div>
+
+  <div class="kpis">
+    <div class="kpi hot"><b>1</b><small>今天需要人工介入（危机上报）</small></div>
+    <div class="kpi"><b>9</b><small>进行中的评估对话</small></div>
+    <div class="kpi"><b>3</b><small>完成待复核</small></div>
+    <div class="kpi"><b>27</b><small>全校本月已筛完</small></div>
+  </div>
+
+  <div class="section-t">今天的学生 <span class="tag">按风险排前</span><input placeholder="搜 姓名 / 班级 / 任务号…"/></div>
+  <table>
+    <tbody>
+      <tr class="clickable">
+        <td class="name"><b>小诚</b><small>男 · 15 岁 · 初三（3）班 · PX-088</small></td>
+        <td class="scales">PHQ-A + ASQ</td>
+        <td class="pct"><div class="bar"><i style="width:23%"></i></div><span>3/13</span></td>
+        <td><span class="pill cr">🔴 危机已介入</span></td>
+        <td class="dos">16:28 上报</td>
+        <td class="tri">›</td>
+      </tr>
+      <tr class="clickable">
+        <td class="name"><b>小婷</b><small>女 · 15 岁 · 初三（1）班 · 心理护航</small></td>
+        <td class="scales">PHQ-A + GAD-7 + ASQ</td>
+        <td class="pct"><div class="bar"><i style="width:44%"></i></div><span>6 / 20</span></td>
+        <td><span class="pill run">进行中</span></td>
+        <td class="dos">刚刚活动</td>
+        <td class="tri">›</td>
+      </tr>
+      <tr class="clickable">
+        <td class="name"><b>小何</b><small>女 · 14 岁 · 初二（7）班</small></td>
+        <td class="scales">PHQ-A</td>
+        <td class="pct"><div class="bar"><i style="width:100%"></i></div><span>9/9</span></td>
+        <td><span class="pill rev">待复核</span></td>
+        <td class="dos">昨天完成</td>
+        <td class="tri">›</td>
+      </tr>
+      <tr class="clickable">
+        <td class="name"><b>小彭</b><small>男 · 16 岁 · 高一（2）班</small></td>
+        <td class="scales">GAD-7</td>
+        <td class="pct"><div class="bar"><i style="width:100%"></i></div><span>7/7</span></td>
+        <td><span class="pill ok">已复核 ✓</span></td>
+        <td class="dos">本周完成</td>
+        <td class="tri">›</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="alert">
+    <span class="mk">📞</span>
+    <div>
+      <b>小诚 · 需要你今天面谈一次</b>
+      <small>16:28 小晴按保密例外上报「反复出现希望不再醒来的念头」→ 记录页只含必要的求助内容，日记仍然私密</small>
+    </div>
+    <button>查看健康风险图 ›</button>
+  </div>
+
+  <footer>心晴伙伴 · 管理端不作诊断，复核结论由心理老师录入 · 演示数据为合成档案</footer>
+</div>
+</body>
+</html>

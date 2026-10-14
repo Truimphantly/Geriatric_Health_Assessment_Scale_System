@@ -19,13 +19,13 @@ interface AssistantMessage {
 }
 
 const answers: Record<string, string> = {
-  开水: '茶水间位于护士站右侧，开水设备24小时开放。使用热水时请注意防烫。',
-  微波炉: '微波炉位于病区公共配餐间，请勿加热密封容器或金属餐具。',
-  探视: '本原型中的探视时间为每日15:00—17:00，实际安排请以病区通知为准。',
+  热线: '心理援助热线 12356 与青少年服务台 12355 全天有人值守，随时可以打。',
+  求助: '想找心理老师聊聊天，可以在对话里说“帮我联系心理老师”，小晴会帮你递请求。',
+  保密: '和小晴的聊天内容严格保密，只有遇到危险情况会通知心理老师来帮忙。',
   呼叫铃: '床头和卫生间均设有呼叫铃。身体不适、输液异常或需要下床协助时请及时使用。',
 };
 
-const quickQuestions = ['开水房在哪里？', '如何呼叫护士？', '探视时间？'];
+const quickQuestions = ['睡不着怎么办？', '怎么找心理老师？', '压力大怎么放松？'];
 
 export default function PatientAssistantPage() {
   const [input, setInput] = useState('');
@@ -48,7 +48,7 @@ export default function PatientAssistantPage() {
       id: 1,
       role: 'assistant',
       content:
-        '您好！我是小晴助手，我可以为您解答住院期间的生活相关问题。',
+        '你好呀！我是小晴，想聊聊最近的睡眠、压力、还是和同学朋友的事？',
     },
   ]);
 
@@ -85,7 +85,7 @@ export default function PatientAssistantPage() {
               id: 'assistant-unavailable',
               role: 'assistant',
               content:
-                '当前病区生活指南暂不可用，请先联系护士确认。文字输入仍会保留，超出范围的问题不会由助手自行回答。',
+                '帮助小知识暂时没加载出来，可以直接跟我说说你的困扰；超出能力范围的问题我会建议你找心理老师。',
             },
           ]);
           setVoiceHint(true);
@@ -135,7 +135,7 @@ export default function PatientAssistantPage() {
     );
     const response = matched
       ? matched[1]
-      : '这个问题可能涉及专业医疗判断，我无法直接回答。请使用呼叫铃联系护士，由医护人员为您说明。';
+      : '这个问题可能涉及专业判断，我不能直接回答。可以找心理老师聊聊——需要的话我帮你呼叫，也可以在对话里直接说。';
     setMessages((current) => [
       ...current,
       { id: Date.now(), role: 'patient', content: text },
@@ -149,16 +149,16 @@ export default function PatientAssistantPage() {
     <PatientLayout showNavigation>
       <div className="flex min-h-[calc(100dvh-92px)] flex-col px-[18px] pb-3 pt-7">
         <header className="text-center">
-          <h1 className="text-[30px] font-black text-[#4a241c]">住院助手</h1>
+          <h1 className="text-[30px] font-black text-[#4a241c]">小晴助手</h1>
           <div className="mt-4 flex min-h-12 items-center justify-center gap-2 rounded-2xl border border-[#f1c9a7] bg-[#fffaf4] px-3 text-[13px] font-bold text-primary">
             <PatientIcon name="shield" className="h-5 w-5" />
-            只回答住院生活问题，不提供诊断建议
+            陪你聊聊天，不诊断、不给标签
           </div>
         </header>
 
         <section
           className="scrollbar-soft mt-5 flex-1 space-y-4 overflow-y-auto pb-4"
-          aria-label="住院助手对话"
+          aria-label="小晴助手对话"
         >
           {messages.map((message) => (
             <div
@@ -247,7 +247,7 @@ export default function PatientAssistantPage() {
             role="status"
             className="mb-2 rounded-2xl border border-amber-200 bg-amber-50 px-3 py-2 text-xs leading-5 text-amber-800"
           >
-            住院助手语音问答尚未接入后端；入口已保留，请暂时使用文字输入。护理评估语音功能不受影响。
+            小晴助手的语音问答还没开放；先用文字聊也可以，评估对话里的语音功能不受影响。
           </div>
         )}
 
@@ -255,7 +255,7 @@ export default function PatientAssistantPage() {
           <input
             value={input}
             onChange={(event) => setInput(event.target.value)}
-            placeholder="输入住院生活问题"
+            placeholder="想聊点什么？"
             className="min-h-12 min-w-0 flex-1 rounded-full border border-[#efcdb5] bg-[#fffdfb] px-4 text-[15px] outline-none focus:border-primary"
             onKeyDown={(event) => {
                 if (event.key === 'Enter') void send(input);
@@ -285,7 +285,7 @@ export default function PatientAssistantPage() {
 
         <NurseCallButton
           taskId={task?.id}
-          reason="患者在住院助手页面主动呼叫护士"
+          reason="学生在小晴助手页面主动呼叫心理老师"
           className="mt-3 w-full"
         />
       </div>

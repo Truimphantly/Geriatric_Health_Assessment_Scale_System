@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>风格B · 手账本子风 — 心晴伙伴</title>
+<style>
+:root{
+  --paper:#FAF3E7; --card:#FFFDF6; --kraft:#EFE3CC;
+  --ink:#3A342C; --ink-soft:#6E6355;
+  --tape-yellow:#F6D866; --tape-blue:#A9C9DE; --tape-pink:#EAA9A2; --tape-green:#9CCB9A;
+  --underline:#F0C94D; --danger:#D96A5B;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:var(--paper);color:var(--ink);font-family:"Microsoft YaHei","PingFang SC",system-ui,sans-serif;min-height:100vh;background-image:radial-gradient(var(--kraft) 1px,transparent 1.6px);background-size:22px 22px}
+.wrap{max-width:1180px;margin:0 auto;padding:30px 24px 80px}
+
+/* ── 顶部：三十度胶带标签 ── */
+.top{display:flex;align-items:center;gap:16px;margin-bottom:36px}
+.logo{font-weight:900;font-size:23px;letter-spacing:1px;position:relative}
+.logo::after{content:"";position:absolute;left:10px;bottom:2px;width:110px;height:10px;background:var(--tape-yellow);opacity:.75;border-radius:2px}
+.slogan{font-family:"KaiTi","STKaiti",serif;font-size:15px;color:var(--ink-soft)}
+.nav{margin-left:auto;display:flex;gap:6px}
+.nav a{font-weight:800;font-size:14px;padding:7px 16px;border-radius:6px;text-decoration:none;color:var(--ink)}
+.nav a:nth-child(1){background:var(--tape-yellow);transform:rotate(1.5deg)}
+.nav a:nth-child(2){background:var(--tape-blue);transform:rotate(-1deg)}
+.nav a:nth-child(3){background:var(--tape-pink);transform:rotate(1deg)}
+
+/* 首屏：左标题右本子页 */
+.hero{display:grid;grid-template-columns:1fr 1fr;gap:34px;align-items:center}
+.hero-left h1{font-size:42px;line-height:1.35;font-weight:900}
+.hero-left h1 u{text-decoration:none;position:relative;white-space:nowrap}
+.hero-left h1 u::after{content:"";position:absolute;left:0;bottom:6px;width:100%;height:12px;background:var(--underline);opacity:.8;border-radius:8px}
+.hero-left p{margin-top:18px;font-size:15.5px;line-height:2;color:var(--ink-soft);max-width:30em}
+.hero-left .actions{margin-top:26px;display:flex;gap:14px}
+.btn{font-weight:900;font-size:16px;border:none;border-radius:10px;padding:14px 28px;cursor:pointer;box-shadow:2px 3px 0 rgba(58,52,44,.35)}
+.btn-primary{background:var(--tape-yellow);color:#5A4A12}
+.btn-plain{background:var(--card);border:1.5px solid var(--ink);color:var(--ink)}
+.note{margin-top:16px;font-size:12.5px;color:var(--ink-soft);font-family:"KaiTi","STKaiti",serif}
+
+/* 本子页（右） */
+.notebook{background:var(--card);border-radius:4px;box-shadow:4px 6px 14px rgba(58,52,44,.18);padding:32px 30px 26px;position:relative;transform:rotate(-1deg)}
+.tape{position:absolute;top:-14px;left:38px;width:120px;height:34px;transform:rotate(-5deg);opacity:.88;border-radius:3px;background:repeating-linear-gradient(-45deg,var(--tape-blue) 0 6px,#B7D3E4 6px 12px);box-shadow:0 1px 3px rgba(58,52,44,.2)}
+.tape.pink{left:auto;right:40px;top:auto;bottom:-13px;background:repeating-linear-gradient(-45deg,var(--tape-pink) 0 6px,#F0BCB6 6px 12px)}
+.stamp{position:absolute;top:22px;right:26px;width:76px;height:76px;border:2px dashed var(--tape-green);border-radius:50%;display:grid;place-items:center;text-align:center;color:#5F8A5D;font-weight:900;font-size:13px;transform:rotate(10deg);opacity:.9}
+.lines{margin-top:8px}
+.row{display:flex;align-items:baseline;gap:8px;padding:11px 0;border-bottom:1.5px dashed #D8CCB6;font-size:15.5px}
+.row b{min-width:74px;font-weight:800;white-space:nowrap}
+.row span{font-family:"KaiTi","STKaiti",serif;color:var(--ink-soft)}
+.punch{position:absolute;top:16px;bottom:16px;left:14px;width:2px;background:#E4DACB}
+.punch i{position:absolute;left:-7px;width:16px;height:16px;border-radius:50%;background:var(--paper);box-shadow:inset 0 0 2px rgba(58,52,44,.4)}
+.punch i:nth-child(1){top:14%}.punch i:nth-child(2){top:34%}.punch i:nth-child(3){top:54%}.punch i:nth-child(4){top:74%}
+
+/* ── 中部两栏 ── */
+.grid2{display:grid;grid-template-columns:1.1fr .9fr;gap:30px;margin-top:40px}
+.card{background:var(--card);border-radius:4px;box-shadow:3px 5px 12px rgba(58,52,44,.14);padding:26px 28px;position:relative}
+.card h3{font-weight:900;font-size:18px;display:flex;gap:10px;align-items:baseline}
+.card h3 small{font-family:"KaiTi","STKaiti",serif;font-size:13px;color:var(--ink-soft);font-weight:400}
+.tl{margin-top:14px;border-left:2.5px solid var(--ink);padding-left:18px;display:grid;gap:14px}
+.tl>div{position:relative}
+.tl>div::before{content:"";position:absolute;left:-23px;top:6px;width:10px;height:10px;border-radius:50%;background:var(--tape-blue)}
+.tl b{font-size:14.5px}
+.tl small{display:block;margin-top:3px;color:var(--ink-soft);font-size:13px;line-height:1.7}
+.quote{margin-top:20px;background:var(--tape-green);opacity:.92;border-radius:4px;padding:14px 18px;font-family:"KaiTi","STKaiti",serif;font-size:16px;line-height:1.9;transform:rotate(-.6deg)}
+
+/* 情绪格子 */
+.mood{display:grid;grid-template-columns:repeat(7,1fr);gap:10px;margin-top:16px}
+.mood .cell{aspect-ratio:1;border:1.5px solid #D8CCB6;border-radius:6px;display:grid;place-items:center;font-size:20px;background:transparent;cursor:pointer}
+.mood .cell.f{background:var(--tape-yellow);border-color:transparent}
+.mood .cell:hover{transform:scale(1.1)}
+.mood-legend{margin-top:12px;font-size:12.5px;color:var(--ink-soft);font-family:"KaiTi","STKaiti",serif}
+.btns{margin-top:14px;display:flex;gap:10px}
+.chip{font-size:13px;font-weight:800;border-radius:8px;padding:8px 16px;border:1.5px solid var(--ink);background:var(--tape-pink)}
+
+/* 危机便利贴 */
+.crisis{margin-top:34px;background:#FFE9B8;border-radius:4px;box-shadow:4px 6px 12px rgba(58,52,44,.18);padding:26px 28px 28px;position:relative;transform:rotate(.4deg)}
+.crisis::before{content:"";position:absolute;top:-13px;left:42%;width:120px;height:30px;background:repeating-linear-gradient(-45deg,var(--tape-pink) 0 7px,#F0BCB6 7px 14px);opacity:.9;transform:rotate(2deg)}
+.crisis h3{font-weight:900;font-size:18px}
+.crisis p{margin-top:10px;font-size:14.5px;line-height:1.95;color:#7A5B22;max-width:42em}
+.crisis .who{margin-top:12px;font-family:"KaiTi","STKaiti",serif;color:#5d4a1c;font-size:13.5px}
+
+footer{margin-top:46px;text-align:center;font-family:"KaiTi","STKaiti",serif;font-size:13.5px;color:var(--ink-soft)}
+@media(max-width:860px){.hero,.grid2{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="top">
+    <div>
+      <div class="logo">心晴手账</div>
+    </div>
+    <div class="slogan">把心事写在能安心放心的地方</div>
+    <div class="nav"><a href="#">小晴</a><a href="#">情绪页</a><a href="#">信箱</a></div>
+  </div>
+
+  <div class="hero">
+    <div class="hero-left">
+      <h1>今天的情绪，<u>值得写在这里</u></h1>
+      <p>小晴是住在手账里的小机器人。她听你说话、帮你记心情，也认识学校的心理老师——愿意的时候，替你递上一枚求助信封。</p>
+      <div class="actions">
+        <button class="btn btn-primary">✎ 打开今天的一页</button>
+        <button class="btn btn-plain">🎙 用说话的方式记</button>
+      </div>
+      <p class="note">· 语音只在你按下喇叭时开始 · 写错可以撕掉重来 ·</p>
+    </div>
+
+    <div class="notebook">
+      <div class="punch"><i></i><i></i><i></i><i></i></div>
+      <div class="tape"></div><div class="tape pink"></div>
+      <div class="stamp">连续<br/>记录<br/>12 天</div>
+      <h2 style="font-weight:900;font-size:20px">十月十四日 · 晴转多云</h2>
+      <div class="lines">
+        <div class="row"><b>小晴说：</b><span>「月考的事，愿意的话就慢慢说，不着急。」</span></div>
+        <div class="row"><b>我写：</b><span>考砸了 + 被爸妈念 + 失眠……（ handwritten feel ）</span></div>
+        <div class="row"><b>心情：</b><span>🌧 转小雨 —— 但写下来好像轻了一点</span></div>
+      </div>
+      <div class="quote">小晴回信：这种“不肯结束”的累，不是矫情，是身体提醒你该享受到一点照护了。我先帮你记着，你先睡个慢慢醒的觉。</div>
+    </div>
+  </div>
+
+  <div class="grid2">
+    <div class="card">
+      <h3>本周页签 <small>老师端可见 · 学生可见完成度</small></h3>
+      <div class="tl">
+        <div><b>PHQ-A 情绪小测 · 3/9 题</b><small>第 3 题剩下一半没答，系统会等你下次接上（预计 4 分钟）</small></div>
+        <div><b>ASQ 安全报平安 · 1/4 题</b><small>答错也没关系，这些题没有对错</small></div>
+        <div><b>心理老师已收信</b><small>今天 16:28 · 她会主动找你碰面，不用自己开口求助</small></div>
+      </div>
+      <div class="quote">小晴备注：我见过的学生里，敢说我最近不太好的，都很勇敢。</div>
+    </div>
+
+    <div class="card">
+      <h3>情绪格子<small>每周 7 格，贴纸全部由你点亮</small></h3>
+      <div class="mood">
+        <div class="cell f">☺</div><div class="cell f">😴</div><div class="cell f">🫠</div><div class="cell">·</div><div class="cell f">🌧</div><div class="cell f">😐</div><div class="cell">·</div>
+      </div>
+      <p class="mood-legend">盖过的格子不清空。连续 7 天，右下角解锁一枚新贴纸。</p>
+      <div class="btns"><button class="chip">写一句今天的理由</button><button class="chip" style="background:var(--card)">只打勾，不写字</button></div>
+    </div>
+  </div>
+
+  <div class="crisis">
+    <h3>🧾 已递交求助信 — 心理老师正在看</h3>
+    <p>今天 16:28，小晴按我们的约定，把这枚信封递给了王老师。内容只描述了需要的帮助，具体哪些话小晴不会抄出来。<b>现在可以先喝口水，做个三次慢呼吸。</b>如果此刻急着想要大人，可以拨到这里：12356（24 小时）。</p>
+    <p class="who">—— 这页手账上锁了，只有你和老师能翻开</p>
+  </div>
+
+  <footer>心晴手账 · 除了危险情况，书写内容绝不透露给老师以外的任何人（如监护人 caused 伤害，这里有自己的规则）</footer>
+</div>
+</body>
+</html>

@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>A风格完整样机 · 家长端通知/同意书 — 心晴伙伴</title>
+<style>
+:root{
+  --bg:#FFF6EC; --card:#FFFFFF; --ink:#2A2320; --ink-soft:#5A5048; --ink-dim:#8A7E73;
+  --mint:#7FDBB6; --mint-deep:#2E8B6A; --peach:#FFB5A7; --lemon:#FFD66B; --sky:#A9C9DE;
+  --amber:#FFC76B; --danger:#F0716B; --danger-soft:#FFDAD6;
+  --bd:2.5px;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:"Microsoft YaHei","PingFang SC",system-ui,sans-serif;min-height:100vh}
+.wrap{max-width:1040px;margin:0 auto;padding:22px 22px 60px}
+
+.top{display:flex;align-items:center;gap:12px;margin-bottom:20px}
+.brand{font-weight:900;font-size:17px;display:flex;align-items:center;gap:9px}
+.brand .dot{width:30px;height:30px;border-radius:10px;background:var(--sky);border:var(--bd) solid var(--ink);display:grid;place-items:center}
+.role{font-size:12px;font-weight:800;background:var(--sky);border:var(--bd) solid var(--ink);border-radius:999px;padding:4px 13px}
+.top .nav{margin-left:auto;display:flex;gap:6px}
+.top .nav a{font-weight:800;font-size:13px;padding:7px 14px;border-radius:11px;text-decoration:none;color:var(--ink)}
+.top .nav a.on{background:var(--card);border:var(--bd) solid var(--ink)}
+
+/* 通知卡 */
+.notice{background:var(--card);border:3px solid var(--ink);border-radius:22px;padding:24px 28px;box-shadow:7px 7px 0 var(--amber);position:relative}
+.notice .stick{position:absolute;top:-15px;left:24px;background:var(--amber);border:var(--bd) solid var(--ink);border-radius:12px;padding:4px 13px;font-weight:900;font-size:12px;transform:rotate(-2deg);box-shadow:2px 2px 0 var(--ink)}
+.notice h1{font-size:22px;font-weight:900}
+.notice .meta{margin-top:10px;display:flex;gap:10px;flex-wrap:wrap}
+.notice .meta span{font-size:12px;font-weight:800;border:var(--bd) solid var(--ink);border-radius:999px;padding:5px 13px;background:var(--bg)}
+.notice p{margin-top:14px;font-size:14px;line-height:1.95;color:var(--ink-soft);max-width:46em}
+.notice .q{margin-top:16px;background:var(--bg);border:var(--bd) dashed var(--ink);border-radius:16px;padding:14px 18px;font-size:13.5px;line-height:1.85;color:var(--ink)}
+.notice .q b{background:linear-gradient(transparent 60%,var(--lemon) 60%)}
+
+.btn-row{margin-top:20px;display:flex;gap:12px;flex-wrap:wrap}
+.b1{border:var(--bd) solid var(--ink);background:var(--danger);color:#fff;border-radius:14px;font-weight:900;font-size:14px;padding:12px 22px;cursor:pointer;box-shadow:4px 4px 0 var(--ink)}
+.b2{border:var(--bd) solid var(--ink);background:var(--card);border-radius:14px;font-weight:800;font-size:13.5px;padding:12px 20px;cursor:pointer}
+.b3{border:var(--bd) solid var(--ink);background:var(--mint);border-radius:14px;font-weight:900;font-size:14px;padding:12px 22px;cursor:pointer;box-shadow:4px 4px 0 var(--ink)}
+
+.grid{margin-top:24px;display:grid;grid-template-columns:1.05fr .95fr;gap:20px;align-items:start}
+.card{background:var(--card);border:3px solid var(--ink);border-radius:20px;padding:22px 26px}
+.card h3{font-weight:900;font-size:15.5px}
+.cls{margin-top:13px;display:grid;gap:10px}
+.cl{border:var(--bd) solid var(--ink);border-radius:14px;background:var(--bg);padding:12px 16px}
+.cl b{font-size:13px;display:flex;align-items:center;gap:8px}
+.cl small{display:block;margin-top:5px;color:var(--ink-soft);font-size:12.5px;line-height:1.75;font-weight:600}
+.cl .rk{margin-left:auto;font-size:10.5px;font-weight:900;border:2px solid var(--ink);border-radius:999px;padding:3px 9px}
+.cl .rk.must{background:var(--danger-soft)}
+.cl .rk.imp{background:var(--lemon)}
+
+/* 签名区 */
+.sign{margin-top:16px;border:3px solid var(--ink);border-radius:18px;background: var(--card);padding:16px 20px;position:relative}
+.sign h4{font-weight:900;font-size:14px}
+.canvas{margin-top:10px;height:110px;background:#FDFBF6;border:2.5px dashed #D8CBAF;border-radius:14px;position:relative;display:grid;place-items:center;color:#C9BCA8;font-weight:800;font-size:13px}
+.sign .row{display:flex;gap:10px;margin-top:12px}
+.sign .row input{flex:1;border:var(--bd) solid var(--ink);border-radius:12px;padding:10px 14px;font:inherit;font-size:13px;font-weight:700;background:var(--bg)}
+.sign .row button{border:var(--bd) solid var(--ink);background:var(--mint);border-radius:12px;font-weight:900;font-size:13px;padding:10px 20px;cursor:pointer;box-shadow:3px 3px 0 var(--ink)}
+.cards-note{margin-top:14px;font-size:12px;color:var(--ink-dim);font-weight:700;line-height:1.85}
+
+footer{margin-top:32px;text-align:center;font-size:12px;color:var(--ink-dim);font-weight:700}
+@media(max-width:920px){.grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="top">
+    <div class="brand"><span class="dot">🏠</span>心晴伙伴</div>
+    <span class="role">监护人 · 小诚妈妈 (139****9972)</span>
+    <div class="nav"><a class="on" href="#">通知</a><a href="#">同意书</a><a href="#">学校联系卡</a></div>
+  </div>
+
+  <div class="notice">
+    <span class="stick">今天 16:28 · 心理老师 王老师 发起</span>
+    <h1>孩子在学校了一份情绪筛查里，跟系统说了句需要你撑一把的话</h1>
+    <div class="meta"><span>场景 · 评估对话进行中</span><span>状态 · 老师已接，孩子当前安全</span><span>今天 17:00 · 建议面谈</span></div>
+    <p>我们不做诊断，也不能替孩子小心眼。以下按保密边界最小必要披露——只描述<b>发生了什么、需要你做什么</b>；不会搬运孩子和小晴的聊天原文。</p>
+    <div class="q">系统声明：评估对话中检测到与安全相关的表达，AI 已按约定通知在校心理老师；建议家长与老师今天面谈一次，并确认家中近期状态。<b>孩子此刻是安全的</b>，面谈是预防性安排，不是急救。</div>
+    <div class="btn-row">
+      <button class="b1">📞 现在联系学校（推荐）</button>
+      <button class="b3">✍️ 签署知情同意</button>
+      <button class="b2">📄 打印说明单给自己</button>
+    </div>
+  </div>
+
+  <div class="grid">
+    <div class="card">
+      <h3>待你签署的条款（4 项）</h3>
+      <div class="cls">
+        <div class="cl"><b>心理评估知情说明 <span class="rk imp">重要</span></b><small>今天对话为筛查采集。AI 不下诊断；结论由心理老师复核与人工判断。</small></div>
+        <div class="cl"><b>联系监护人（本通知）<span class="rk must">必须</span></b><small>当出现需要监护人知晓的风险或支持需求时，学校会联系你并说明原因与范围。</small></div>
+        <div class="cl"><b>数据使用范围 <span class="rk imp">重要</span></b><small>信息用于心理评估、风险识别与必要的支持安排；不用于无关用途。</small></div>
+        <div class="cl"><b>转介知情同意 <span class="rk imp">重要</span></b><small>如需校内/校外专业支持，会事先说明对象、目的与范围。</small></div>
+      </div>
+      <p class="cards-note">签署后可以在「同意书」页随时查看与下载回执；孩子本人的评估答卷家校共享，以其本人意愿为主。</p>
+    </div>
+
+    <div class="card">
+      <h3>签名（或转给另一位监护人来签）</h3>
+      <div class="sign">
+        <h4>在下面横线上用鼠标/手指签个名</h4>
+        <div class="canvas">监护人手写区 · 也可以写「同意 + 日期」拍照上传</div>
+        <div class="row">
+          <input placeholder="监护人姓名" value="陈女士"/>
+          <input placeholder="与学生关系" value="母亲"/>
+          <button>确认签署 ✓</button>
+        </div>
+      </div>
+      <p class="cards-note">一份同意书对应一次评估任务。转介第三方机构会再走一次单独签署——不打包授权。</p>
+    </div>
+  </div>
+
+  <footer>心晴伙伴 · 家长端通知由保密例外触发（仅安全与求助类）· 演示数据为合成档案</footer>
+</div>
+</body>
+</html>

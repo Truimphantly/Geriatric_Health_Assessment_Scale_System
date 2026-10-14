@@ -145,13 +145,13 @@ export function mapTaskDto(dto: BackendTaskDto): CareTask {
     encounterStatus: dto.encounter_status,
     taskType:
       dto.task_type === 'assessment'
-        ? '入院评估任务包'
-        : dto.task_type ?? '入院评估任务包',
+        ? '心理评估任务包'
+        : dto.task_type ?? '心理评估任务包',
     collectionMode: toCollectionMode(dto.collection_mode),
     taskStatus: dto.task_status,
     preparation: mapTaskPreparation(dto.preparation),
     assignedNurseId: id(dto.assigned_nurse_id ?? dto.nurse_id),
-    assignedNurseName: dto.assigned_nurse_name ?? '责任护士',
+    assignedNurseName: dto.assigned_nurse_name ?? '心理老师',
     scaleIds: dto.scale_ids?.map(String),
     scaleNames: dto.scale_names,
     scaleProgress: dto.scale_progress?.map((item) => ({

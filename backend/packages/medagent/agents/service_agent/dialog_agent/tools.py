@@ -351,7 +351,7 @@ async def request_nurse_assistance(
     return {
         "success": True,
         "event_id": f"HANDOFF-EVENT-{uuid4().hex.upper()}",
-        "request_id": f"NURSE-{uuid4().hex.upper()}",
+        "request_id": f"SUPPORT-{uuid4().hex.upper()}",
         "requested_action": requested_action,
         "action_label": action_label,
         "reason": normalized_reason,

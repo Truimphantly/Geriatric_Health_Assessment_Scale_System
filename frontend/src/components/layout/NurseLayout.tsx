@@ -276,8 +276,8 @@ export default function NurseLayout({
                       )}
                     >
                       {request.requestSource === 'patient'
-                        ? '患者主动呼叫护士'
-                        : 'AI工具呼叫护士'}
+                        ? '学生主动呼叫老师'
+                        : 'AI 伙伴呼叫老师'}
                     </p>
                     {request.urgency === 'urgent' && (
                       <span className="rounded-full bg-red-600 px-2 py-0.5 text-xs text-white">

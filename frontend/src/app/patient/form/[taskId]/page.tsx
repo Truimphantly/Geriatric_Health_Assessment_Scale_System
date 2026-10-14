@@ -235,7 +235,7 @@ export default function PatientFormPage() {
           <PatientState
             kind="empty-tasks"
             title="任务不存在"
-            description="请返回任务中心查看最新护理任务。"
+            description="请返回任务中心查看最新任务。"
           />
         </div>
       </PatientLayout>
@@ -268,8 +268,8 @@ export default function PatientFormPage() {
             <CheckCircleIcon className="w-10 h-10 mx-auto text-primary mb-3" />
             <p className="font-medium">
               {questionnaire.status === 'confirmed'
-                ? '问卷结果已由护士确认'
-                : '问卷已提交，等待护士复核'}
+                ? '问卷结果已由心理老师确认'
+                : '问卷已提交，等待心理老师复核'}
             </p>
             <Button className="mt-5 w-full" onClick={() => router.push(`/patient/tasks/${taskId}`)}>
               返回任务详情

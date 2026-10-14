@@ -1,7 +1,6 @@
 'use client';
 
-import { Suspense, useState } from 'react';
-import Image from 'next/image';
+import { Suspense, useEffect, useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import PatientLayout from '@/components/layout/PatientLayout';
 import { PatientIcon } from '@/components/patient/PatientIcon';
@@ -10,7 +9,6 @@ import { runtimeConfig } from '@/lib/runtime/config';
 import { useTaskStore } from '@/lib/stores/useTaskStore';
 import { useUserStore } from '@/lib/stores/useUserStore';
 import { mockPatients } from '@/lib/mock/data';
-import { patientDemoAccounts } from '@/lib/patient/demoAccounts';
 
 export default function PatientVerifyPage() {
   return (
@@ -25,19 +23,34 @@ function VerifyFallback() {
     <PatientLayout>
       <div className="flex min-h-screen items-center justify-center p-6">
         <div className="text-center">
-          <Image
-            src="/assets/patient/states/loading.svg"
-            alt=""
-            width={80}
-            height={80}
-            className="mx-auto h-20 w-20"
-          />
+          {/* 小晴头像：占位 SVG，后续替换官方卡通形象素材 */}
+          <XiaoQingFace size={80} />
           <p className="mt-4 font-medium text-foreground-muted">
-            正在加载身份核验…
+            正在打开小晴的门…
           </p>
         </div>
       </div>
     </PatientLayout>
+  );
+}
+
+/** 小晴头像（贴纸风占位 SVG，金色圆头机器人 + 腮红 + 天线） */
+function XiaoQingFace({ size = 96 }: { size?: number }) {
+  return (
+    <svg viewBox="0 0 200 200" width={size} height={size} aria-label="小晴" role="img">
+      <circle cx="100" cy="100" r="96" fill="#FFF9F2" stroke="#2A2320" strokeWidth="4" />
+      <g>
+        <circle cx="70" cy="90" r="9" fill="#2A2320" />
+        <circle cx="130" cy="90" r="9" fill="#2A2320" />
+        <circle cx="73" cy="86" r="3" fill="#FFF9F2" />
+        <circle cx="133" cy="86" r="3" fill="#FFF9F2" />
+      </g>
+      <ellipse cx="52" cy="114" rx="10" ry="6.5" fill="#FFB5A7" />
+      <ellipse cx="148" cy="114" rx="10" ry="6.5" fill="#FFB5A7" />
+      <path d="M84 110 q16 13 32 2" fill="none" stroke="#2A2320" strokeWidth="4" strokeLinecap="round" />
+      <circle cx="100" cy="34" r="9" fill="#7FDBB6" stroke="#2A2320" strokeWidth="3" />
+      <line x1="100" y1="43" x2="100" y2="56" stroke="#2A2320" strokeWidth="3" />
+    </svg>
   );
 }
 
@@ -49,7 +62,6 @@ function PatientVerifyContent() {
   const { login } = useUserStore();
   const [taskNo, setTaskNo] = useState(() => searchParams.get('taskNo') ?? '');
   const [idCardNo, setIdCardNo] = useState('');
-  const [phone, setPhone] = useState('');
   const [participantType, setParticipantType] = useState<'patient' | 'family'>('patient');
   const [relationship, setRelationship] = useState('女儿');
   const [loading, setLoading] = useState(false);
@@ -77,9 +89,10 @@ function PatientVerifyContent() {
 
     if (apiMode) {
       try {
-        const portal = await careRepository.loginPatient({
-          idCardNo: idCardNo.trim(),
-          phone: phone.trim(),
+        // 主流程：任务号 + 证件后四位（verify-task），与心理老师下发任务一一对应
+        const portal = await careRepository.verifyPatientTask({
+          taskNo: taskNo.trim(),
+          idCardSuffix: idCardNo.trim(),
         });
         setTasks(portal.tasks);
         login({
@@ -91,9 +104,7 @@ function PatientVerifyContent() {
         router.push('/patient/tasks');
       } catch (loginError) {
         setError(
-          loginError instanceof Error
-            ? loginError.message
-            : '患者身份核验失败'
+          loginError instanceof Error ? loginError.message : '患者身份核验失败'
         );
       } finally {
         setLoading(false);
@@ -160,102 +171,74 @@ function PatientVerifyContent() {
 
   return (
     <PatientLayout>
-      <div className="relative min-h-screen overflow-hidden px-[18px] pb-8 pt-9">
-        <div
-          className="pointer-events-none absolute inset-x-0 top-28 h-44 opacity-70"
-          aria-hidden="true"
-          style={{
-            background:
-              'radial-gradient(ellipse at 20% 70%, #ffe8d5 0 26%, transparent 27%), radial-gradient(ellipse at 72% 70%, #fff0df 0 34%, transparent 35%)',
-          }}
-        />
-
-        <div className="relative z-10 pt-2 text-center">
-          <PatientIcon
-            name="brand-heart-cross"
-            className="mx-auto h-[92px] w-[92px] text-primary"
-          />
-          <h1 className="mt-5 text-[32px] font-black leading-tight text-[#4a241c]">
-            进入护理服务
+      <div className="relative min-h-screen px-[18px] pb-8 pt-9">
+        <div className="relative z-10 pt-1 text-center">
+          <XiaoQingFace size={92} />
+          <h1 className="mt-4 text-[32px] font-black leading-tight text-foreground">
+            心晴伙伴
           </h1>
           <div className="mt-3 flex items-center justify-center gap-3">
-            <span className="h-px w-16 bg-[#efc9ae]" />
-            <p className="text-lg font-bold">患者身份核验</p>
-            <span className="h-px w-16 bg-[#efc9ae]" />
+            <span className="patient-sticker-tag">学生入口</span>
+            <p className="text-base font-bold">和小晴聊一聊最近的状态</p>
           </div>
 
-          <div className="patient-card mt-6 overflow-hidden p-4">
+          <div className="patient-card mt-6 overflow-hidden p-4 text-left">
             <form onSubmit={handleVerify} className="space-y-5">
-              <div className="grid grid-cols-2 rounded-2xl border border-[#f0d6c3] bg-[#fffaf5] p-1">
-                {(
-                  [
-                    ['patient', '患者本人'],
-                    ['family', '家属协助'],
-                  ] as const
-                ).map(([value, label]) => (
-                  <button
-                    key={value}
-                    type="button"
-                    onClick={() => setParticipantType(value)}
-                    className={`min-h-12 rounded-[14px] text-[16px] font-bold transition ${
-                      participantType === value
-                        ? 'bg-gradient-to-r from-[#ff6949] to-[#ff5133] text-white shadow-sm'
-                        : 'text-foreground-muted'
-                    }`}
-                    aria-pressed={participantType === value}
-                  >
-                    {label}
-                  </button>
-                ))}
-              </div>
-
               {!apiMode && (
-                <label className="patient-field flex items-center gap-3 px-4">
-                  <PatientIcon name="clipboard" className="text-[#8e745f]" />
-                  <span className="shrink-0 text-[16px] font-bold">任务编号</span>
-                  <input
-                    value={taskNo}
-                    onChange={(event) => setTaskNo(event.target.value)}
-                    placeholder="请输入任务编号"
-                    className="min-w-0 flex-1 bg-transparent text-[15px] outline-none placeholder:text-foreground-placeholder"
-                    required
-                  />
-                </label>
+                <div className="grid grid-cols-2 rounded-2xl border-2 border-foreground bg-surface-secondary p-1">
+                  {(
+                    [
+                      ['patient', '患者本人'],
+                      ['family', '家属协助'],
+                    ] as const
+                  ).map(([value, label]) => (
+                    <button
+                      key={value}
+                      type="button"
+                      onClick={() => setParticipantType(value)}
+                      className={`min-h-12 rounded-xl text-[16px] font-bold transition ${
+                        participantType === value
+                          ? 'bg-[var(--accent-mint)] text-foreground shadow-[2px_2px_0_var(--ink)]'
+                          : 'text-foreground-muted'
+                      }`}
+                      aria-pressed={participantType === value}
+                    >
+                      {label}
+                    </button>
+                  ))}
+                </div>
               )}
 
               <label className="patient-field flex items-center gap-3 px-4">
-                <PatientIcon name="user" className="text-[#8e745f]" />
-                <span className="shrink-0 text-[17px] font-bold">
-                  {apiMode ? '身份证号' : '证件号后四位'}
-                </span>
+                <PatientIcon name="clipboard" className="text-foreground-muted" />
+                <span className="shrink-0 text-[16px] font-black">任务号</span>
                 <input
-                  value={idCardNo}
-                  onChange={(event) => setIdCardNo(event.target.value)}
-                  placeholder={apiMode ? '请输入身份证号' : '请输入后四位'}
-                  maxLength={apiMode ? 18 : 4}
-                  className="min-w-0 flex-1 bg-transparent text-[15px] outline-none placeholder:text-foreground-placeholder"
+                  value={taskNo}
+                  onChange={(event) => setTaskNo(event.target.value)}
+                  placeholder="心理老师给你的编号"
+                  className="min-w-0 flex-1 bg-transparent text-[15px] font-bold outline-none placeholder:font-medium placeholder:text-foreground-placeholder"
                   required
                 />
               </label>
 
-              {apiMode && (
-                <label className="patient-field flex items-center gap-3 px-4">
-                  <PatientIcon name="phone" className="text-[#8e745f]" />
-                  <span className="shrink-0 text-[16px] font-bold">手机号</span>
-                  <input
-                    value={phone}
-                    onChange={(event) => setPhone(event.target.value)}
-                    placeholder="请输入登记手机号"
-                    maxLength={20}
-                    className="min-w-0 flex-1 bg-transparent text-[15px] outline-none placeholder:text-foreground-placeholder"
-                    required
-                  />
-                </label>
-              )}
+              <label className="patient-field flex items-center gap-3 px-4">
+                <PatientIcon name="user" className="text-foreground-muted" />
+                <span className="shrink-0 text-[16px] font-black">证件后四位</span>
+                <input
+                  value={idCardNo}
+                  onChange={(event) => setIdCardNo(event.target.value)}
+                  placeholder="登记证件的最后 4 位"
+                  maxLength={apiMode ? 4 : 4}
+                  inputMode={apiMode ? 'numeric' : 'text'}
+                  pattern={apiMode ? '[0-9Xx]{4}' : undefined}
+                  className="min-w-0 flex-1 bg-transparent text-[15px] font-bold outline-none placeholder:font-medium placeholder:text-foreground-placeholder"
+                  required
+                />
+              </label>
 
-              {participantType === 'family' && (
+              {!apiMode && participantType === 'family' && (
                 <label className="patient-field flex items-center gap-3 px-4">
-                  <PatientIcon name="family" className="text-[#8e745f]" />
+                  <PatientIcon name="family" className="text-foreground-muted" />
                   <span className="shrink-0 text-[16px] font-bold">与患者关系</span>
                   <select
                     value={relationship}
@@ -273,7 +256,7 @@ function PatientVerifyContent() {
               {error && (
                 <div
                   role="alert"
-                  className="rounded-2xl border border-red-200 bg-red-50 px-4 py-3 text-left text-sm text-red-700"
+                  className="rounded-2xl border-2 border-[#ef6a63] bg-[#ffefee] px-4 py-3 text-left text-sm font-semibold text-[#a24c46]"
                 >
                   {error}
                 </div>
@@ -282,80 +265,36 @@ function PatientVerifyContent() {
               <button
                 type="submit"
                 disabled={loading}
-                className="patient-primary-button w-full"
+                className="patient-primary-button w-full justify-center"
               >
-                <PatientIcon name="shield" className="h-5 w-5" />
-                {loading ? '正在核验…' : '核验并进入'}
+                {loading ? '正在核验…' : '进入小晴 →'}
               </button>
             </form>
 
-            <div className="my-4 flex items-center gap-3">
-              <span className="h-px flex-1 bg-border" />
-              <span className="text-xs text-foreground-muted">
-                {apiMode ? '联调演示身份' : '快速体验'}
-              </span>
-              <span className="h-px flex-1 bg-border" />
-            </div>
-
-            {apiMode ? (
+            {!apiMode && (
               <>
-                <div className="grid grid-cols-2 gap-2">
-                {patientDemoAccounts.slice(0, 2).map((account) => (
-                    <button
-                      key={account.idCardNo}
-                      type="button"
-                      onClick={() => {
-                        setIdCardNo(account.idCardNo);
-                        setPhone(account.phone);
-                        setError('');
-                      }}
-                      className="patient-outline-button min-h-11 text-sm"
-                    >
-                      填充{account.name}
-                    </button>
-                  ))}
+                <div className="my-4 flex items-center gap-3">
+                  <span className="h-px flex-1 bg-border" />
+                  <span className="text-xs text-foreground-muted">快速体验</span>
+                  <span className="h-px flex-1 bg-border" />
                 </div>
-                {patientDemoAccounts.length > 2 && (
-                  <details className="mt-2 rounded-2xl bg-[#fffaf5] px-3 py-2 text-sm">
-                    <summary className="cursor-pointer font-bold text-foreground-muted">
-                      更多联调演示身份
-                    </summary>
-                    <div className="mt-2 grid grid-cols-2 gap-2">
-                      {patientDemoAccounts.slice(2).map((account) => (
-                        <button
-                          key={account.idCardNo}
-                          type="button"
-                          onClick={() => {
-                            setIdCardNo(account.idCardNo);
-                            setPhone(account.phone);
-                            setError('');
-                          }}
-                          className="min-h-10 rounded-xl border border-[#efc9ae] bg-white px-2 text-xs font-bold text-primary"
-                        >
-                          填充{account.name}
-                        </button>
-                      ))}
-                    </div>
-                  </details>
-                )}
+                <div className="grid grid-cols-2 gap-2">
+                  <button
+                    type="button"
+                    className="patient-outline-button min-h-11 text-sm"
+                    onClick={() => fillDemo('ai')}
+                  >
+                    AI 对话任务
+                  </button>
+                  <button
+                    type="button"
+                    className="patient-outline-button min-h-11 text-sm"
+                    onClick={() => fillDemo('form')}
+                  >
+                    传统问卷任务
+                  </button>
+                </div>
               </>
-            ) : (
-              <div className="grid grid-cols-2 gap-2">
-                <button
-                  type="button"
-                  className="patient-outline-button min-h-11 text-sm"
-                  onClick={() => fillDemo('ai')}
-                >
-                  AI 对话任务
-                </button>
-                <button
-                  type="button"
-                  className="patient-outline-button min-h-11 text-sm"
-                  onClick={() => fillDemo('form')}
-                >
-                  传统问卷任务
-                </button>
-              </div>
             )}
 
             <button
@@ -373,10 +312,10 @@ function PatientVerifyContent() {
             {scanOpen && (
               <form
                 onSubmit={handleScanVerify}
-                className="mt-3 rounded-2xl border border-[#f0d6c3] bg-[#fffaf5] p-3 text-left"
+                className="mt-3 rounded-2xl border-2 border-foreground bg-surface-secondary p-3"
               >
                 <label className="text-sm font-bold text-foreground-muted">
-                  扫码后粘贴院内一次性令牌
+                  扫码后粘贴一次性令牌
                   <input
                     value={scanToken}
                     onChange={(event) => setScanToken(event.target.value)}
@@ -389,25 +328,25 @@ function PatientVerifyContent() {
                 <button
                   type="submit"
                   disabled={loading}
-                  className="patient-primary-button mt-3 w-full"
+                  className="patient-primary-button mt-3 w-full justify-center"
                 >
                   {loading ? '正在核验…' : '核验扫码令牌'}
                 </button>
                 <p className="mt-2 text-xs leading-5 text-foreground-muted">
-                  相机权限未开启时可粘贴二维码内容；令牌只能使用一次，过期后请联系护士重新生成。
+                  相机未开启时可粘贴二维码内容；令牌只能使用一次，过期请让心理老师重新生成。
                 </p>
               </form>
             )}
           </div>
 
-          <p className="mt-4 flex items-center justify-center gap-2 text-sm text-foreground-muted">
+          <p className="mt-4 flex items-center justify-center gap-2 text-sm font-semibold text-foreground-muted">
             <PatientIcon name="shield" className="h-4 w-4" />
-            信息仅用于心理评估
+            你说的话只有你和小晴知道
           </p>
 
           {apiMode && (
-            <div className="mt-3 rounded-2xl bg-[#edf6ff] p-3 text-left text-xs leading-5 text-[#3c6594]">
-              身份证号和手机号仅用于确认本次住院身份；登录后由患者专用接口加载本人护理任务。
+            <div className="mt-3 rounded-2xl border-2 border-foreground bg-[var(--accent-lemon)] p-3 text-left text-xs font-semibold leading-5 text-[#4a3f10] shadow-[3px_3px_0_var(--ink)]">
+              任务号和证件后四位来自心理老师的小纸条或二维码（300 秒有效）。进门后先读一遍知情同意，可慢慢读、随时退出。
             </div>
           )}
         </div>
