@@ -92,10 +92,10 @@ export default function PatientLayout({
             <div className="grid grid-cols-3 gap-2">
               {(
                 [
-                  { href: '/patient/home', label: '首页', icon: 'nav-home' },
-                  { href: '/patient/tasks', label: '任务', icon: 'nav-tasks' },
+                  { href: '/student/home', label: '首页', icon: 'nav-home' },
+                  { href: '/student/tasks', label: '任务', icon: 'nav-tasks' },
                   {
-                    href: '/patient/assistant',
+                    href: '/student/assistant',
                     label: '小晴助手',
                     icon: 'nav-assistant',
                   },

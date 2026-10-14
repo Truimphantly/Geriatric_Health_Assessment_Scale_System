@@ -33,12 +33,12 @@ interface NurseLayoutProps {
 }
 
 const navigation = [
-  { name: '工作台', href: '/nurse/dashboard', icon: HomeIcon },
-  { name: '学生管理', href: '/nurse/patients', icon: UserGroupIcon },
-  { name: '任务管理', href: '/nurse/tasks', icon: ClipboardDocumentListIcon },
-  { name: '实时监控', href: '/nurse/monitor', icon: ComputerDesktopIcon },
-  { name: 'AI质评', href: '/nurse/quality', icon: StarIcon },
-  { name: '系统配置', href: '/nurse/config', icon: Cog6ToothIcon },
+  { name: '工作台', href: '/teacher/dashboard', icon: HomeIcon },
+  { name: '学生管理', href: '/teacher/patients', icon: UserGroupIcon },
+  { name: '任务管理', href: '/teacher/tasks', icon: ClipboardDocumentListIcon },
+  { name: '实时监控', href: '/teacher/monitor', icon: ComputerDesktopIcon },
+  { name: 'AI质评', href: '/teacher/quality', icon: StarIcon },
+  { name: '系统配置', href: '/teacher/config', icon: Cog6ToothIcon },
 ];
 
 const subscribeToHydration = () => () => undefined;
@@ -110,14 +110,14 @@ export default function NurseLayout({
 
   useEffect(() => {
     if (hydrated && sessionChecked && !isAuthenticated) {
-      router.replace('/nurse/login');
+      router.replace('/teacher/login');
     }
   }, [hydrated, isAuthenticated, router, sessionChecked]);
 
   const handleLogout = () => {
     void careRepository.logoutStaff().catch(() => undefined);
     logout();
-    router.push('/nurse/login');
+    router.push('/teacher/login');
   };
 
   const handleResolveRequest = async (
@@ -163,7 +163,7 @@ export default function NurseLayout({
           <div className="flex items-center justify-between h-16">
             {/* Logo */}
             <div className="flex items-center space-x-8">
-              <Link href="/nurse/dashboard" className="flex items-center space-x-2">
+              <Link href="/teacher/dashboard" className="flex items-center space-x-2">
                 <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
                   <span className="text-foreground font-black">晴</span>
                 </div>
@@ -302,7 +302,7 @@ export default function NurseLayout({
                   </p>
                   <div className="mt-3 flex items-center gap-3">
                     <Link
-                      href={`/nurse/monitor/${request.taskId}`}
+                      href={`/teacher/monitor/${request.taskId}`}
                       className="text-sm font-medium text-primary"
                     >
                       立即查看

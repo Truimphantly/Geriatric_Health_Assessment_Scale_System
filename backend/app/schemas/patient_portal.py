@@ -1,4 +1,4 @@
-"""患者门户补充域 API Schema。"""
+"""学生门户补充域 API Schema。"""
 
 from __future__ import annotations
 

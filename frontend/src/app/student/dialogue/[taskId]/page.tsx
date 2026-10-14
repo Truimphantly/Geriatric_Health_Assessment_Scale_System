@@ -1,0 +1,1418 @@
+'use client';
+
+import { useEffect, useMemo, useRef, useState } from 'react';
+import Image from 'next/image';
+import { useParams, useRouter } from 'next/navigation';
+import PatientLayout from '@/components/layout/PatientLayout';
+import ConsentInteractionCard from '@/components/chat/ConsentInteractionCard';
+import EducationMaterialCard from '@/components/chat/EducationMaterialCard';
+import HandoffHistoryCard from '@/components/chat/HandoffHistoryCard';
+import { PatientChatBubble } from '@/components/patient/PatientChatBubble';
+import { PatientIcon } from '@/components/patient/PatientIcon';
+import { VoiceOrb } from '@/components/patient/VoiceOrb';
+import { IntegrationStatus } from '@/components/shared/IntegrationStatus';
+import { useRealtimeStream } from '@/hooks/useRealtimeStream';
+import { abortRequest, isRequestCancelled } from '@/lib/api/httpClient';
+import { careRepository } from '@/lib/repositories';
+import { runtimeConfig } from '@/lib/runtime/config';
+import { buildDialogueHistoryTimeline } from '@/lib/dialogue/historyTimeline';
+import { createClientInvocationId } from '@/lib/clientInvocation';
+import { getStructuredAnswerDisplayValue } from '@/lib/structuredAnswer';
+import {
+  buildDialogueSnapshotKey,
+  shouldLoadDialogueSnapshot,
+} from '@/lib/dialogue/sessionRecovery';
+import { isPatientTaskReadOnly } from '@/lib/patient/taskGroups';
+import { useChatStore } from '@/lib/stores/useChatStore';
+import { useTaskStore } from '@/lib/stores/useTaskStore';
+import { createDialogueSsePath } from '@/lib/transports/sseClient';
+import { applyRealtimeEvent } from '@/lib/transports/applyRealtimeEvent';
+import {
+  toDomainSseEnvelope,
+  toHandoffSseEnvelope,
+} from '@/lib/transports/handoffResponse';
+import {
+  VoiceSocketClient,
+  type VoiceConnectionState,
+} from '@/lib/transports/voiceSocket';
+import type {
+  CicareStage,
+  InteractionEvent,
+  InteractionMessage,
+  InteractionSession,
+  StructuredAnswer,
+} from '@/lib/types';
+
+interface ScriptResult {
+  stage: CicareStage;
+  content: string;
+  answer?: StructuredAnswer;
+  education?: {
+    title: string;
+    content: string;
+    priority: InteractionEvent['priority'];
+  };
+  complete?: boolean;
+}
+
+const totalQuestions = 7;
+
+function buildScriptResult(answerIndex: number, content: string): ScriptResult {
+  const normalized = content.trim();
+  if (answerIndex === 0) {
+    return {
+      stage: 'introduce',
+      content: '你好呀，我是小晴～今天咱们随便聊聊最近的状态，没有对错，你说什么我都保密。先聊聊最近睡得怎么样？',
+      answer: {
+        questionId: 'ready',
+        questionCode: 'READY',
+        questionText: '是否准备开始评估',
+        answerText: normalized,
+        sourceMessageIds: [],
+        extractionConfidence: 0.99,
+        corrected: false},
+    };
+  }
+  if (answerIndex === 1) {
+    const roughSleep = /差|不好|睡不着|失眠|难|浅|少/.test(normalized);
+    return {
+      stage: 'communicate',
+      content: '记下啦 ✓（睡不好不是矫情，是身体在提醒你需要注意了）那最近两周，有没有觉得做什么都提不起劲、没什么意思？',
+      answer: {
+        questionId: 'sleep',
+        questionCode: 'SLEEP',
+        questionText: '睡眠情况（入睡难/睡不安稳/睡得过多）',
+        answerText: normalized,
+        sourceMessageIds: [],
+        extractionConfidence: 0.93,
+        corrected: false,
+      },
+      education: roughSleep
+        ? {
+            title: '睡眠小卡片',
+            content: '睡前半小时放下手机、把房间灯光调暗一点点；白天足够运动能帮夜里更快关机。如果连续两周都睡不好，值得告诉老师或家长。',
+            priority: 'medium',
+          }
+        : undefined,
+    };
+  }
+  if (answerIndex === 2) {
+    const low = /低|难过|想哭|没意思|空|烦|压/.test(normalized);
+    return {
+      stage: 'ask',
+      content: '谢谢你说我认真听着。这段时间，看起来是不是比平时更容易紧张、担心、或者脑子停不下来么？比如考试周？',
+      answer: {
+        questionId: 'interest',
+        questionCode: 'INTEREST',
+        questionText: '做事提不起劲或没有兴趣',
+        answerText: normalized,
+        sourceMessageIds: [],
+        extractionConfidence: 0.92,
+        corrected: false,
+      },
+      education: low
+        ? {
+            title: '情绪小卡片',
+            content: '情绪波动是正常反应，不是脆弱。试着给情绪起个名字（烦躁、委屈、紧张），往往比硬压下去更轻松。',
+            priority: 'medium',
+          }
+        : undefined,
+    };
+  }
+  if (answerIndex === 3) {
+    const worried = /担|紧张|怕|考|评|烦/.test(normalized);
+    return {
+      stage: 'ask',
+      content: '这种紧张感很多人都有，你并不是一个人。那最近有没有觉得疲倦、没精神，做什么都没力气？',
+      answer: {
+        questionId: 'worry',
+        questionCode: 'WORRY',
+        questionText: '感到紧张、担心或难以放松',
+        answerText: normalized,
+        sourceMessageIds: [],
+        extractionConfidence: 0.9,
+        corrected: false,
+      },
+      education: worried
+        ? {
+            title: '压力小卡片',
+            content: '压力大时把任务拆小、一次只做一件；给自己留出休息和喜欢的事，能慢慢变得可承受。寻求帮助也是一种能力。',
+            priority: 'medium',
+          }
+        : undefined,
+    };
+  }
+  if (answerIndex === 4) {
+    const low = /提不起|没力|累|没精神|沉/.
+      test(normalized);
+    return {
+      stage: 'respond',
+      content: '记下啦 ✓ 最后一个话题，想问问你和身边的人：这段时间有没有觉得做什么都没意思、或者心里闷闷说不出来？愿意说多少都可以。',
+      answer: {
+        questionId: 'fatigue',
+        questionCode: 'FATIGUE',
+        questionText: '疲倦或没有活力',
+        answerText: normalized,
+        sourceMessageIds: [],
+        extractionConfidence: 0.91,
+        corrected: false,
+      },
+      education: low
+        ? {
+            title: '低落小卡片',
+            content: '持续提不起劲是需要被认真对待的信号，不是矫情。愿意说出来本身就是很重要的一步，也可以找信任的大人一起想办法。',
+            priority: 'high',
+          }
+        : undefined,
+    };
+  }
+  if (answerIndex === 5) {
+    const heavy = /没意思|累|闷|说不|低|压/.test(normalized);
+    return {
+      stage: 'ask',
+      content: '谢谢你的信任，这些我都记准了（可以随时改）。如果以后遇到难处，你希望先找谁聊聊？小晴也可以帮你递求助卡片给心理老师。',
+      answer: {
+        questionId: 'support',
+        questionCode: 'SUPPORT',
+        questionText: '支持资源与求助意愿',
+        answerText: normalized,
+        sourceMessageIds: [],
+        extractionConfidence: 0.89,
+        corrected: false,
+      },
+      education: heavy
+        ? {
+            title: '求助小卡片',
+            content: '求助不是小题大做。12356 心理援助热线和 12355 青少年服务台都有人接；教室里的心理老师也是你可以敲门的地方。',
+            priority: 'high',
+          }
+        : undefined,
+    };
+  }
+  return {
+    stage: 'exit',
+    content: '今天聊到这里，辛苦你跟小晴说了这么多。我会把记录整理给心理老师看（只给他们必要了解的部分）。接下来请完成知情同意确认。',
+    answer: {
+      questionId: 'symptoms',
+      questionCode: 'SYMPTOMS',
+      questionText: '主要困扰与帮助需求',
+      answerText: normalized,
+      sourceMessageIds: [],
+      extractionConfidence: 0.9,
+      corrected: false,
+    },
+    complete: true,
+  };
+}
+
+export default function PatientDialoguePage() {
+  const { taskId } = useParams<{ taskId: string }>();
+  const router = useRouter();
+  const messagesEndRef = useRef<HTMLDivElement>(null);
+  const voiceClientRef = useRef<VoiceSocketClient | undefined>(undefined);
+  const voiceOverlayHideTimerRef = useRef<ReturnType<typeof setTimeout> | null>(
+    null
+  );
+  const loadedSnapshotKeyRef = useRef<string | null>(null);
+  const handoffSubmittingRef = useRef(false);
+  const task = useTaskStore((state) => state.tasks.find((item) => item.id === taskId));
+  const readOnly = isPatientTaskReadOnly(task);
+  const updateTask = useTaskStore((state) => state.updateTask);
+  const session = useChatStore((state) => state.sessions[taskId]);
+  const structuredAnswers = useChatStore((state) => state.structuredAnswers);
+  const interactionEvents = useChatStore((state) => state.events);
+  const educationCards = useChatStore((state) => state.educationCards);
+  const consentRequests = useChatStore((state) => state.consentRequests);
+  const answers = structuredAnswers[taskId] ?? [];
+  const historyTimeline = useMemo(
+    () =>
+      buildDialogueHistoryTimeline({
+        messages: session?.messages,
+        educationCards: educationCards[taskId],
+        consentRequests: consentRequests[taskId],
+        events: interactionEvents[taskId],
+      }),
+    [
+      consentRequests,
+      educationCards,
+      interactionEvents,
+      session?.messages,
+      taskId,
+    ]
+  );
+  const streamingTaskId = useChatStore((state) => state.streamingTaskId);
+  const setSession = useChatStore((state) => state.setSession);
+  const addMessage = useChatStore((state) => state.addMessage);
+  const updateMessage = useChatStore((state) => state.updateMessage);
+  const upsertAnswer = useChatStore((state) => state.upsertStructuredAnswer);
+  const addEvent = useChatStore((state) => state.addEvent);
+  const updateConsentRequest = useChatStore(
+    (state) => state.updateConsentRequest
+  );
+  const saveConsent = useTaskStore((state) => state.saveConsent);
+  const setStreaming = useChatStore((state) => state.setStreaming);
+  const [isRecording, setIsRecording] = useState(false);
+  const [isSending, setIsSending] = useState(false);
+  const [isHandoffSubmitting, setIsHandoffSubmitting] = useState(false);
+  const [isPaused, setIsPaused] = useState(false);
+  const [connectionError, setConnectionError] = useState('');
+  const [voiceState, setVoiceState] =
+    useState<VoiceConnectionState>('idle');
+  const [inputMode, setInputMode] = useState<'text' | 'voice'>('voice');
+  const [voiceCompletionReadyTaskId, setVoiceCompletionReadyTaskId] =
+    useState<string | null>(null);
+  const [editingAnswerId, setEditingAnswerId] = useState<string | null>(null);
+  const [correction, setCorrection] = useState('');
+  const [manualInterventionReason, setManualInterventionReason] = useState('');
+  const [messageDraft, setMessageDraft] = useState('');
+  const [pendingVoiceTranscript, setPendingVoiceTranscript] = useState('');
+  const [pendingVoiceTranscriptId, setPendingVoiceTranscriptId] = useState('');
+  const [voiceOverlayVisible, setVoiceOverlayVisible] = useState(false);
+
+  const clearVoiceOverlayHideTimer = () => {
+    if (voiceOverlayHideTimerRef.current !== null) {
+      clearTimeout(voiceOverlayHideTimerRef.current);
+      voiceOverlayHideTimerRef.current = null;
+    }
+  };
+
+  const showVoiceOverlay = () => {
+    clearVoiceOverlayHideTimer();
+    setVoiceOverlayVisible(true);
+  };
+
+  const hideVoiceOverlay = (delayMs = 0) => {
+    clearVoiceOverlayHideTimer();
+    if (delayMs <= 0) {
+      setVoiceOverlayVisible(false);
+      return;
+    }
+    voiceOverlayHideTimerRef.current = setTimeout(() => {
+      voiceOverlayHideTimerRef.current = null;
+      setVoiceOverlayVisible(false);
+    }, delayMs);
+  };
+
+  const dialogueSnapshotKey = task
+    ? buildDialogueSnapshotKey(taskId, task.sessionId)
+    : '';
+
+  useEffect(() => {
+    const currentTask = useTaskStore
+      .getState()
+      .tasks.find((item) => item.id === taskId);
+    const hasSession = Boolean(
+      useChatStore.getState().sessions[taskId]
+    );
+    if (
+      !shouldLoadDialogueSnapshot({
+        dataMode: runtimeConfig.dataMode,
+        hasTask: Boolean(currentTask),
+        hasSession,
+        snapshotKey: dialogueSnapshotKey,
+        loadedSnapshotKey: loadedSnapshotKeyRef.current,
+      }) ||
+      !currentTask
+    ) {
+      return;
+    }
+
+    if (runtimeConfig.dataMode === 'mock') {
+      const timestamp = Date.now();
+      const sessionId =
+        currentTask.sessionId ?? `SESSION-${taskId}-${timestamp}`;
+      const welcome: InteractionMessage = {
+        id: `MSG-${timestamp}`,
+        messageNo: `MSG-${timestamp}`,
+        sessionId,
+        turnNo: 1,
+        role: 'ai',
+        cicareStage: 'connect',
+        intentType: 'greeting',
+        contentText: `您好，${currentTask.participantName ?? currentTask.patientName}。我是AI心理陪伴助手小晴，今天想跟你随便聊聊最近的状态。现在方便开始吗？`,
+        occurredAt: new Date().toISOString(),
+      };
+      const nextSession: InteractionSession = {
+        id: sessionId,
+        sessionNo: sessionId,
+        taskId,
+        patientId: currentTask.patientId,
+        encounterId: currentTask.encounterId,
+        interactionType: 'assessment',
+        channelType: 'mixed',
+        sessionStatus: 'active',
+        startedAt: new Date().toISOString(),
+        currentCicareStage: 'connect',
+        answeredQuestionCount: 0,
+        totalQuestionCount: totalQuestions,
+        messages: [welcome],
+      };
+      setSession(taskId, nextSession);
+      updateTask(taskId, {
+        sessionId,
+        ...(readOnly
+          ? {}
+          : {
+              taskStatus: 'in_progress' as const,
+              currentStage: 'connect' as const,
+              progress: { current: 0, total: totalQuestions },
+            }),
+      });
+      return;
+    }
+
+    loadedSnapshotKeyRef.current = dialogueSnapshotKey;
+    // API 快照是当前任务领域事件的事实来源，先移除 sessionStorage 中
+    // 可能残留的旧卡片，避免提交已经不存在的领域事件 ID。
+    useChatStore.getState().clearTaskDomainState(taskId);
+    const controller = new AbortController();
+    void careRepository
+      .getDialogueSnapshot(currentTask, controller.signal)
+      .then((snapshot) => {
+        loadedSnapshotKeyRef.current = buildDialogueSnapshotKey(
+          taskId,
+          snapshot.session.id
+        );
+        setSession(taskId, snapshot.session);
+        useChatStore
+          .getState()
+          .setStructuredAnswers(taskId, snapshot.answers);
+        setManualInterventionReason(
+          snapshot.manualIntervention
+            ? snapshot.interventionReason ?? '部分字段需要医护人工确认'
+            : ''
+        );
+        snapshot.events.forEach(applyRealtimeEvent);
+        setConnectionError('');
+        updateTask(taskId, {
+          sessionId: snapshot.session.id,
+          ...(readOnly
+            ? {}
+            : {
+                taskStatus: 'in_progress' as const,
+                currentStage: snapshot.session.currentCicareStage,
+                progress: {
+                  current: snapshot.session.answeredQuestionCount ?? 0,
+                  total:
+                    snapshot.session.totalQuestionCount ??
+                    currentTask.progress?.total ??
+                    totalQuestions,
+                },
+              }),
+        });
+      })
+      .catch((loadError) => {
+        if (controller.signal.aborted || isRequestCancelled(loadError)) return;
+        loadedSnapshotKeyRef.current = null;
+        setConnectionError(
+          loadError instanceof Error
+            ? `会话加载失败：${loadError.message}`
+            : '会话加载失败'
+        );
+      });
+    return () => abortRequest(controller);
+  }, [
+    dialogueSnapshotKey,
+    readOnly,
+    setSession,
+    taskId,
+    updateTask,
+  ]);
+
+  const streamPath = session?.id
+    ? createDialogueSsePath(session.id)
+    : task?.sessionId
+      ? createDialogueSsePath(task.sessionId)
+      : undefined;
+  const { status: streamStatus, error: streamError } = useRealtimeStream({
+    path: streamPath,
+    enabled: Boolean(task) && !readOnly,
+  });
+
+  useEffect(
+    () => () => {
+      clearVoiceOverlayHideTimer();
+      void voiceClientRef.current?.close();
+      voiceClientRef.current = undefined;
+    },
+    []
+  );
+
+  useEffect(() => {
+    if (readOnly) return;
+    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+  }, [readOnly, session?.messages.length]);
+
+  const patientAnswerCount = useMemo(
+    () => session?.messages.filter((message) => message.role === 'patient').length ?? 0,
+    [session?.messages]
+  );
+  const backendCompleted = session?.sessionStatus === 'completed';
+  const completingVoice =
+    backendCompleted &&
+    runtimeConfig.dataMode === 'api' &&
+    inputMode === 'voice' &&
+    voiceCompletionReadyTaskId !== taskId;
+  const completed = backendCompleted && !completingVoice;
+  const preparing = session?.sessionStatus === 'pending';
+  const awaitingReply =
+    !readOnly &&
+    !completed &&
+    session?.messages.at(-1)?.role === 'patient' &&
+    runtimeConfig.dataMode === 'api';
+  const isStreaming =
+    !readOnly &&
+    (preparing || streamingTaskId === taskId || isSending || awaitingReply);
+  const displayedTotalQuestions =
+    runtimeConfig.dataMode === 'api'
+      ? session?.totalQuestionCount ?? task?.progress?.total ?? totalQuestions
+      : totalQuestions;
+
+  useEffect(() => {
+    if (
+      !backendCompleted ||
+      runtimeConfig.dataMode !== 'api' ||
+      inputMode !== 'voice'
+    ) {
+      return;
+    }
+    let active = true;
+    void (async () => {
+      try {
+        await voiceClientRef.current?.finishAndCloseAfterPlayback();
+      } finally {
+        if (!active) return;
+        voiceClientRef.current = undefined;
+        setIsRecording(false);
+        setVoiceState('closed');
+        setVoiceCompletionReadyTaskId(taskId);
+      }
+    })();
+    return () => {
+      active = false;
+    };
+  }, [backendCompleted, inputMode, taskId]);
+
+  const streamAssistantMessage = async (result: ScriptResult) => {
+    if (!session) return;
+    const messageId = `MSG-${Date.now()}-AI`;
+    const message: InteractionMessage = {
+      id: messageId,
+      messageNo: messageId,
+      sessionId: session.id,
+      turnNo: session.messages.length + 2,
+      role: 'ai',
+      cicareStage: result.stage,
+      intentType: result.complete ? 'confirmation' : 'question',
+      contentText: '',
+      occurredAt: new Date().toISOString(),
+      isStreaming: true,
+    };
+    addMessage(taskId, message);
+    setStreaming(taskId);
+    const chunks = result.content.match(/.{1,6}/g) ?? [result.content];
+    let currentText = '';
+    for (const chunk of chunks) {
+      currentText += chunk;
+      updateMessage(taskId, messageId, { contentText: currentText });
+      await new Promise((resolve) => setTimeout(resolve, 45));
+    }
+    updateMessage(taskId, messageId, { isStreaming: false });
+    setStreaming(null);
+  };
+
+  const handleSendMessage = async (content: string) => {
+    const currentSession = useChatStore.getState().sessions[taskId];
+    if (!currentSession || readOnly || isPaused || isStreaming || completed) return;
+    const messageId = `MSG-${Date.now()}-PATIENT`;
+    const patientMessage: InteractionMessage = {
+      id: messageId,
+      messageNo: messageId,
+      sessionId: currentSession.id,
+      turnNo: currentSession.messages.length + 1,
+      role: 'patient',
+      cicareStage: currentSession.currentCicareStage,
+      intentType: 'answer',
+      contentText: content,
+      occurredAt: new Date().toISOString(),
+    };
+    addMessage(taskId, patientMessage);
+
+    if (runtimeConfig.dataMode === 'api') {
+      setIsSending(true);
+      setConnectionError('');
+      try {
+        await careRepository.sendDialogMessage({
+          taskId,
+          sessionId: currentSession.id,
+          content,
+          clientMessageId: messageId,
+          inputMode: 'text',
+        });
+      } catch (sendError) {
+        const rawMessage =
+          sendError instanceof Error ? sendError.message : '消息发送失败';
+        setConnectionError(
+          rawMessage.includes('已经提交答案')
+            ? '这一题已经答过了，AI 正在准备下一问，稍等一下就好'
+            : `发送失败：${rawMessage}`
+        );
+      } finally {
+        setIsSending(false);
+      }
+      return;
+    }
+
+    const result = buildScriptResult(patientAnswerCount, content);
+    if (result.answer) {
+      upsertAnswer(taskId, {
+        ...result.answer,
+        sourceMessageIds: [messageId],
+      });
+    }
+    if (result.education) {
+      const event: InteractionEvent = {
+        id: `EVENT-${Date.now()}`,
+        taskId,
+        messageId,
+        eventType: 'education',
+        title: result.education.title,
+        description: result.education.content,
+        priority: result.education.priority,
+        handled: false,
+        occurredAt: new Date().toISOString(),
+      };
+      addEvent(taskId, event);
+    }
+
+    await streamAssistantMessage(result);
+    const latestSession = useChatStore.getState().sessions[taskId];
+    if (!latestSession) return;
+    const answered = Math.min(patientAnswerCount + 1, totalQuestions);
+    const summary = result.complete
+      ? '学生完成了本轮心理评估对话，小晴已整理回答，等待心理老师复核。'
+      : latestSession.aiSummary;
+    setSession(taskId, {
+      ...latestSession,
+      currentCicareStage: result.stage,
+      answeredQuestionCount: answered,
+      sessionStatus: result.complete ? 'completed' : 'active',
+      completedAt: result.complete ? new Date().toISOString() : undefined,
+      aiSummary: summary,
+    });
+    updateTask(taskId, {
+      currentStage: result.stage,
+      progress: { current: answered, total: totalQuestions },
+      taskStatus:
+        result.complete && !task?.consentRequired ? 'pending_review' : 'in_progress',
+      aiSummary: summary,
+    });
+  };
+
+  const requestPatientHandoff = async (
+    reason: string,
+    requestedAction = 'other'
+  ) => {
+    if (handoffSubmittingRef.current) return null;
+    handoffSubmittingRef.current = true;
+    setIsHandoffSubmitting(true);
+    try {
+      return await careRepository.requestHandoff(taskId, reason, {
+        requestedAction,
+        clientInvocationId: createClientInvocationId('patient-handoff'),
+      });
+    } finally {
+      handoffSubmittingRef.current = false;
+      setIsHandoffSubmitting(false);
+    }
+  };
+
+  const askNurse = async () => {
+    const reason = '学生在小晴对话中主动呼叫心理老师';
+    try {
+      const response = await requestPatientHandoff(reason);
+      if (!response) return;
+      applyRealtimeEvent(
+        toHandoffSseEnvelope(response, {
+          taskId,
+          sessionId: session?.id,
+          eventType: 'handoff_requested',
+        })
+      );
+      setConnectionError('');
+    } catch (handoffError) {
+      setConnectionError(
+        handoffError instanceof Error
+          ? `呼叫心理老师失败：${handoffError.message}`
+          : '呼叫心理老师失败'
+      );
+      return;
+    }
+  };
+
+  const handleConsentSubmit = async (
+    progress: Parameters<typeof saveConsent>[0]
+  ) => {
+    if (progress.decision === 'needs_explanation') {
+      const reason = '学生对知情同意内容需要老师人工解说';
+      const response = await requestPatientHandoff(reason, 'explain_consent');
+      if (response) {
+        applyRealtimeEvent(
+          toHandoffSseEnvelope(response, {
+            taskId,
+            sessionId: session?.id,
+            eventType: 'handoff_requested',
+          })
+        );
+      }
+    }
+    await careRepository.submitConsent(progress);
+    saveConsent(progress);
+    if (progress.formId) {
+      updateConsentRequest(taskId, progress.formId, {
+        status:
+          progress.decision === 'agreed'
+            ? 'signed'
+            : progress.decision === 'needs_explanation'
+              ? 'needs_explanation'
+              : 'refused',
+        decision: progress.decision,
+        clauses: progress.clauses,
+        completedAt: progress.completedAt,
+      });
+    }
+    if (progress.decision === 'agreed') {
+      updateTask(taskId, { taskStatus: 'pending_review' });
+    }
+  };
+
+  const handleEducationAcknowledge = async (
+    eventId: string,
+    materialId: string
+  ) => {
+    try {
+      const response = await careRepository.acknowledgeEducation(
+        taskId,
+        eventId,
+        materialId
+      );
+      applyRealtimeEvent(
+        toDomainSseEnvelope(response, {
+          taskId,
+          sessionId: session?.id,
+          eventType: 'education_status_updated',
+        })
+      );
+      setConnectionError('');
+    } catch (acknowledgeError) {
+      setConnectionError(
+        acknowledgeError instanceof Error
+          ? `科普确认失败：${acknowledgeError.message}`
+          : '科普确认失败'
+      );
+      throw acknowledgeError;
+    }
+  };
+
+  const togglePause = async () => {
+    const current = useChatStore.getState().sessions[taskId];
+    if (!current) return;
+    const nextPaused = !isPaused;
+    try {
+      if (nextPaused) {
+        await careRepository.pauseDialogue(current.id);
+        await voiceClientRef.current?.pause();
+      } else {
+        await careRepository.resumeDialogue(current.id);
+        await voiceClientRef.current?.resume();
+      }
+      setIsPaused(nextPaused);
+      setSession(taskId, {
+        ...current,
+        sessionStatus: nextPaused ? 'paused' : 'active',
+      });
+    } catch (pauseError) {
+      setConnectionError(
+        pauseError instanceof Error
+          ? pauseError.message
+          : '会话状态更新失败'
+      );
+    }
+  };
+
+  const startVoice = async () => {
+    showVoiceOverlay();
+    setPendingVoiceTranscript('');
+    setPendingVoiceTranscriptId('');
+    if (runtimeConfig.dataMode === 'mock') {
+      setIsRecording(true);
+      setVoiceState('listening');
+      return;
+    }
+    const currentSession = useChatStore.getState().sessions[taskId];
+    if (!currentSession) {
+      setConnectionError('会话尚未准备完成，请稍后重试');
+      hideVoiceOverlay(2800);
+      return;
+    }
+    if (
+      voiceClientRef.current &&
+      voiceState === 'paused'
+    ) {
+      await voiceClientRef.current.resume();
+      return;
+    }
+    await voiceClientRef.current?.close();
+    const client = new VoiceSocketClient({
+      taskId,
+      sessionId: currentSession.id,
+      onStateChange: (state) => {
+        setVoiceState(state);
+        setIsRecording(
+          state === 'listening' ||
+            state === 'transcribing' ||
+            state === 'thinking' ||
+            state === 'speaking'
+        );
+        if (
+          state === 'connecting' ||
+          state === 'transcribing' ||
+          state === 'thinking' ||
+          state === 'speaking' ||
+          state === 'paused'
+        ) {
+          showVoiceOverlay();
+        } else if (state === 'error' || state === 'text_fallback') {
+          showVoiceOverlay();
+          hideVoiceOverlay(2800);
+        }
+      },
+      onError: setConnectionError,
+      onSpeechStarted: showVoiceOverlay,
+      onPlaybackCompleted: () => hideVoiceOverlay(),
+      onTranscriptReady: (transcript) => {
+        showVoiceOverlay();
+        setPendingVoiceTranscript(transcript.text);
+        setPendingVoiceTranscriptId(transcript.transcriptId);
+        setVoiceState('transcribing');
+        // 生产语音识别完成后直接提交；确认卡仅保留给 Mock 原型演示。
+        if (runtimeConfig.dataMode === 'api') {
+          client.confirmTranscript(transcript.transcriptId);
+        }
+      },
+      onTranscriptConfirmed: () => {
+        setPendingVoiceTranscript('');
+        setPendingVoiceTranscriptId('');
+        setVoiceState('thinking');
+      },
+      onTranscriptDiscarded: (transcriptId) => {
+        if (transcriptId === pendingVoiceTranscriptId) {
+          setPendingVoiceTranscript('');
+          setPendingVoiceTranscriptId('');
+        }
+      },
+    });
+    voiceClientRef.current = client;
+    try {
+      await client.start();
+    } catch {
+      setIsRecording(false);
+      setVoiceState('text_fallback');
+      showVoiceOverlay();
+      hideVoiceOverlay(2800);
+    }
+  };
+
+  const changeInputMode = async (mode: 'text' | 'voice') => {
+    if (mode === inputMode) return;
+    if (mode === 'text') {
+      await voiceClientRef.current?.close();
+      voiceClientRef.current = undefined;
+      setIsRecording(false);
+      setVoiceState('idle');
+      hideVoiceOverlay();
+    }
+    setConnectionError('');
+    setInputMode(mode);
+  };
+
+  const closeVoice = async () => {
+    try {
+      await voiceClientRef.current?.close();
+    } finally {
+      voiceClientRef.current = undefined;
+      setIsRecording(false);
+      setVoiceState('closed');
+      hideVoiceOverlay();
+      setInputMode('text');
+    }
+  };
+
+  const stopVoice = async () => {
+    setIsRecording(false);
+    showVoiceOverlay();
+    if (runtimeConfig.dataMode === 'mock') {
+      setVoiceState('transcribing');
+      setPendingVoiceTranscript('我目前感觉还可以，没有特别不舒服。');
+      setPendingVoiceTranscriptId('mock-transcript');
+      return;
+    }
+    try {
+      if (voiceClientRef.current && voiceState === 'listening') {
+        // 主动结束本轮：注入静音促使服务端立即断句，采集保持开启。
+        await voiceClientRef.current?.endTurn();
+        return;
+      }
+      await voiceClientRef.current?.pause();
+    } catch (voiceError) {
+      setVoiceState('text_fallback');
+      showVoiceOverlay();
+      hideVoiceOverlay(2800);
+      setConnectionError(
+        voiceError instanceof Error
+          ? voiceError.message
+          : '语音发送失败，已切换文字输入'
+      );
+    }
+  };
+
+  const confirmVoiceTranscript = async () => {
+    const transcript = pendingVoiceTranscript.trim();
+    if (!transcript) return;
+    if (
+      runtimeConfig.dataMode !== 'mock' &&
+      pendingVoiceTranscriptId
+    ) {
+      voiceClientRef.current?.confirmTranscript(pendingVoiceTranscriptId);
+      setPendingVoiceTranscript('');
+      setPendingVoiceTranscriptId('');
+      setVoiceState('thinking');
+      return;
+    }
+    setPendingVoiceTranscript('');
+    setPendingVoiceTranscriptId('');
+    setVoiceState('thinking');
+    await handleSendMessage(transcript);
+    setVoiceState('idle');
+    hideVoiceOverlay();
+  };
+
+  const retryVoiceTranscript = async () => {
+    if (
+      runtimeConfig.dataMode !== 'mock' &&
+      pendingVoiceTranscriptId
+    ) {
+      voiceClientRef.current?.retryTranscript(pendingVoiceTranscriptId);
+    }
+    setPendingVoiceTranscript('');
+    setPendingVoiceTranscriptId('');
+    showVoiceOverlay();
+    await startVoice();
+  };
+
+  const interruptVoice = () => {
+    voiceClientRef.current?.interrupt();
+    setVoiceState('listening');
+    setIsRecording(true);
+  };
+
+  const saveCorrection = () => {
+    const answer = answers.find((item) => item.questionId === editingAnswerId);
+    if (!answer || !correction.trim()) return;
+    upsertAnswer(taskId, {
+      ...answer,
+      answerText: correction.trim(),
+      answerNumber: undefined,
+      corrected: true,
+    });
+    setEditingAnswerId(null);
+    setCorrection('');
+  };
+  const visualVoiceState: VoiceConnectionState = connectionError
+    ? 'text_fallback'
+    : isPaused
+      ? 'paused'
+      : inputMode === 'voice' &&
+          isStreaming &&
+          (voiceState === 'idle' || voiceState === 'closed')
+        ? 'thinking'
+        : voiceState;
+  const progressValue = session?.answeredQuestionCount ?? 0;
+  const progressPercentage = Math.round(
+    (progressValue / Math.max(displayedTotalQuestions, 1)) * 100
+  );
+
+  if (!task) {
+    return (
+      <PatientLayout title="AI对话评估" showBack>
+        <div className="p-6 text-center">
+          <Image
+            src="/assets/patient/states/empty-tasks.svg"
+            alt=""
+            width={96}
+            height={96}
+            priority
+            className="mx-auto h-24 w-24"
+          />
+          <p className="mt-4 font-bold">任务不存在或已经失效</p>
+        </div>
+      </PatientLayout>
+    );
+  }
+
+  return (
+    <PatientLayout
+      title="心晴对话"
+      showBack
+      onBack={() => router.push(`/student/tasks/${taskId}`)}
+      headerRight={
+        <button
+          type="button"
+          onClick={() => void askNurse()}
+          disabled={isHandoffSubmitting}
+          className="patient-touch-button min-w-[78px] gap-1 rounded-full bg-primary px-3 text-white disabled:opacity-50"
+          aria-label={isHandoffSubmitting ? '正在呼叫心理老师' : '呼叫心理老师'}
+        >
+          <PatientIcon name="nurse" className="h-5 w-5" />
+          <span className="text-sm font-black">呼叫心理老师</span>
+        </button>
+      }
+    >
+      <div className="relative flex h-[calc(100dvh-64px)] flex-col overflow-hidden">
+        <section className="shrink-0 border-b border-border bg-[#fffaf6]/90 px-[18px] py-3">
+          <div className="flex items-center gap-3">
+            <span className="font-black text-primary">{progressValue}</span>
+            <span className="-ml-2 text-sm text-foreground-muted">
+              / {displayedTotalQuestions}
+            </span>
+            <div className="patient-progress-track flex-1">
+              <div
+                className="patient-progress-value"
+                style={{ width: `${progressPercentage}%` }}
+              />
+            </div>
+            {readOnly ? (
+              <span className="rounded-full bg-[#eee9e3] px-2.5 py-1 text-xs font-bold text-foreground-muted">
+                只读
+              </span>
+            ) : (
+              <IntegrationStatus
+                compact
+                streamStatus={streamStatus}
+                voiceState={inputMode === 'voice' ? voiceState : undefined}
+              />
+            )}
+          </div>
+          <p className="mt-2 flex items-center justify-center gap-1.5 text-xs text-foreground-muted">
+            <PatientIcon name="lock" className="h-4 w-4" />
+            仅在您点击后使用麦克风
+          </p>
+        </section>
+
+        <div className="scrollbar-soft flex-1 overflow-y-auto px-[14px] py-4">
+          <section
+            className={`${
+              inputMode === 'voice' && !readOnly
+                ? 'patient-card rounded-[26px] p-3'
+                : ''
+            }`}
+            aria-label="评估对话记录"
+          >
+            {historyTimeline.map((item) => {
+              if (item.kind === 'message') {
+                return (
+                  <PatientChatBubble key={item.id} message={item.message} />
+                );
+              }
+              if (item.kind === 'education') {
+                return (
+                  <EducationMaterialCard
+                    key={item.id}
+                    card={item.item}
+                    readOnly={readOnly}
+                    onAcknowledge={() =>
+                      handleEducationAcknowledge(
+                        item.item.id,
+                        item.item.materialId
+                      )
+                    }
+                  />
+                );
+              }
+              if (item.kind === 'consent') {
+                return (
+                  <ConsentInteractionCard
+                    key={item.id}
+                    request={item.item}
+                    participantName={task.participantName ?? task.patientName}
+                    readOnly={readOnly}
+                    onSubmit={handleConsentSubmit}
+                  />
+                );
+              }
+              if (item.event.eventType === 'handoff') {
+                return (
+                  <div key={item.id} className="mb-4">
+                    <HandoffHistoryCard event={item.event} />
+                  </div>
+                );
+              }
+              return (
+                <div
+                  key={item.id}
+                  className={`mb-4 rounded-2xl border p-4 ${
+                    item.event.priority === 'high'
+                      ? 'border-red-200 bg-red-50'
+                      : 'border-amber-200 bg-amber-50'
+                  }`}
+                >
+                  <div className="flex items-center gap-2 font-bold">
+                    <PatientIcon name="warning" className="h-5 w-5" />
+                    {item.event.title}
+                  </div>
+                  <p className="mt-1 text-sm leading-6">
+                    {item.event.description}
+                  </p>
+                  {readOnly ? (
+                    <p className="mt-2 text-xs text-foreground-muted">
+                      {item.event.handled ? '学生已了解' : '历史提示记录'}
+                    </p>
+                  ) : (
+                    <button
+                      type="button"
+                      onClick={() =>
+                        useChatStore
+                          .getState()
+                          .markEventHandled(taskId, item.event.id)
+                      }
+                      className="mt-2 text-xs font-bold text-primary underline"
+                    >
+                      {item.event.handled ? '已了解' : '我已了解'}
+                    </button>
+                  )}
+                </div>
+              );
+            })}
+            <div ref={messagesEndRef} />
+          </section>
+
+          {runtimeConfig.dataMode === 'mock' &&
+          (pendingVoiceTranscript || voiceState === 'transcribing') ? (
+            <section className="patient-card mt-3 p-3">
+              <div className="flex items-center gap-2 rounded-2xl bg-[#edf8f7] px-3 py-3 font-bold text-[#258f91]">
+                <PatientIcon name="microphone" className="h-5 w-5" />
+                <span className="flex-1">
+                  {pendingVoiceTranscript || '正在等待后端返回可确认的转写内容…'}
+                </span>
+                {pendingVoiceTranscript && (
+                  <PatientIcon name="check-circle" className="h-5 w-5" />
+                )}
+              </div>
+              <div className="mt-2 grid grid-cols-2 gap-2">
+                <button
+                  type="button"
+                  onClick={() => void retryVoiceTranscript()}
+                  className="patient-outline-button min-h-11 text-sm"
+                >
+                  <PatientIcon name="replay" className="h-5 w-5" />
+                  重新说一遍
+                </button>
+                <button
+                  type="button"
+                  onClick={() => void confirmVoiceTranscript()}
+                  disabled={!pendingVoiceTranscript}
+                  className="patient-primary-button min-h-11 text-sm"
+                >
+                  <PatientIcon name="send" className="h-5 w-5" />
+                  确认发送
+                </button>
+              </div>
+            </section>
+          ) : null}
+
+          {answers.length > 0 && (
+            <details className="patient-card mt-3 p-4">
+              <summary className="cursor-pointer font-bold">
+                查看已记录信息（{answers.length} 项）
+              </summary>
+              <div className="mt-3 space-y-2">
+                {answers.map((answer) => (
+                  <div
+                    key={answer.questionId}
+                    className="rounded-2xl bg-surface-secondary p-3"
+                  >
+                    <div className="flex items-start justify-between gap-2">
+                      <div>
+                        <p className="text-xs text-foreground-muted">
+                          {answer.questionText}
+                        </p>
+                        <p className="mt-1 text-sm font-bold">
+                          {getStructuredAnswerDisplayValue(answer)}
+                        </p>
+                      </div>
+                      {!readOnly && (
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setEditingAnswerId(answer.questionId);
+                            setCorrection(
+                              getStructuredAnswerDisplayValue(answer)
+                            );
+                          }}
+                          className="patient-touch-button h-10 min-h-10 w-10 min-w-10 text-primary"
+                          aria-label={`纠正${answer.questionText}`}
+                        >
+                          <PatientIcon name="edit" className="h-5 w-5" />
+                        </button>
+                      )}
+                    </div>
+                  </div>
+                ))}
+                {!readOnly && editingAnswerId && (
+                  <div className="rounded-2xl bg-primary-tint p-3">
+                    <textarea
+                      value={correction}
+                      onChange={(event) => setCorrection(event.target.value)}
+                      className="w-full rounded-xl border border-border bg-surface p-3 text-sm outline-none focus:border-primary"
+                      rows={2}
+                    />
+                    <button
+                      type="button"
+                      className="patient-primary-button mt-2 min-h-11 w-full text-sm"
+                      onClick={saveCorrection}
+                    >
+                      保存更正
+                    </button>
+                  </div>
+                )}
+              </div>
+            </details>
+          )}
+
+          {(connectionError || streamError) && (
+            <div
+              role="alert"
+              className="mt-3 rounded-2xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm leading-6 text-amber-800"
+            >
+              {connectionError || streamError}
+              {voiceState === 'text_fallback' && '，您仍可继续使用文字输入。'}
+            </div>
+          )}
+          {manualInterventionReason && (
+            <div
+              role="status"
+              className="mt-3 rounded-2xl border border-red-200 bg-red-50 px-4 py-3 text-sm leading-6 text-red-800"
+            >
+              有一条记录需要心理老师人工看看：{manualInterventionReason}
+              。对话仍可继续，人工填写结果将在后续请求中生效。
+            </div>
+          )}
+        </div>
+
+        {voiceOverlayVisible &&
+          inputMode === 'voice' &&
+          !readOnly &&
+          !completed && (
+            <div
+              className="patient-voice-overlay pointer-events-none absolute inset-x-0 top-1/2 z-30 flex -translate-y-1/2 justify-center px-4"
+              aria-live="polite"
+              aria-label="语音状态"
+            >
+              <div className="pointer-events-auto flex w-full max-w-[360px] flex-col items-center rounded-[28px] border border-white/80 bg-[#fffaf6]/92 px-4 py-5 shadow-[0_18px_60px_rgba(94,67,48,.18)] backdrop-blur-md">
+                <VoiceOrb state={visualVoiceState} />
+                {(voiceState === 'listening' || isRecording) && (
+                  <button
+                    type="button"
+                    onClick={() => void stopVoice()}
+                    className="patient-outline-button mx-auto mt-4 flex min-w-[160px] rounded-full"
+                  >
+                    结束回答
+                  </button>
+                )}
+              </div>
+            </div>
+          )}
+
+        <footer className="shrink-0 border-t border-border bg-[#fffaf6] px-[14px] pb-[max(10px,env(safe-area-inset-bottom))] pt-3 shadow-[0_-12px_28px_rgba(94,67,48,.08)]">
+          {readOnly ? (
+            <div className="flex items-center gap-3">
+              <PatientIcon
+                name="lock"
+                className="h-7 w-7 text-foreground-muted"
+              />
+              <div className="min-w-0 flex-1">
+                <p className="font-bold">本次评估已提交，当前为只读查看</p>
+                <p className="text-xs text-foreground-muted">
+                  如需补充或修改，请联系你的心理老师。
+                </p>
+              </div>
+              <button
+                type="button"
+                className="patient-outline-button min-h-11 px-3 text-sm"
+                onClick={() => router.push(`/student/tasks/${taskId}`)}
+              >
+                返回
+              </button>
+            </div>
+          ) : completed ? (
+            <div className="flex items-center gap-3">
+              <PatientIcon
+                name="check-circle"
+                className="h-7 w-7 text-success"
+              />
+              <div className="min-w-0 flex-1">
+                <p className="font-bold">AI 评估已完成</p>
+                <p className="text-xs text-foreground-muted">
+                  {runtimeConfig.dataMode === 'api'
+                    ? '结果已提交心理老师复核'
+                    : '下一步完成知情同意确认'}
+                </p>
+              </div>
+              <button
+                type="button"
+                className="patient-primary-button min-h-11 px-4 text-sm"
+                onClick={() =>
+                  router.push(
+                    task.consentRequired
+                      ? `/student/consent/${taskId}`
+                      : `/student/complete/${taskId}`
+                  )
+                }
+              >
+                继续
+              </button>
+            </div>
+          ) : inputMode === 'voice' ? (
+            <>
+              <div className="grid grid-cols-[1fr_92px_1fr] items-center gap-3">
+                <button
+                  type="button"
+                  onClick={() => void changeInputMode('text')}
+                  disabled={completingVoice}
+                  className="flex min-h-[60px] flex-col items-center justify-center gap-1 text-xs font-bold text-foreground-muted disabled:opacity-50"
+                >
+                  <span className="patient-touch-button border border-border bg-white">
+                    <PatientIcon name="keyboard" />
+                  </span>
+                  切换文字
+                </button>
+                <button
+                  type="button"
+                  onClick={() => {
+                    if (voiceState === 'speaking') {
+                      interruptVoice();
+                    } else if (isRecording) {
+                      void stopVoice();
+                    } else {
+                      void startVoice();
+                    }
+                  }}
+                  disabled={
+                    isPaused ||
+                    completingVoice ||
+                    voiceState === 'transcribing' ||
+                    voiceState === 'thinking'
+                  }
+                  className="mx-auto grid h-20 w-20 place-items-center rounded-full border-[7px] border-white bg-gradient-to-br from-[#ff7557] to-[#ff5032] text-white shadow-[0_10px_26px_rgba(255,86,52,.28)] disabled:opacity-50"
+                  aria-label={isRecording ? '结束回答' : '开始语音回答'}
+                >
+                  <PatientIcon
+                    name={isRecording ? 'stop' : 'microphone'}
+                    className="h-9 w-9"
+                  />
+                </button>
+                <button
+                  type="button"
+                  onClick={interruptVoice}
+                  disabled={voiceState !== 'speaking'}
+                  className="flex min-h-[60px] flex-col items-center justify-center gap-1 text-xs font-bold text-foreground-muted disabled:opacity-45"
+                >
+                  <span className="patient-touch-button border border-border bg-white">
+                    <PatientIcon name="interrupt" />
+                  </span>
+                  打断播报
+                </button>
+              </div>
+              {voiceState !== 'idle' && voiceState !== 'closed' && (
+                <button
+                  type="button"
+                  onClick={() => void closeVoice()}
+                  disabled={completingVoice}
+                  className="mx-auto mt-1 block text-xs font-bold text-danger underline disabled:opacity-50"
+                >
+                  关闭语音并保留文字输入
+                </button>
+              )}
+              {completingVoice && (
+                <p className="mt-2 text-center text-xs text-primary">
+                  正在等待最后一段语音播报完成…
+                </p>
+              )}
+            </>
+          ) : (
+            <div className="flex items-end gap-2">
+              <button
+                type="button"
+                onClick={() => void changeInputMode('voice')}
+                disabled={isStreaming || isPaused}
+                className="patient-touch-button border border-border bg-white text-primary disabled:opacity-50"
+                aria-label="切换语音"
+              >
+                <PatientIcon name="microphone" />
+              </button>
+              <textarea
+                value={messageDraft}
+                onChange={(event) => setMessageDraft(event.target.value)}
+                onKeyDown={(event) => {
+                  if (event.key === 'Enter' && !event.shiftKey) {
+                    event.preventDefault();
+                    const content = messageDraft.trim();
+                    if (!content) return;
+                    setMessageDraft('');
+                    void handleSendMessage(content);
+                  }
+                }}
+                placeholder={isPaused ? '评估已暂停' : '输入您的回答…'}
+                disabled={isPaused || isStreaming || completingVoice}
+                rows={1}
+                className="min-h-12 max-h-28 min-w-0 flex-1 resize-none rounded-2xl border border-border bg-white px-4 py-3 text-sm outline-none focus:border-primary disabled:opacity-50"
+              />
+              <button
+                type="button"
+                onClick={() => {
+                  const content = messageDraft.trim();
+                  if (!content) return;
+                  setMessageDraft('');
+                  void handleSendMessage(content);
+                }}
+                disabled={
+                  !messageDraft.trim() ||
+                  isPaused ||
+                  isStreaming ||
+                  completingVoice
+                }
+                className="patient-touch-button bg-primary text-white disabled:opacity-40"
+                aria-label="发送回答"
+              >
+                <PatientIcon name="send" />
+              </button>
+            </div>
+          )}
+          {runtimeConfig.dataMode === 'mock' && !readOnly && !completed && (
+            <button
+              type="button"
+              onClick={() => void togglePause()}
+              className="mx-auto mt-2 flex min-h-8 items-center gap-1 text-xs font-bold text-foreground-muted"
+            >
+              <PatientIcon
+                name={isPaused ? 'play' : 'pause'}
+                className="h-4 w-4"
+              />
+              {isPaused ? '继续评估' : '暂停评估'}
+            </button>
+          )}
+        </footer>
+      </div>
+    </PatientLayout>
+  );
+}

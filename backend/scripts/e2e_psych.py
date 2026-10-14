@@ -39,7 +39,7 @@ with httpx.Client(base_url=BASE, timeout=90) as c:
     print("1. 登录 OK")
 
     r = c.post(
-        "/api/patients",
+        "/api/students",
         json={
             "patient": {
                 "patient_name": "小婷",
@@ -95,7 +95,7 @@ with httpx.Client(base_url=BASE, timeout=90) as c:
 
     # 患者登录（任务号 + 证件后四位），Cookie 自动跟随后续 /api/dialog 请求
     r = c.post(
-        "/api/patients/verify-task",
+        "/api/students/verify-task",
         json={"task_no": task_ref, "id_card_suffix": id_suffix},
     )
     show("6. 患者登录", r.json(), limit=200)

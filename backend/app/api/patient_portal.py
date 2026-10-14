@@ -1,4 +1,4 @@
-"""患者门户 API。
+"""学生门户 API。
 
 作用：提供患者鉴权后的通知、指南、住院助手和知情同意真实数据接口，
 并提供医护端创建一次性扫码令牌。所有返回统一使用 ``{code,message,data}``。
@@ -35,7 +35,7 @@ from app.schemas.patient_portal import (
 from app.schemas.response import ApiResponse, ok
 from app.services import patient_portal_service, patient_service
 
-router = APIRouter(tags=["patient-portal"])
+router = APIRouter(tags=["student-portal"])
 DbSession = Annotated[Session, Depends(get_db)]
 PatientContext = Annotated[tuple[Patient, PatientEncounter], Depends(require_patient)]
 
@@ -54,7 +54,7 @@ def _set_patient_cookie(response: Response, token: str) -> None:
 
 
 @router.post(
-    "/api/patients/verify-task",
+    "/api/students/verify-task",
     response_model=ApiResponse[dict],
     summary="按任务编号和证件后四位登录患者端",
 )
@@ -100,7 +100,7 @@ def _request_with_cookie(request: Request, cookie_name: str, token: str) -> Requ
 
 
 @router.post(
-    "/api/patients/scan/token",
+    "/api/students/scan/token",
     response_model=ApiResponse[dict],
     summary="医护端创建一次性患者扫码令牌",
 )
@@ -120,7 +120,7 @@ def create_scan_token(
 
 
 @router.post(
-    "/api/patients/scan/verify",
+    "/api/students/scan/verify",
     response_model=ApiResponse[dict],
     summary="患者端消费一次性扫码令牌",
 )
@@ -130,7 +130,7 @@ def verify_scan(
     response: Response,
     db: DbSession,
 ) -> dict:
-    """消费成功后只返回当前患者门户数据并设置 HttpOnly Cookie。"""
+    """消费成功后只返回当前学生门户数据并设置 HttpOnly Cookie。"""
     patient, encounter, task, token = patient_portal_service.consume_scan_token(
         db, req.token
     )

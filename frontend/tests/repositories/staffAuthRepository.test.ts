@@ -122,7 +122,7 @@ describe('staff authentication repository', () => {
     const tasks = await new ApiCareRepository().listPatientTasks();
 
     const [url, request] = fetchMock.mock.calls[0] as [string, RequestInit];
-    expect(url).toContain('/api/patients/me/tasks');
+    expect(url).toContain('/api/students/me/tasks');
     expect(url).not.toMatch(/\/api\/tasks(?:$|\?)/);
     expect(request.credentials).toBe('include');
     expect(tasks[0]).toMatchObject({

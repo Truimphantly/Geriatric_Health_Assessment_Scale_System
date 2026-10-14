@@ -24,8 +24,8 @@ def make_request(host: str = "127.0.0.1") -> Request:
     scope = {
         "type": "http",
         "method": "POST",
-        "path": "/api/patients/verify-task",
-        "raw_path": b"/api/patients/verify-task",
+        "path": "/api/students/verify-task",
+        "raw_path": b"/api/students/verify-task",
         "query_string": b"",
         "headers": [],
         "client": (host, 12345),

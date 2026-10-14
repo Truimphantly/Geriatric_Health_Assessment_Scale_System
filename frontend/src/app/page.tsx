@@ -8,7 +8,7 @@ import Link from 'next/link';
  */
 const portals = [
   {
-    href: '/patient',
+    href: '/student',
     emoji: '🙋',
     tag: '和中学生',
     title: '学生端',
@@ -18,7 +18,7 @@ const portals = [
     tone: 'bg-[var(--accent-mint)]',
   },
   {
-    href: '/nurse/login',
+    href: '/teacher/login',
     emoji: '🧑‍🏫',
     tag: '学校 / 机构工作台',
     title: '心理老师端',

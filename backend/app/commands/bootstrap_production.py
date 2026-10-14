@@ -43,7 +43,7 @@ def _upsert_staff() -> str:
     if len(password) < 12:
         raise SystemExit("BOOTSTRAP_STAFF_PASSWORD 至少需要 12 位")
 
-    role_code = os.getenv("BOOTSTRAP_STAFF_ROLE", "nurse").strip() or "nurse"
+    role_code = os.getenv("BOOTSTRAP_STAFF_ROLE", "teacher").strip() or "teacher"
     department_name = os.getenv("BOOTSTRAP_STAFF_DEPARTMENT", "").strip() or None
     if model_base.SessionLocal is None:
         raise RuntimeError("数据库未初始化")

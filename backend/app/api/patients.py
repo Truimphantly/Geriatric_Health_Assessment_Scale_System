@@ -25,7 +25,7 @@ from app.schemas.response import ApiResponse, ok
 from app.schemas.task import BackendTaskDto
 from app.services import patient_service
 
-router = APIRouter(prefix="/api/patients", tags=["patients"])
+router = APIRouter(prefix="/api/students", tags=["students"])
 
 
 @router.get(

@@ -58,7 +58,7 @@ def test_staff_can_create_search_view_and_update_patient() -> None:
             )
             assert login.status_code == 200, login.text
 
-            created = client.post("/api/patients", json=payload)
+            created = client.post("/api/students", json=payload)
             assert created.status_code == 200, created.text
             created_data = created.json()["data"]
             patient_id = int(created_data["patient"]["id"])
@@ -69,7 +69,7 @@ def test_staff_can_create_search_view_and_update_patient() -> None:
             assert created_data["encounter"]["allergy_summary"] == "青霉素过敏"
 
             listed = client.get(
-                "/api/patients",
+                "/api/students",
                 params={"keyword": f"HIS-CODEX-{suffix}", "status": "在册"},
             )
             assert listed.status_code == 200, listed.text
@@ -77,7 +77,7 @@ def test_staff_can_create_search_view_and_update_patient() -> None:
                 patient_id
             ]
 
-            detail = client.get(f"/api/patients/{patient_id}")
+            detail = client.get(f"/api/students/{patient_id}")
             assert detail.status_code == 200, detail.text
             assert detail.json()["data"]["patient"]["patient_name"] == "接口测试患者"
 
@@ -98,7 +98,7 @@ def test_staff_can_create_search_view_and_update_patient() -> None:
                 },
             }
             updated = client.put(
-                f"/api/patients/{patient_id}",
+                f"/api/students/{patient_id}",
                 json=update_payload,
             )
             assert updated.status_code == 200, updated.text
@@ -107,7 +107,7 @@ def test_staff_can_create_search_view_and_update_patient() -> None:
             assert updated_data["encounter"]["bed_no"] == "99-2"
             assert updated_data["encounter"]["nursing_level"] == "二级护理"
 
-            duplicate = client.post("/api/patients", json=payload)
+            duplicate = client.post("/api/students", json=payload)
             assert duplicate.status_code == 409, duplicate.text
         finally:
             if model_base.SessionLocal is not None:

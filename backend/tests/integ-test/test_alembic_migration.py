@@ -78,7 +78,7 @@ def test_initial_migration_upgrade_and_downgrade():
             test_engine.dispose()
 
             command.check(alembic_config)
-            # 患者门户迁移本身必须可回滚；更早的历史类型清理迁移明确不可逆，
+            # 学生门户迁移本身必须可回滚；更早的历史类型清理迁移明确不可逆，
             # 因此不把测试数据库一路降到 base。
             command.downgrade(alembic_config, "20260822_task_preparation")
 

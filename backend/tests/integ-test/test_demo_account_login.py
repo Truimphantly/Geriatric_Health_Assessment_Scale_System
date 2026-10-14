@@ -46,7 +46,7 @@ def test_all_seeded_patients_can_login() -> None:
     with TestClient(app) as client:
         for id_card_no, phone, patient_name in PATIENT_CREDENTIALS:
             response = client.post(
-                "/api/patients/login",
+                "/api/students/login",
                 json={"id_card_no": id_card_no, "phone": phone},
             )
             assert response.status_code == 200, response.text
@@ -54,13 +54,13 @@ def test_all_seeded_patients_can_login() -> None:
             assert data["patient"]["patient_name"] == patient_name
             assert "id_card_no" not in data["patient"]
             assert "id_card_ciphertext" not in data["patient"]
-            assert client.post("/api/patients/logout").status_code == 200
+            assert client.post("/api/students/logout").status_code == 200
 
 
 def test_staff_session_protects_nurse_patient_list() -> None:
     """在册学生列表应拒绝匿名请求并接受有效医护会话。"""
     with TestClient(app) as client:
-        anonymous = client.get("/api/patients/in-hospital")
+        anonymous = client.get("/api/students/in-hospital")
         assert anonymous.status_code == 401
         assert anonymous.json()["code"] == "ERR_STAFF_002"
 
@@ -71,6 +71,6 @@ def test_staff_session_protects_nurse_patient_list() -> None:
             ).status_code
             == 200
         )
-        authorized = client.get("/api/patients/in-hospital")
+        authorized = client.get("/api/students/in-hospital")
         assert authorized.status_code == 200
         assert len(authorized.json()["data"]) >= 10

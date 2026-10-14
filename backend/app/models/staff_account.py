@@ -27,7 +27,7 @@ class StaffAccount(BusinessBaseMixin, Base):
     role_code: Mapped[str] = mapped_column(
         String(32),
         nullable=False,
-        default="nurse",
+        default="teacher",
         comment="角色编码：nurse/doctor",
     )
     department_name: Mapped[str | None] = mapped_column(

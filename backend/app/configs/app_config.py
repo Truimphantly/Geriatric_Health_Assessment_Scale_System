@@ -106,10 +106,10 @@ class SecurityConfig(BaseModel):
 
     patient_identity_secret: str = "medical-evaluate-development-identity-secret"
     patient_session_ttl_seconds: int = 28800
-    patient_session_cookie: str = "medical_patient_session"
+    patient_session_cookie: str = "psychology_student_session"
     patient_session_secure: bool = False
     staff_session_ttl_seconds: int = 28800
-    staff_session_cookie: str = "medical_staff_session"
+    staff_session_cookie: str = "psychology_teacher_session"
     staff_session_secure: bool = False
     guardian_session_ttl_seconds: int = 28800
     guardian_session_cookie: str = "psychology_guardian_session"

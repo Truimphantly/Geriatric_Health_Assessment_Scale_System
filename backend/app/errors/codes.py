@@ -36,7 +36,7 @@ class ErrorCode(str, Enum):
     ERR_PATIENT_006 = "ERR_PATIENT_006"  # 患者或住院标识重复
     ERR_PATIENT_007 = "ERR_PATIENT_007"  # 任务核验失败次数过多
     ERR_PATIENT_008 = "ERR_PATIENT_008"  # 一次性扫码令牌无效或已使用
-    ERR_PATIENT_009 = "ERR_PATIENT_009"  # 患者门户资源不可用
+    ERR_PATIENT_009 = "ERR_PATIENT_009"  # 学生门户资源不可用
 
     # 医护身份域
     ERR_STAFF_001 = "ERR_STAFF_001"  # 工号或密码错误
@@ -84,7 +84,7 @@ ERROR_MESSAGES: dict[ErrorCode, str] = {
     ErrorCode.ERR_PATIENT_006: "患者身份或住院标识已存在",
     ErrorCode.ERR_PATIENT_007: "身份核验失败次数过多，请稍后再试",
     ErrorCode.ERR_PATIENT_008: "扫码已失效或已使用，请重新扫码",
-    ErrorCode.ERR_PATIENT_009: "患者门户内容暂不可用，请联系护士",
+    ErrorCode.ERR_PATIENT_009: "学生门户内容暂不可用，请联系护士",
     ErrorCode.ERR_STAFF_001: "工号或密码错误",
     ErrorCode.ERR_STAFF_002: "医护登录已失效，请重新登录",
     ErrorCode.ERR_STAFF_003: "医护账号不存在或已停用",

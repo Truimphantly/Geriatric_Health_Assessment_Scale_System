@@ -378,7 +378,7 @@ export class ApiCareRepository implements CareRepository {
     if (filters.wardName) query.set('ward_name', filters.wardName);
     const suffix = query.size ? `?${query.toString()}` : '';
     const response = await apiRequest<PatientRecordDto[]>(
-      `/api/patients${suffix}`,
+      `/api/students${suffix}`,
       { signal }
     );
     return response.map(mapPatientRecord);
@@ -388,7 +388,7 @@ export class ApiCareRepository implements CareRepository {
     signal?: AbortSignal
   ): Promise<PatientWithEncounter[]> {
     const response = await apiRequest<InHospitalPatientDto[]>(
-      '/api/patients/in-hospital',
+      '/api/students/in-hospital',
       { signal }
     );
     return response.map(mapInHospitalPatient);
@@ -396,14 +396,14 @@ export class ApiCareRepository implements CareRepository {
 
   async getPatient(patientId: string, signal?: AbortSignal) {
     const response = await apiRequest<PatientRecordDto>(
-      `/api/patients/${encodeURIComponent(patientId)}`,
+      `/api/students/${encodeURIComponent(patientId)}`,
       { signal }
     );
     return mapPatientRecord(response);
   }
 
   async createPatient(input: PatientRecordInput, signal?: AbortSignal) {
-    const response = await apiRequest<PatientRecordDto>('/api/patients', {
+    const response = await apiRequest<PatientRecordDto>('/api/students', {
       method: 'POST',
       body: patientRecordBody(input, false),
       signal,
@@ -417,7 +417,7 @@ export class ApiCareRepository implements CareRepository {
     signal?: AbortSignal
   ) {
     const response = await apiRequest<PatientRecordDto>(
-      `/api/patients/${encodeURIComponent(patientId)}`,
+      `/api/students/${encodeURIComponent(patientId)}`,
       {
         method: 'PUT',
         body: patientRecordBody(input, true),
@@ -542,7 +542,7 @@ export class ApiCareRepository implements CareRepository {
 
   async loginPatient(input: PatientLoginInput, signal?: AbortSignal) {
     const response = await apiRequest<PatientLoginResponse>(
-      '/api/patients/login',
+      '/api/students/login',
       {
         method: 'POST',
         body: {
@@ -560,7 +560,7 @@ export class ApiCareRepository implements CareRepository {
     signal?: AbortSignal
   ) {
     const response = await apiRequest<PatientLoginResponse>(
-      '/api/patients/verify-task',
+      '/api/students/verify-task',
       {
         method: 'POST',
         body: {
@@ -575,7 +575,7 @@ export class ApiCareRepository implements CareRepository {
 
   async verifyPatientScanToken(token: string, signal?: AbortSignal) {
     const response = await apiRequest<PatientLoginResponse>(
-      '/api/patients/scan/verify',
+      '/api/students/scan/verify',
       {
         method: 'POST',
         body: { token },
@@ -747,7 +747,7 @@ export class ApiCareRepository implements CareRepository {
 
   async listPatientTasks(signal?: AbortSignal) {
     const response = await apiRequest<BackendTaskDto[]>(
-      '/api/patients/me/tasks',
+      '/api/students/me/tasks',
       { signal }
     );
     return response.map(mapTaskDto);

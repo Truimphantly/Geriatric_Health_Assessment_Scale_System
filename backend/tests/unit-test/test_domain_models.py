@@ -70,7 +70,7 @@ OBSOLETE_TABLES = {
 
 
 def test_quality_review_registers_all_domain_tables():
-    """核心、患者门户、质量评价与护理计划域应准确注册全部领域表。"""
+    """核心、学生门户、质量评价与护理计划域应准确注册全部领域表。"""
     assert set(Base.metadata.tables) == EXPECTED_TABLES
     assert OBSOLETE_TABLES.isdisjoint(Base.metadata.tables)
 
