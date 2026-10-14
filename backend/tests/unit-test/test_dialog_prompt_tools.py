@@ -25,42 +25,49 @@ def question(code="smoking", *, required=True):
 
 
 def test_system_prompt_contains_cicare_patient_and_tasks():
-    """系统提示词应包含护理规范、患者信息与评估任务。"""
+    """系统提示词应包含心理面谈规范、学生信息与评估任务。"""
     prompt = build_system_prompt(
         {
-            "name": "张三",
+            "name": "李明",
             "gender": "男",
-            "age": 60,
-            "diagnosis_snapshot": {"primary": "慢性阻塞性肺疾病急性加重"},
+            "age": 14,
+            "diagnosis_snapshot": {"primary": "学业压力带来的情绪困扰"},
         },
         [question(), question("optional", required=False)],
     )
 
-    for stage in ("Connect", "Introduce", "Communicate", "Ask", "Respond", "Exit"):
+    for stage in (
+        "Build Trust",
+        "Confidentiality",
+        "Empathize",
+        "Non-judgmental",
+        "Privacy & Guardian",
+        "Crisis Escalation",
+    ):
         assert stage in prompt
-    assert "张三" in prompt
+    assert "李明" in prompt
     assert "[smoking]" in prompt
     assert "必填" in prompt
     assert "选填" in prompt
     assert "{patient_name}" not in prompt
     assert "TODO" not in prompt
     assert "只有系统确认全部必填评估进度完成后" in prompt
-    assert "先接住患者当前内容" in prompt
-    assert "禁止照抄" in prompt
-    assert "开水房" in prompt
-    assert "青霉素过敏" in prompt
-    assert "慢性阻塞性肺疾病急性加重" in prompt
-    assert "不得把诊断快照当作患者自述" in prompt
-    assert "建议礼貌称呼：叔叔" in prompt
+    assert "先接住青少年当前内容" in prompt
+    assert "不是必须逐字朗读的问题" in prompt
+    assert "保密例外" in prompt
+    assert "自伤" in prompt
+    assert "学业压力带来的情绪困扰" in prompt
+    assert "不得把内部参考当作青少年自述" in prompt
+    assert "建议称呼：同学" in prompt
     assert "禁止每轮重复完整姓名" in prompt
     assert "teach-back" in prompt
-    assert "用自己的话说说" in prompt
+    assert "你愿意说说" in prompt
 
 
 def test_system_prompt_uses_safe_gender_and_age_salutation():
-    """高龄女性应使用奶奶等自然昵称，未知性别不能武断猜称呼。"""
-    elderly_prompt = build_system_prompt(
-        {"name": "王奶奶", "gender": "女", "age": 80},
+    """10-18 岁统一称呼「同学」弱化性别标签，未知年龄使用中性称呼。"""
+    teen_prompt = build_system_prompt(
+        {"name": "王小晴", "gender": "女", "age": 14},
         [question()],
     )
     unknown_prompt = build_system_prompt(
@@ -68,9 +75,9 @@ def test_system_prompt_uses_safe_gender_and_age_salutation():
         [question()],
     )
 
-    assert "建议礼貌称呼：奶奶" in elderly_prompt
-    assert "建议礼貌称呼：您" in unknown_prompt
-    assert "您好，患者您" not in unknown_prompt
+    assert "建议称呼：同学" in teen_prompt
+    assert "建议称呼：你" in unknown_prompt
+    assert "您好，患者你" not in unknown_prompt
 
 
 def test_system_prompt_includes_dynamic_constraints():
@@ -114,13 +121,13 @@ def test_dialog_tool_schemas_follow_openai_function_contract():
 
 @pytest.mark.asyncio
 async def test_education_material_returns_real_structured_content_and_validates():
-    """宣教工具返回可直接展示和播报的结构化材料，并拒绝非法枚举。"""
-    result = await execute_tool("get_education_material", {"category": "tobacco", "level": 2})
+    """科普工具返回可直接展示和播报的结构化材料，并拒绝非法枚举。"""
+    result = await execute_tool("get_education_material", {"category": "depression", "level": 2})
     invalid_category = await execute_tool(
         "get_education_material", {"category": "unknown", "level": 2}
     )
     invalid_level = await execute_tool(
-        "get_education_material", {"category": "tobacco", "level": 9}
+        "get_education_material", {"category": "depression", "level": 9}
     )
 
     assert result["success"] is True
@@ -137,8 +144,8 @@ async def test_education_material_returns_real_structured_content_and_validates(
 @pytest.mark.asyncio
 async def test_consent_returns_clauses_and_is_not_signed():
     """知情同意工具返回条款并保持待签署状态，form_id 必须避免固定碰撞。"""
-    first = await execute_tool("trigger_consent_form", {"form_type": "surgery"})
-    second = await execute_tool("trigger_consent_form", {"form_type": "surgery"})
+    first = await execute_tool("trigger_consent_form", {"form_type": "assessment"})
+    second = await execute_tool("trigger_consent_form", {"form_type": "assessment"})
 
     assert first["success"] is True
     assert first["status"] == "pending_signature"
@@ -169,16 +176,16 @@ async def test_play_audio_is_explicitly_unavailable():
 
 @pytest.mark.asyncio
 async def test_request_nurse_assistance_returns_action_and_reason():
-    """呼叫护士工具返回可供患者端和护士端使用的结构化请求。"""
+    """风险上报工具返回可供学生端和心理老师端使用的结构化请求。"""
     result = await execute_tool(
         "request_nurse_assistance",
         {
-            "requested_action": "measure_blood_pressure",
-            "reason": "需要护士到床旁测量血压",
+            "requested_action": "notify_counselor",
+            "reason": "学生流露自伤风险，需要心理老师介入",
             "urgency": "urgent",
         },
     )
     assert result["success"] is True
-    assert result["action_label"] == "测量血压"
+    assert result["action_label"] == "通知心理老师"
     assert result["urgency"] == "urgent"
     assert result["status"] == "requested"

@@ -26,7 +26,7 @@ class DeterministicTextEngine(DialogEngine):
         tools: list[dict[str, Any]],
         **kwargs: Any,
     ) -> None:
-        assert "CICARE" in system_prompt
+        assert "青少年心理评估面谈规范" in system_prompt
         assert tools
 
     async def send_input(self, input_data: Any) -> None:

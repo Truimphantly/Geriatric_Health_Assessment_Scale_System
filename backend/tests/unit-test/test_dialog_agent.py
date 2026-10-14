@@ -128,7 +128,7 @@ async def test_initialize_builds_prompt_registers_tools_and_saves_state():
 
     await dialog.initialize()
 
-    assert "CICARE" in engine.created["system_prompt"]
+    assert "青少年心理评估面谈规范" in engine.created["system_prompt"]
     assert engine.created["tools"]
     assert state.calls[0][0] == "session"
     assert state.calls[0][1]["engine_type"] == "FakeEngine"

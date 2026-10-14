@@ -74,16 +74,16 @@ async def test_empty_model_opening_is_rejected():
 
 @pytest.mark.asyncio
 async def test_completion_message_uses_cicare_exit_guidance():
-    """进度完整后的结束语应说明复核、下一步安排和求助方式。"""
-    model = StubModel("感谢您的配合，护士会复核记录并安排后续护理。若仍有不适，请及时呼叫医护人员。")
+    """进度完整后的收尾语应说明复核、下一步支持和求助方式。"""
+    model = StubModel("谢谢你今天愿意跟我说这么多。心理老师会看看这份记录，告诉你下一步能得到什么支持。以后再有烦心事，随时找心理老师或者你信任的大人聊聊。")
     runner = make_runner(model)
 
     result = await runner._generate_completion_message()
 
-    assert "护士会复核" in result
+    assert "心理老师会看看" in result
     system_prompt = model.messages[0].content
-    assert "CICARE Exit" in system_prompt
-    assert "全部必填护理评估信息完整" in system_prompt
+    assert "AI 陪伴助手小晴" in system_prompt
+    assert "全部必填评估内容完成" in system_prompt
 
 
 class DummyDb:

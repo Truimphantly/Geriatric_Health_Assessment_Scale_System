@@ -70,7 +70,7 @@ def test_dialog_roles_are_localized():
             {"role": "system", "content": "约束"},
         ]
     )
-    assert text.splitlines() == ["AI: 您好", "患者: 你好", "系统: 约束"]
+    assert text.splitlines() == ["AI: 您好", "学生: 你好", "系统: 约束"]
 
 
 def test_user_prompt_contains_context_and_few_shots():
@@ -82,7 +82,7 @@ def test_user_prompt_contains_context_and_few_shots():
     )
     assert "第 5 轮" in prompt
     assert "q1" in prompt
-    assert "患者: 回答" in prompt
+    assert "学生: 回答" in prompt
     assert "正常追问场景" in prompt
 
 
@@ -90,5 +90,5 @@ def test_few_shot_examples_cover_four_scenarios():
     """Few-shot 应覆盖既定四类场景。"""
     text = get_few_shot_examples_text()
     assert text.count("### 示例") == 4
-    for scenario in ("正常追问场景", "偏离场景", "共情场景", "宣教场景"):
+    for scenario in ("正常追问场景", "偏离场景", "共情场景", "危机信号场景"):
         assert scenario in text

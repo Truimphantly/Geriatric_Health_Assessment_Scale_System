@@ -109,7 +109,7 @@ async def test_prepare_task_todo_uses_model_order_and_deduplicates_shared_fields
     llm = make_llm(
         {
             "ordered_question_codes": ["weight_kg", "height_cm"],
-            "opening_guidance": "先完成 CICARE 开场",
+            "opening_guidance": "先按青少年心理面谈规范完成开场",
             "planning_reason": "先了解体重",
         }
     )
@@ -122,7 +122,7 @@ async def test_prepare_task_todo_uses_model_order_and_deduplicates_shared_fields
         "height_cm",
     ]
     assert plan.tasks[1].source_question_ids == [1, 3]
-    assert plan.opening_guidance == "先完成 CICARE 开场"
+    assert plan.opening_guidance == "先按青少年心理面谈规范完成开场"
 
 
 @pytest.mark.asyncio
@@ -152,7 +152,7 @@ async def test_task_todo_prompt_explicitly_requests_json():
 
 
 def test_task_todo_prompt_keeps_diagnosis_as_internal_context():
-    """Schedule Prompt 应携带住院诊断，但明确禁止向患者宣告。"""
+    """Schedule Prompt 应携带内部参考信息，但明确禁止向学生宣告标签结论。"""
     from medagent.agents.service_agent.schedule_agent.prompts import (
         TASK_TODO_SYSTEM_PROMPT,
         build_task_todo_prompt,
@@ -164,7 +164,8 @@ def test_task_todo_prompt_keeps_diagnosis_as_internal_context():
     )
 
     assert "脑卒中后遗症" in prompt
-    assert "不得向患者宣告诊断结论" in TASK_TODO_SYSTEM_PROMPT
+    assert "不得把内部参考当作学生自述" in TASK_TODO_SYSTEM_PROMPT
+    assert "不得向学生宣告标签结论" in TASK_TODO_SYSTEM_PROMPT
 
 
 @pytest.mark.asyncio

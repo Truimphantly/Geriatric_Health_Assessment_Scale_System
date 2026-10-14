@@ -1,0 +1,135 @@
+{
+  "id": "phq_a",
+  "title": "PHQ-A青少年抑郁筛查量表",
+  "source_file": "PHQ-A（患者健康问卷青少年版）； teen 话术参考 SunnyMindBuddy/docs/structured/scales/phq-9.json",
+  "status": "published",
+  "form_type": "symptom_scale",
+  "patient_fields": ["patient_name", "sex", "age"],
+  "sections": [
+    {
+      "id": "phq_items",
+      "title": "最近两周的状态（按出现天数计分）",
+      "fields": [
+        {
+          "id": "q1",
+          "label": "做事时提不起劲或没有兴趣",
+          "patient_text": "最近有没有觉得做什么都提不起劲、没什么意思？这种情况多久出现一次？",
+          "type": "single_choice",
+          "options": [
+            {"id": "o_0", "score": 0, "label": "完全不会"},
+            {"id": "o_1", "score": 1, "label": "好几天"},
+            {"id": "o_2", "score": 2, "label": "一半以上天数"},
+            {"id": "o_3", "score": 3, "label": "几乎每天"}
+          ]
+        },
+        {
+          "id": "q2",
+          "label": "感到心情低落、沮丧或绝望",
+          "patient_text": "最近这段时间，有没有觉得心情很低落、难过，甚至有点绝望？",
+          "type": "single_choice",
+          "options": [
+            {"id": "o_0", "score": 0, "label": "完全不会"},
+            {"id": "o_1", "score": 1, "label": "好几天"},
+            {"id": "o_2", "score": 2, "label": "一半以上天数"},
+            {"id": "o_3", "score": 3, "label": "几乎每天"}
+          ]
+        },
+        {
+          "id": "q3",
+          "label": "入睡困难、睡不安稳或睡眠过多",
+          "patient_text": "最近的睡眠怎么样？会不会很难入睡、睡不安稳，或者睡得特别多？",
+          "type": "single_choice",
+          "options": [
+            {"id": "o_0", "score": 0, "label": "完全不会"},
+            {"id": "o_1", "score": 1, "label": "好几天"},
+            {"id": "o_2", "score": 2, "label": "一半以上天数"},
+            {"id": "o_3", "score": 3, "label": "几乎每天"}
+          ]
+        },
+        {
+          "id": "q4",
+          "label": "感觉疲倦或没有活力",
+          "patient_text": "有没有觉得很累、没精神，做什么都没力气？",
+          "type": "single_choice",
+          "options": [
+            {"id": "o_0", "score": 0, "label": "完全不会"},
+            {"id": "o_1", "score": 1, "label": "好几天"},
+            {"id": "o_2", "score": 2, "label": "一半以上天数"},
+            {"id": "o_3", "score": 3, "label": "几乎每天"}
+          ]
+        },
+        {
+          "id": "q5",
+          "label": "食欲不振或吃太多",
+          "patient_text": "最近胃口怎么样？有没有吃不下，或者反而吃得比平时多很多？",
+          "type": "single_choice",
+          "options": [
+            {"id": "o_0", "score": 0, "label": "完全不会"},
+            {"id": "o_1", "score": 1, "label": "好几天"},
+            {"id": "o_2", "score": 2, "label": "一半以上天数"},
+            {"id": "o_3", "score": 3, "label": "几乎每天"}
+          ]
+        },
+        {
+          "id": "q6",
+          "label": "觉得自己很糟，或觉得自己很失败，或让自己或家人失望",
+          "patient_text": "有没有觉得自己不够好、有点失败，或者让家里人失望了？",
+          "type": "single_choice",
+          "options": [
+            {"id": "o_0", "score": 0, "label": "完全不会"},
+            {"id": "o_1", "score": 1, "label": "好几天"},
+            {"id": "o_2", "score": 2, "label": "一半以上天数"},
+            {"id": "o_3", "score": 3, "label": "几乎每天"}
+          ]
+        },
+        {
+          "id": "q7",
+          "label": "对事物专注有困难，例如阅读或看电视时",
+          "patient_text": "做事或学习的时候，会不会很难集中注意力，容易走神？",
+          "type": "single_choice",
+          "options": [
+            {"id": "o_0", "score": 0, "label": "完全不会"},
+            {"id": "o_1", "score": 1, "label": "好几天"},
+            {"id": "o_2", "score": 2, "label": "一半以上天数"},
+            {"id": "o_3", "score": 3, "label": "几乎每天"}
+          ]
+        },
+        {
+          "id": "q8",
+          "label": "动作或说话速度缓慢到别人已经察觉，或相反地烦躁、坐立不安",
+          "patient_text": "有没有人说过你动作或说话变慢了？或者相反，最近特别烦躁、坐不住、动来动去？",
+          "type": "single_choice",
+          "options": [
+            {"id": "o_0", "score": 0, "label": "完全不会"},
+            {"id": "o_1", "score": 1, "label": "好几天"},
+            {"id": "o_2", "score": 2, "label": "一半以上天数"},
+            {"id": "o_3", "score": 3, "label": "几乎每天"}
+          ]
+        },
+        {
+          "id": "q9",
+          "label": "有不如死掉或用某种方式伤害自己的念头",
+          "patient_text": "这个问题可能有点重，你可以慢慢说，也可以先不说——最近有没有过“不想活了”或者想伤害自己的念头？",
+          "type": "single_choice",
+          "options": [
+            {"id": "o_0", "score": 0, "label": "完全不会"},
+            {"id": "o_1", "score": 1, "label": "好几天"},
+            {"id": "o_2", "score": 2, "label": "一半以上天数"},
+            {"id": "o_3", "score": 3, "label": "几乎每天"}
+          ]
+        }
+      ]
+    }
+  ],
+  "interpretation": [
+    {"condition": "total_score >= 20", "result": "重度抑郁风险，需立即安排专人跟进"},
+    {"condition": "total_score >= 15", "result": "中重度抑郁风险，建议尽快复评与干预"},
+    {"condition": "total_score >= 10", "result": "中度抑郁风险，需要心理老师跟进"},
+    {"condition": "total_score >= 5", "result": "轻度抑郁风险，建议关注与观察"},
+    {"condition": "total_score <= 4", "result": "未见明显抑郁症状"}
+  ],
+  "review_notes": [
+    "PHQ-9/PHQ-A 评估最近两周；q9（自杀意念条目）得分≥1 时，除总分分档外应同步触发危机安全协议（关键词兜底+转介）。",
+    "结果仅供筛查参考，不构成诊断；正式结论由心理老师复核确认。"
+  ]
+}

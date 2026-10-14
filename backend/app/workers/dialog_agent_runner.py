@@ -152,7 +152,7 @@ class DialogAgentRunner:
             lease.release()
 
     async def _run_completion(self) -> dict[str, Any]:
-        """在结构化进度完整后生成 CICARE Exit 并提交任务。"""
+        """在结构化进度完整后生成收尾语并提交任务。"""
         if model_base.SessionLocal is None:
             raise RuntimeError("数据库未初始化")
         with model_base.SessionLocal() as db:
@@ -218,7 +218,7 @@ class DialogAgentRunner:
             with model_base.SessionLocal() as db:
                 completed_progress = complete_assessment_session(db, self.session_id)
             if not completed_progress.completed:
-                raise RuntimeError("CICARE 结束语已生成，但结构化评估进度不再完整")
+                raise RuntimeError("收尾语已生成，但结构化评估进度不再完整")
 
             completed_event_id = self.publisher.publish(
                 DialogMessageEvent(
@@ -269,20 +269,21 @@ class DialogAgentRunner:
         *,
         on_delta: Callable[[str], Awaitable[None]] | None = None,
     ) -> str:
-        """生成符合 CICARE Exit 的自然结束语。"""
+        """生成符合青少年心理面谈规范的收尾语。"""
         salutation = suggest_patient_salutation(self.patient_info)
         messages = [
             SystemMessage(
                 content=(
-                    "你是住院病区的 AI 护理助手。系统已经确认全部必填护理评估信息完整。"
-                    "请按 CICARE Exit 用两到三句自然中文结束：感谢患者配合，"
-                    "说明护士会复核记录并告知下一步护理安排，提醒仍有不适可及时呼叫医护人员。"
-                    "不要重复量表内容，不要夸大诊断，不要使用客服式套话，"
-                    "优先使用自然礼貌昵称，不要反复直呼患者全名。"
+                    "你是青少年心理健康评估的 AI 陪伴助手小晴。系统已经确认全部必填评估内容完成。"
+                    "请按「青少年心理评估面谈规范」的收尾要求用两到三句自然中文结束："
+                    "真诚感谢同学的信任与配合，说明心理老师会看看记录并告诉下一步怎么得到支持，"
+                    "提醒以后再有烦心事随时可以找心理老师或信任的大人聊聊。"
+                    "不要重复量表内容，不要评价情绪好坏，不要使用客服式套话，"
+                    "语气要像朋友一样轻松温暖，优先使用称呼，不要反复直呼姓名。"
                 )
             ),
             HumanMessage(
-                content=f"患者建议称呼：{salutation}。患者姓名仅供身份背景，不要在每轮回复中重复。",
+                content=f"建议称呼：{salutation}。姓名仅供身份背景，不要在每轮回复中重复。",
             ),
         ]
         chunks: list[str] = []
@@ -303,7 +304,7 @@ class DialogAgentRunner:
                     await on_delta(text)
         result = "".join(chunks).strip()
         if not result:
-            raise RuntimeError("Dialog Agent 未返回 CICARE 结束语")
+            raise RuntimeError("Dialog Agent 未返回收尾语")
         return result
 
     async def _run_opening(
@@ -554,23 +555,24 @@ class DialogAgentRunner:
         messages = [
             SystemMessage(
                 content=(
-                    "你是住院病区的 AI 护理助手，正在按 CICARE 开始护理评估。"
-                    "开场需要自然完成：使用患者称呼、简短慰问、自我介绍、说明职责和评估配合方式。"
-                    "称呼可能不合适时请允许患者纠正，但不要连续抛出身份核实问题。"
-                    "开场最多一次使用姓名加礼貌昵称，后续使用昵称或“您”，不要每轮重复全名。"
-                    "随后自然过渡到一个护理评估问题。整段应像真人护士交流，"
+                    "你是青少年心理健康评估的 AI 陪伴助手小晴，正在与一名学生进行第一次聊天式评估。"
+                    "开场需要自然完成：叫出合适的称呼、像朋友一样打个招呼、简单自我介绍（我是小晴，AI 陪伴助手）、"
+                    "说明今天就是随便聊聊最近的状态、保密与例外会说清，然后自然过渡到第一个问题。"
+                    "称呼可能不合适时请允许学生纠正，但不要连续抛出身份核实问题。"
+                    "开场最多一次使用姓名加称呼，后续用称呼或“你”，不要每轮重复全名。"
+                    "整段应像真人同龄人喜欢的温柔大哥哥大姐姐在交流，口吻平等不居高临下，"
                     "不要念量表名称，不要使用“您的某某情况是怎样的”这类问卷句式，"
-                    "不要一次询问多个评估主题。"
+                    "不要一次询问多个评估主题，敏感问题（自伤、被伤害）不能放在开场。"
                 )
             ),
             HumanMessage(
                 content=(
-                    f"患者建议称呼：{salutation}。"
-                    f"患者姓名仅供身份背景：{self.patient_info.get('name', '患者')}。"
-                    f"当前住院诊断快照（仅供内部理解，不得向患者宣告）："
+                    f"建议称呼：{salutation}。"
+                    f"学生姓名仅供身份背景：{self.patient_info.get('name', '同学')}。"
+                    f"内部参考信息（仅供理解背景，不得向学生宣告）："
                     f"{json.dumps(self.patient_info.get('diagnosis_snapshot') or {}, ensure_ascii=False)}。"
-                    f"第一项需要了解的护理事实：{question.question_name}。"
-                    f"量表参考表达：{target_text}"
+                    f"第一个要了解的评估主题：{question.question_name}。"
+                    f"量表口语参考：{target_text}"
                 )
             ),
         ]

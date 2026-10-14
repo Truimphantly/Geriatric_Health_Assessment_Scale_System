@@ -157,6 +157,27 @@
       "source_file": "量表统计(1).md 表B.19",
       "structured_file": "mna-sf.json",
       "form_type": "risk_scale"
+    },
+    {
+      "id": "phq_a",
+      "title": "PHQ-A青少年抑郁筛查量表",
+      "source_file": "PHQ-A（患者健康问卷青少年版）",
+      "structured_file": "phq-a.json",
+      "form_type": "symptom_scale"
+    },
+    {
+      "id": "gad7",
+      "title": "GAD-7广泛性焦虑筛查量表",
+      "source_file": "GAD-7（广泛性障碍量表）",
+      "structured_file": "gad7.json",
+      "form_type": "symptom_scale"
+    },
+    {
+      "id": "asq_crisis",
+      "title": "ASQ自杀风险筛查量表",
+      "source_file": "ASQ（Ask Suicide-Screening Questions）",
+      "structured_file": "asq-crisis.json",
+      "form_type": "risk_scale"
     }
   ]
 }

@@ -1,0 +1,109 @@
+{
+  "id": "gad7",
+  "title": "GAD-7广泛性焦虑筛查量表",
+  "source_file": "GAD-7（广泛性障碍量表）；青少年适用，按最近两周出现天数计分",
+  "status": "published",
+  "form_type": "symptom_scale",
+  "patient_fields": ["patient_name", "sex", "age"],
+  "sections": [
+    {
+      "id": "gad_items",
+      "title": "最近两周的状态（按出现天数计分）",
+      "fields": [
+        {
+          "id": "g1",
+          "label": "感觉紧张、焦虑或急躁",
+          "patient_text": "最近会不会觉得心里很紧张、焦虑，或者容易急躁？",
+          "type": "single_choice",
+          "options": [
+            {"id": "o_0", "score": 0, "label": "完全不会"},
+            {"id": "o_1", "score": 1, "label": "好几天"},
+            {"id": "o_2", "score": 2, "label": "一半以上天数"},
+            {"id": "o_3", "score": 3, "label": "几乎每天"}
+          ]
+        },
+        {
+          "id": "g2",
+          "label": "不能停止或控制担忧",
+          "patient_text": "会不会总是控制不住地担心各种事？",
+          "type": "single_choice",
+          "options": [
+            {"id": "o_0", "score": 0, "label": "完全不会"},
+            {"id": "o_1", "score": 1, "label": "好几天"},
+            {"id": "o_2", "score": 2, "label": "一半以上天数"},
+            {"id": "o_3", "score": 3, "label": "几乎每天"}
+          ]
+        },
+        {
+          "id": "g3",
+          "label": "对各种各样的事情担忧过多",
+          "patient_text": "是不是对很多事都担心得比较多？比如学习、家里的事、和朋友的关系？",
+          "type": "single_choice",
+          "options": [
+            {"id": "o_0", "score": 0, "label": "完全不会"},
+            {"id": "o_1", "score": 1, "label": "好几天"},
+            {"id": "o_2", "score": 2, "label": "一半以上天数"},
+            {"id": "o_3", "score": 3, "label": "几乎每天"}
+          ]
+        },
+        {
+          "id": "g4",
+          "label": "很难放松下来",
+          "patient_text": "想放松的时候——比如休息、玩的时候——能放松下来吗？还是很难？",
+          "type": "single_choice",
+          "options": [
+            {"id": "o_0", "score": 0, "label": "完全不会"},
+            {"id": "o_1", "score": 1, "label": "好几天"},
+            {"id": "o_2", "score": 2, "label": "一半以上天数"},
+            {"id": "o_3", "score": 3, "label": "几乎每天"}
+          ]
+        },
+        {
+          "id": "g5",
+          "label": "由于不安而无法静坐",
+          "patient_text": "会不会烦躁坐不住、总想动来动去？",
+          "type": "single_choice",
+          "options": [
+            {"id": "o_0", "score": 0, "label": "完全不会"},
+            {"id": "o_1", "score": 1, "label": "好几天"},
+            {"id": "o_2", "score": 2, "label": "一半以上天数"},
+            {"id": "o_3", "score": 3, "label": "几乎每天"}
+          ]
+        },
+        {
+          "id": "g6",
+          "label": "变得容易烦恼或急躁",
+          "patient_text": "最近是不是变得容易烦、容易发脾气？",
+          "type": "single_choice",
+          "options": [
+            {"id": "o_0", "score": 0, "label": "完全不会"},
+            {"id": "o_1", "score": 1, "label": "好几天"},
+            {"id": "o_2", "score": 2, "label": "一半以上天数"},
+            {"id": "o_3", "score": 3, "label": "几乎每天"}
+          ]
+        },
+        {
+          "id": "g7",
+          "label": "感到似乎将有可怕的事情发生而害怕",
+          "patient_text": "会不会莫名害怕，觉得好像要发生什么可怕的事？",
+          "type": "single_choice",
+          "options": [
+            {"id": "o_0", "score": 0, "label": "完全不会"},
+            {"id": "o_1", "score": 1, "label": "好几天"},
+            {"id": "o_2", "score": 2, "label": "一半以上天数"},
+            {"id": "o_3", "score": 3, "label": "几乎每天"}
+          ]
+        }
+      ]
+    }
+  ],
+  "interpretation": [
+    {"condition": "total_score >= 15", "result": "重度焦虑风险，建议尽快安排专业评估"},
+    {"condition": "total_score >= 10", "result": "中度焦虑风险，需要心理老师跟进"},
+    {"condition": "total_score >= 5", "result": "轻度焦虑风险，建议关注与观察"},
+    {"condition": "total_score <= 4", "result": "未见明显焦虑症状"}
+  ],
+  "review_notes": [
+    "GAD-7 评估最近两周；结果仅供筛查参考，不构成诊断。"
+  ]
+}

@@ -1,0 +1,66 @@
+{
+  "id": "asq_crisis",
+  "title": "ASQ自杀风险筛查量表",
+  "source_file": "ASQ（Ask Suicide-Screening Questions，自杀风险初级筛查 4 条目）",
+  "status": "published",
+  "form_type": "risk_scale",
+  "patient_fields": ["patient_name", "sex", "age"],
+  "sections": [
+    {
+      "id": "asq_items",
+      "title": "安全筛查条目",
+      "fields": [
+        {
+          "id": "s1",
+          "label": "过去几周，你是否希望自己已经死去",
+          "patient_text": "最近几个星期，有没有过希望自己已经不在了的念头？",
+          "type": "single_choice",
+          "options": [
+            {"id": "yes", "score": 1, "label": "是"},
+            {"id": "no", "score": 0, "label": "否"}
+          ]
+        },
+        {
+          "id": "s2",
+          "label": "你是否觉得你死了家人和朋友会过得更好",
+          "patient_text": "有没有觉得如果你不在了，家人或者朋友会过得更好？",
+          "type": "single_choice",
+          "options": [
+            {"id": "yes", "score": 1, "label": "是"},
+            {"id": "no", "score": 0, "label": "否"}
+          ]
+        },
+        {
+          "id": "s3",
+          "label": "你是否正在考虑伤害自己（急性条目）",
+          "patient_text": "这个问题很重要，请认真告诉我：你现在有没有在想伤害自己的事？",
+          "type": "single_choice",
+          "options": [
+            {"id": "yes", "score": 1, "label": "是"},
+            {"id": "no", "score": 0, "label": "否"}
+          ]
+        },
+        {
+          "id": "s4",
+          "label": "你过去是否有过尝试伤害自己的行为（急性条目）",
+          "patient_text": "以前有没有真的做过伤害自己的事？哪怕只有一次？",
+          "type": "single_choice",
+          "options": [
+            {"id": "yes", "score": 1, "label": "是"},
+            {"id": "no", "score": 0, "label": "否"}
+          ]
+        }
+      ]
+    }
+  ],
+  "interpretation": [
+    {"condition": "total_score >= 3", "result": "急性阳性：需要立即安全评估，专人陪伴，不得让青少年独处"},
+    {"condition": "total_score >= 1", "result": "阳性：需由心理老师在24小时内完成简短自杀安全评估"},
+    {"condition": "total_score == 0", "result": "阴性：暂无自杀风险信号"}
+  ],
+  "review_notes": [
+    "ASQ 判定规则：第 1/2 题任一为“是”且第 3/4 题均为“否”= 阳性（中风险）；第 3/4 题任一为“是”= 急性阳性（危机级）。",
+    "本表用总分近似分档，存在边界误差（如仅第 3 题为是时总分=1，应按急性阳性处理）；心理老师复核时须按原始规则人工判断，本系统结果仅作提示。",
+    "凡本表阳性，对话侧均应触发危机安全协议：共情稳定 + 转介，不继续普通评估流程。"
+  ]
+}
