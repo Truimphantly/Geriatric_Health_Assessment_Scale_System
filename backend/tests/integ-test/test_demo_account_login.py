@@ -42,7 +42,7 @@ def test_all_seeded_staff_accounts_can_login() -> None:
 
 
 def test_all_seeded_patients_can_login() -> None:
-    """10 位患者均应通过身份证号、手机号和在院记录登录。"""
+    """10 位患者均应通过身份证号、手机号和在册记录登录。"""
     with TestClient(app) as client:
         for id_card_no, phone, patient_name in PATIENT_CREDENTIALS:
             response = client.post(
@@ -58,7 +58,7 @@ def test_all_seeded_patients_can_login() -> None:
 
 
 def test_staff_session_protects_nurse_patient_list() -> None:
-    """在院患者列表应拒绝匿名请求并接受有效医护会话。"""
+    """在册学生列表应拒绝匿名请求并接受有效医护会话。"""
     with TestClient(app) as client:
         anonymous = client.get("/api/patients/in-hospital")
         assert anonymous.status_code == 401

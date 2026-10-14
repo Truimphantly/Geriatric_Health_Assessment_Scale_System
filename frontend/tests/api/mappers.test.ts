@@ -61,7 +61,7 @@ describe('API mappers', () => {
       sex: '女',
       age: 68,
       admission_time: '2026-08-19T08:30:00+08:00',
-      encounter_status: '在院中',
+      encounter_status: '在册中',
       scale_progress: [
         {
           scale_id: 5,
@@ -120,12 +120,12 @@ describe('API mappers', () => {
     });
   });
 
-  it('映射患者登录后的住院信息和本人任务', () => {
+  it('映射患者登录后的在册档案信息和本人任务', () => {
     const portal = mapPatientPortal({
       patient: {
         id: 4,
         patient_no: 'P-DEMO-0004',
-        patient_name: '陈建军',
+        patient_name: '赵一鸣',
         sex: '男',
         birthday: '1968-01-18',
         phone: '13800000004',
@@ -139,7 +139,7 @@ describe('API mappers', () => {
         ward_name: '呼吸内科病区',
         bed_no: '16-1',
         admission_time: '2026-08-17T10:00:00Z',
-        encounter_status: '在院',
+        encounter_status: '在册',
       },
       tasks: [
         {

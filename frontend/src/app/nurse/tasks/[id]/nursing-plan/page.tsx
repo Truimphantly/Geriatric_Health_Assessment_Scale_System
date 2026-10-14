@@ -28,12 +28,12 @@ import {
 const profileLabels: Array<[keyof NursingPlan['profile'], string]> = [
   ['cooperationLevel', '配合度'],
   ['cognitionLevel', '认知度'],
-  ['selfCareLevel', '自理能力'],
-  ['fallRiskLevel', '跌倒风险'],
+  ['selfCareLevel', '日常状态'],
+  ['fallRiskLevel', '安全关注'],
   ['pressureRiskLevel', '压疮风险'],
   ['nutritionRiskLevel', '营养风险'],
   ['communicationLevel', '沟通能力'],
-  ['educationNeedLevel', '宣教需求'],
+  ['educationNeedLevel', '科普需求'],
 ];
 
 const valueLabels: Record<string, string> = {
@@ -43,9 +43,9 @@ const valueLabels: Record<string, string> = {
   clear: '清晰',
   mild_impairment: '轻度受损',
   impaired: '受损',
-  independent: '可自理',
-  partial_assistance: '部分协助',
-  dependent: '依赖照护',
+  independent: '状态平稳',
+  partial_assistance: '需要一些支持',
+  dependent: '需要较多支持',
   low: '低',
   medium: '中',
   high: '高',
@@ -63,9 +63,9 @@ const actionLabels: Record<NursingPlanAction, string> = {
 
 const itemTypeLabels: Record<string, string> = {
   nursing_measure: '支持措施',
-  education: '宣教措施',
+  education: '科普措施',
   observation: '观察重点',
-  handover: '交接班提示',
+  handover: '给老师的小提示',
 };
 
 function statusLabel(status: string) {
@@ -292,7 +292,7 @@ export default function NursingPlanPage() {
                   {(
                     [
                       ['riskSummary', '风险摘要'],
-                      ['educationSummary', '宣教重点'],
+                      ['educationSummary', '科普重点'],
                       ['handoverSummary', '交接班重点'],
                     ] as const
                   ).map(([key, label]) => (

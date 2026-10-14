@@ -59,7 +59,7 @@ function CreateTaskContent() {
   const [collectionMode, setCollectionMode] = useState<CollectionMode>('ai_dialogue');
   const [consentRequired, setConsentRequired] = useState(!apiMode);
   const [educationTopics, setEducationTopics] = useState<string[]>(
-    apiMode ? [] : ['药物过敏安全宣教', '防跌倒宣教']
+    apiMode ? [] : ['药物过敏安全科普', '睡眠与情绪科普']
   );
   const [plannedStartTime, setPlannedStartTime] = useState('2026-08-16T14:00');
   const [notes, setNotes] = useState('');
@@ -84,7 +84,7 @@ function CreateTaskContent() {
     ])
       .then(([patientRecords, scaleRecords]) => {
         if (!patientRecords.length) {
-          throw new Error('后端未返回在院学生');
+          throw new Error('后端未返回学生列表');
         }
         if (!scaleRecords.length) {
           throw new Error('后端未返回可用量表');
@@ -145,7 +145,7 @@ function CreateTaskContent() {
 
   const createTask = async () => {
     if (!patient || !encounter) {
-      setError('学生或住院记录不完整，暂时无法创建任务');
+      setError('学生或在册档案不完整，暂时无法创建任务');
       return;
     }
     const duplicate = tasks.some(
@@ -210,7 +210,7 @@ function CreateTaskContent() {
             <IntegrationStatus compact />
           </div>
           <h1 className="text-3xl mt-2">创建<span className="text-primary italic">评估任务包</span></h1>
-          <p className="text-foreground-muted mt-1">选择学生、量表、采集方式和配套宣教内容</p>
+          <p className="text-foreground-muted mt-1">选择学生、量表、采集方式和配套科普内容</p>
         </div>
 
         <div className="grid grid-cols-4 gap-2 mb-6">
@@ -232,7 +232,7 @@ function CreateTaskContent() {
 
         {step === 1 && (
           <Card padding="lg">
-            <h2 className="text-xl mb-4">选择在院学生</h2>
+            <h2 className="text-xl mb-4">选择学生</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
               {patients.map((item) => {
                 const currentEncounter = encounters.find((record) => record.patientId === item.id);
@@ -330,7 +330,7 @@ function CreateTaskContent() {
                     label: 'AI对话采集',
                     detail: apiMode
                       ? '文字问诊、实时抽取与对话监控'
-                      : '文字/语音模拟、实时抽取与宣教',
+                      : '文字/语音模拟、实时抽取与科普',
                   },
                   { value: 'traditional_form', label: '传统问卷', detail: '分组填写、自动保存与断点续答' },
                 ].map((item) => (
@@ -388,9 +388,9 @@ function CreateTaskContent() {
               </label>
 
               <div className="mt-5">
-                <p className="text-sm font-medium mb-2">配套宣教</p>
+                <p className="text-sm font-medium mb-2">配套科普</p>
                 <div className="flex flex-wrap gap-2">
-                  {['药物过敏安全宣教', '防跌倒宣教', '住院禁烟宣教', '用药安全宣教'].map((topic) => {
+                  {['情绪与睡眠科普', '压力应对科普', '人际关系科普', '求助方式科普'].map((topic) => {
                     const selected = educationTopics.includes(topic);
                     return (
                       <button
@@ -448,7 +448,7 @@ function CreateTaskContent() {
                 <p className="font-medium mt-1">{patient.name} · {participantType === 'patient' ? '学生本人' : `${relationship}协助`}</p>
               </div>
               <div className="rounded-xl bg-surface-secondary p-4">
-                <p className="text-foreground-muted">住院信息</p>
+                <p className="text-foreground-muted">在册信息</p>
                 <p className="font-medium mt-1">{encounter.ward} · {encounter.bedNo} · {encounter.inpatientNo}</p>
               </div>
               <div className="rounded-xl bg-surface-secondary p-4">
@@ -467,10 +467,10 @@ function CreateTaskContent() {
               </div>
             </div>
             <div className="mt-5">
-              <p className="text-sm text-foreground-muted mb-2">宣教与知情同意</p>
+              <p className="text-sm text-foreground-muted mb-2">科普与知情同意</p>
               <p className="text-sm">
                 {consentRequired ? '包含评估须知签名；' : '不包含知情同意；'}
-                {educationTopics.length ? educationTopics.join('、') : '无额外宣教'}
+                {educationTopics.length ? educationTopics.join('、') : '无额外科普'}
               </p>
             </div>
           </Card>

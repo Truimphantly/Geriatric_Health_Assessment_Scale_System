@@ -30,7 +30,7 @@ function statusPresentation(
   status: PatientWithEncounter['encounter']['encounterStatus']
 ) {
   if (status === 'in_hospital') {
-    return { label: '在院', variant: 'success' as const };
+    return { label: '在册', variant: 'success' as const };
   }
   if (status === 'pending_admission') {
     return { label: '待建档', variant: 'warning' as const };
@@ -93,7 +93,7 @@ export default function NursePatientDetailPage() {
     return (
       <NurseLayout>
         <Card padding="lg" className="text-center text-danger">
-          {error || '学生住院记录不存在'}
+          {error || '学生档案不存在'}
         </Card>
       </NurseLayout>
     );
@@ -128,7 +128,7 @@ export default function NursePatientDetailPage() {
                 ? '女'
                 : '其他'}{' '}
             · {patient.age}岁 · 学生编号 {patient.patientNo}
-            {patient.hisPatientId ? ` · HIS ${patient.hisPatientId}` : ''}
+            {patient.hisPatientId ? ` · 学籍 ${patient.hisPatientId}` : ''}
           </p>
         </div>
         <div className="flex flex-col gap-2 sm:flex-row">
@@ -152,16 +152,16 @@ export default function NursePatientDetailPage() {
       <div className="grid grid-cols-1 gap-5 lg:grid-cols-3">
         <Card padding="lg" className="lg:col-span-2">
           <CardHeader>
-            <CardTitle>本次住院信息</CardTitle>
+            <CardTitle>在册档案信息</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="grid grid-cols-1 gap-4 text-sm sm:grid-cols-2 md:grid-cols-3">
               <div>
-                <p className="text-foreground-muted">住院号</p>
+                <p className="text-foreground-muted">档案编号</p>
                 <p className="mt-1 font-medium">{encounter.inpatientNo}</p>
               </div>
               <div>
-                <p className="text-foreground-muted">中心床号</p>
+                <p className="text-foreground-muted">房间 / 座位</p>
                 <p className="mt-1 font-medium">
                   {encounter.ward} · {encounter.bedNo}
                 </p>
@@ -194,7 +194,7 @@ export default function NursePatientDetailPage() {
                 </p>
               </div>
               <div className="sm:col-span-2 md:col-span-3">
-                <p className="text-foreground-muted">诊断快照</p>
+                <p className="text-foreground-muted">内部备注</p>
                 <p className="mt-1 font-medium">
                   {encounter.diagnosis || '未记录'}
                 </p>

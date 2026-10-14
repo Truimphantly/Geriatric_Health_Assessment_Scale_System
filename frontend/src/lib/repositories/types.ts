@@ -41,7 +41,7 @@ export interface PatientTaskSummary {
 
 export interface PatientListFilters {
   keyword?: string;
-  status?: '待建档' | '在院' | '已出院' | '取消' | '';
+  status?: '待建档' | '在册' | '已出院' | '取消' | '';
   departmentName?: string;
   wardName?: string;
 }

@@ -707,8 +707,8 @@ export default function PatientDialoguePage() {
     } catch (acknowledgeError) {
       setConnectionError(
         acknowledgeError instanceof Error
-          ? `宣教确认失败：${acknowledgeError.message}`
-          : '宣教确认失败'
+          ? `科普确认失败：${acknowledgeError.message}`
+          : '科普确认失败'
       );
       throw acknowledgeError;
     }

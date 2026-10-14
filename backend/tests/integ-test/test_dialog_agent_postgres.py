@@ -73,7 +73,7 @@ def _seed_interaction_session(session_factory) -> str:
             patient_id=patient.id,
             inpatient_no=_uid("DIALOG-INP"),
             admission_time=now,
-            encounter_status="在院",
+            encounter_status="在册",
             creator="pytest",
             updator="pytest",
         )

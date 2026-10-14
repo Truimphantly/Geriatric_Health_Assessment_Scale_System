@@ -489,7 +489,7 @@ describe('实时事件进度口径', () => {
           success: true,
           request_id: 'NURSE-AGENT-1',
         },
-        patient_name: '周海燕',
+        patient_name: '郑小满',
         bed_no: '09-1',
         reason: '需要测量血压',
         action_label: '测量血压',
@@ -550,7 +550,7 @@ describe('实时事件进度口径', () => {
       occurred_at: '2026-08-19T15:58:00Z',
       payload: {
         form_id: 'FORM-TOBACCO',
-        title: '住院戒烟知情确认',
+        title: '在册档案戒烟知情确认',
         document_version: '1.0',
         full_text: '戒烟知情同意完整内容',
         clauses: [

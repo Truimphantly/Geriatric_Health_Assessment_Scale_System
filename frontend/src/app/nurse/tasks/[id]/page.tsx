@@ -438,7 +438,7 @@ export default function TaskDetailPage() {
                           <>
                             <Badge variant="info" size="sm">{structuredAnswers.length}项结构化答案</Badge>
                             <Badge variant={interactionEvents.some((event) => event.priority === 'high') ? 'danger' : 'warning'} size="sm">
-                              {interactionEvents.length}项风险/宣教事件
+                              {interactionEvents.length}项风险/科普事件
                             </Badge>
                           </>
                         ) : (

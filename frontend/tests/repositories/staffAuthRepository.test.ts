@@ -23,7 +23,7 @@ describe('staff authentication repository', () => {
       staff: {
         id: 7,
         staff_no: 'N007',
-        staff_name: '测试护士',
+        staff_name: '测试老师',
         role_code: 'nurse',
         department_name: '测试病区',
       },
@@ -33,7 +33,7 @@ describe('staff authentication repository', () => {
       id: '7',
       username: 'N007',
       role: 'nurse',
-      name: '测试护士',
+      name: '测试老师',
       department: '测试病区',
     });
   });
@@ -44,7 +44,7 @@ describe('staff authentication repository', () => {
         staff: {
           id: 1,
           staff_no: 'N001',
-          staff_name: '李护士',
+          staff_name: '李老师',
           role_code: 'nurse',
           department_name: '心内科',
         },
@@ -77,7 +77,7 @@ describe('staff authentication repository', () => {
           session_id: 'SESS-HISTORY-109',
           patient_id: 1,
           encounter_id: 2,
-          patient_name: '周海燕',
+          patient_name: '郑小满',
           bed_no: '09-1',
           collection_mode: 'ai_dialogue',
           task_status: 'pending_review',
@@ -96,7 +96,7 @@ describe('staff authentication repository', () => {
     expect(tasks[0]).toMatchObject({
       id: '109',
       taskNo: 'TASK-HISTORY-109',
-      patientName: '周海燕',
+      patientName: '郑小满',
     });
   });
 
@@ -109,7 +109,7 @@ describe('staff authentication repository', () => {
           session_id: 'SESS-PATIENT-111',
           patient_id: 1,
           encounter_id: 2,
-          patient_name: '张桂芳',
+          patient_name: '陈小雨',
           bed_no: '01-1',
           collection_mode: 'ai_dialogue',
           task_status: 'in_progress',
@@ -127,7 +127,7 @@ describe('staff authentication repository', () => {
     expect(request.credentials).toBe('include');
     expect(tasks[0]).toMatchObject({
       id: '111',
-      patientName: '张桂芳',
+      patientName: '陈小雨',
     });
   });
 
@@ -138,7 +138,7 @@ describe('staff authentication repository', () => {
         task_no: 'TASK-RETRY-112',
         patient_id: 1,
         encounter_id: 2,
-        patient_name: '张桂芳',
+        patient_name: '陈小雨',
         bed_no: '01-1',
         collection_mode: 'ai_dialogue',
         task_status: 'in_progress',
@@ -169,7 +169,7 @@ describe('staff authentication repository', () => {
       repository.loginStaff({ staffNo: 'N004', password: '123456' })
     ).resolves.toMatchObject({
       id: 'N004',
-      name: '陈护士',
+      name: '陈老师',
     });
     await expect(
       repository.loginStaff({ staffNo: 'N004', password: 'wrong' })

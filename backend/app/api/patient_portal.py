@@ -64,7 +64,7 @@ def verify_task(
     req: PatientTaskVerifyRequest,
     db: DbSession,
 ) -> dict:
-    """核验当前在院任务并复用患者 HttpOnly Cookie。"""
+    """核验当前在册任务并复用患者 HttpOnly Cookie。"""
     patient, encounter, task, token = patient_portal_service.verify_task_identity(
         db,
         request,
@@ -83,7 +83,7 @@ def verify_task(
             "tasks": [item.model_dump(mode="json") for item in portal.tasks],
             "verified_task_no": task.task_no,
             "verification_method": "task_no_id_card_suffix",
-            "inpatient": encounter.encounter_status == "在院",
+            "inpatient": encounter.encounter_status == "在册",
             "patient_name": patient.patient_name,
         }
     )

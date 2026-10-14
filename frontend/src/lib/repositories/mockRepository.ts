@@ -42,11 +42,11 @@ const mockEducationMaterials: EducationMaterialConfig[] = [
     versionId: '1',
     unitId: '1',
     category: 'tobacco',
-    title: '住院期间戒烟与烟草危害宣教',
+    title: '压力与学业的小科普',
     documentVersion: '1.0',
-    originalContent: '吸烟会增加心脑血管和呼吸系统疾病风险，住院中心属于无烟环境。',
-    patientContent: '住院期间请不要吸烟，如烟瘾明显请告诉心理老师。',
-    spokenContent: '跟您提醒一下，住院期间请不要吸烟，如有不适请及时告诉心理老师。',
+    originalContent: '压力大时身体和情绪都会发出信号；把任务拆小、一次只做一件，通常更有帮助。',
+    patientContent: '压力大的时候可以试试把任务拆小，慢慢来；需要时找信任的大人聊聊。',
+    spokenContent: '跟你分享一个小方法：压力大的时候把任务拆小，一次只做一件，会轻松很多。',
     sourceName: '系统内置演示材料',
     priority: 'medium',
     requiresAcknowledgement: true,
@@ -58,7 +58,7 @@ const mockEducationMaterials: EducationMaterialConfig[] = [
     versionId: '2',
     unitId: '2',
     category: 'allergy',
-    title: '药物过敏安全宣教',
+    title: '药物过敏安全科普',
     documentVersion: '1.0',
     originalContent: '已知或疑似药物过敏者，应主动说明具体药物及既往反应。',
     patientContent: '每次用药前，请主动告诉医生和心理老师您对什么药过敏。',
@@ -80,7 +80,7 @@ const mockInteractionRules: InteractionRuleConfig[] = [
     keywords: ['过敏', '青霉素'],
     patterns: ['对.+过敏'],
     actionType: 'constraint_prompt',
-    prompt: '追问具体过敏药物和既往反应，并调用药物过敏宣教材料。',
+    prompt: '追问具体过敏药物和既往反应，并调用药物过敏科普材料。',
     tags: ['过敏', '高风险'],
     priority: 100,
     enabled: true,
@@ -93,7 +93,7 @@ const mockInteractionRules: InteractionRuleConfig[] = [
     keywords: ['吸烟', '抽烟'],
     patterns: ['每天.*支'],
     actionType: 'constraint_prompt',
-    prompt: '追问吸烟量和年限，并调用戒烟宣教材料。',
+    prompt: '追问吸烟量和年限，并调用戒烟科普材料。',
     tags: ['烟草'],
     priority: 60,
     enabled: true,
@@ -162,7 +162,7 @@ function buildMockNursingPlan(taskId: string): NursingPlan {
     taskId: Number(taskId) || 1,
     planNo: `PLAN-DEMO-${taskId}`,
     planStatus: 'ai_draft',
-    riskSummary: '当前为演示草案：建议重点关注跌倒风险、用药过敏信息和学生理解程度。',
+    riskSummary: '当前为演示草案：建议重点关注安全关注、用药过敏信息和学生理解程度。',
     educationSummary: '用药前核对过敏史，采用短句和回教法确认学生理解。',
     handoverSummary: '交接班时说明学生配合度、认知状态及需要持续观察的风险点。',
     generatedBy: 'ai:demo',
@@ -193,7 +193,7 @@ function buildMockNursingPlan(taskId: string): NursingPlan {
         id: 1,
         itemType: 'observation',
         itemCode: 'fall_risk_observation',
-        itemContent: '首次下床及夜间活动时陪同，观察头晕、步态不稳等表现。',
+        itemContent: '首次下床及夜间活动时陪同，观察头晕、作息不稳等表现。',
         sourceType: 'assessment_score',
         sourceId: 'demo-fall-score',
         priority: 'high',
@@ -236,7 +236,7 @@ const MOCK_STAFF_USERS: Record<
       id: 'N001',
       username: 'N001',
       role: 'nurse',
-      name: '李心理老师',
+      name: '李老师',
       department: '心内科',
       avatar: '',
     },
@@ -247,8 +247,8 @@ const MOCK_STAFF_USERS: Record<
       id: 'N002',
       username: 'N002',
       role: 'nurse',
-      name: '王心理老师',
-      department: '老年医学科',
+      name: '王老师',
+      department: '心理护航中心',
       avatar: '',
     },
   },
@@ -258,7 +258,7 @@ const MOCK_STAFF_USERS: Record<
       id: 'N003',
       username: 'N003',
       role: 'nurse',
-      name: '赵心理老师',
+      name: '赵老师',
       department: '消化内科',
       avatar: '',
     },
@@ -269,7 +269,7 @@ const MOCK_STAFF_USERS: Record<
       id: 'N004',
       username: 'N004',
       role: 'nurse',
-      name: '陈心理老师',
+      name: '陈老师',
       department: '呼吸与危重症医学科',
       avatar: '',
     },
@@ -280,7 +280,7 @@ const MOCK_STAFF_USERS: Record<
       id: 'N005',
       username: 'N005',
       role: 'nurse',
-      name: '刘心理老师',
+      name: '刘老师',
       department: '骨科',
       avatar: '',
     },
@@ -455,7 +455,7 @@ export class MockCareRepository implements CareRepository {
     > = {
       '': '',
       待建档: 'pending_admission',
-      在院: 'in_hospital',
+      在册: 'in_hospital',
       已出院: 'discharged',
       取消: 'cancelled',
     };
@@ -497,7 +497,7 @@ export class MockCareRepository implements CareRepository {
   async listInHospitalPatients(
     signal?: AbortSignal
   ): Promise<PatientWithEncounter[]> {
-    return this.listPatients({ status: '在院' }, signal);
+    return this.listPatients({ status: '在册' }, signal);
   }
 
   async getPatient(
@@ -509,7 +509,7 @@ export class MockCareRepository implements CareRepository {
     const encounter = mockEncounters.find(
       (item) => item.patientId === patientId
     );
-    if (!patient || !encounter) throw new Error('学生住院记录不存在');
+    if (!patient || !encounter) throw new Error('学生档案不存在');
     return buildMockPatientRecord(patient, encounter);
   }
 
@@ -523,7 +523,7 @@ export class MockCareRepository implements CareRepository {
         (item) => item.inpatientNo === input.encounter.inpatientNo
       )
     ) {
-      throw new Error('住院号已存在');
+      throw new Error('档案编号已存在');
     }
     const sequence = String(Date.now()).slice(-8);
     const record = buildMockRecordFromInput(
@@ -551,7 +551,7 @@ export class MockCareRepository implements CareRepository {
         (!input.encounter.id || item.id === input.encounter.id)
     );
     if (patientIndex < 0 || encounterIndex < 0) {
-      throw new Error('学生住院记录不存在');
+      throw new Error('学生档案不存在');
     }
     if (
       mockEncounters.some(
@@ -560,7 +560,7 @@ export class MockCareRepository implements CareRepository {
           item.inpatientNo === input.encounter.inpatientNo
       )
     ) {
-      throw new Error('住院号已存在');
+      throw new Error('档案编号已存在');
     }
     const currentPatient = mockPatients[patientIndex];
     const currentEncounter = mockEncounters[encounterIndex];
@@ -596,7 +596,7 @@ export class MockCareRepository implements CareRepository {
     const index = mockEducationMaterials.findIndex(
       (item) => item.id === materialId
     );
-    if (index < 0) throw new Error('宣教材料不存在');
+    if (index < 0) throw new Error('科普材料不存在');
     mockEducationMaterials[index] = {
       ...mockEducationMaterials[index],
       ...input,

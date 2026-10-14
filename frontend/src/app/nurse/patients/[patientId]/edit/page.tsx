@@ -78,7 +78,7 @@ export default function EditPatientPage() {
           编辑<span className="italic text-primary">学生信息</span>
         </h1>
         <p className="mt-1 text-foreground-muted">
-          更新学生主档和本次住院记录；历史评估快照不会被改写
+          更新学生档案与在册信息；历史评估快照不会被改写
         </p>
       </div>
       {loading ? (
@@ -96,7 +96,7 @@ export default function EditPatientPage() {
         />
       ) : (
         <Card padding="lg" className="text-center text-danger">
-          {error || '学生住院记录不存在'}
+          {error || '学生档案不存在'}
         </Card>
       )}
     </NurseLayout>

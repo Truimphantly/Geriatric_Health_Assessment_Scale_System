@@ -49,7 +49,7 @@ const issueTagOptions = [
   '信息不准确',
   '漏问关键信息',
   '追问不合理',
-  '宣教不适宜',
+  '科普不适宜',
   '存在安全风险',
 ];
 
@@ -476,7 +476,7 @@ export default function NurseMonitorDetailPage() {
               <div className="flex items-center gap-2">
                 <span className="font-semibold">{task.patientName}</span>
                 <Badge variant="success" size="sm">
-                  {task.encounterStatus ?? '在院中'}
+                  {task.encounterStatus ?? '在册'}
                 </Badge>
               </div>
             </div>
@@ -484,7 +484,7 @@ export default function NurseMonitorDetailPage() {
           <div className="hidden h-8 w-px bg-border lg:block" />
           <dl className="grid flex-1 grid-cols-2 gap-x-5 gap-y-1 text-xs sm:grid-cols-3 xl:grid-cols-6">
             <div>
-              <dt className="text-[11px] text-foreground-muted">住院号</dt>
+              <dt className="text-[11px] text-foreground-muted">档案编号</dt>
               <dd className="mt-1 font-medium">{task.inpatientNo ?? task.encounterNo ?? '—'}</dd>
             </div>
             <div>
@@ -735,7 +735,7 @@ export default function NurseMonitorDetailPage() {
           </Card>
 
           <Card padding="sm">
-            <h2 className="mb-1.5 font-semibold">风险与宣教事件</h2>
+            <h2 className="mb-1.5 font-semibold">风险与科普事件</h2>
             <div className="scrollbar-soft max-h-48 space-y-1 overflow-y-auto pr-1">
               {events.map((event) => (
                 <button

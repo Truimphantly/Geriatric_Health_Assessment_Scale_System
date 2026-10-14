@@ -81,7 +81,7 @@ def _active_encounter(db: Session, patient_id: int) -> PatientEncounter | None:
     return db.scalar(
         select(PatientEncounter).where(
             PatientEncounter.patient_id == patient_id,
-            PatientEncounter.encounter_status == "在院",
+            PatientEncounter.encounter_status == "在册",
             PatientEncounter.deleted == 0,
         )
     )

@@ -85,7 +85,7 @@ def _task_for_patient(
 
 
 def _task_by_no(db: Session, task_no: str) -> tuple[CareTask, Patient, PatientEncounter]:
-    """加载扫码/身份核验使用的任务及在院上下文。"""
+    """加载扫码/身份核验使用的任务及在册上下文。"""
     task = db.scalar(
         select(CareTask).where(
             CareTask.task_no == task_no.strip(),
@@ -101,7 +101,7 @@ def _task_by_no(db: Session, task_no: str) -> tuple[CareTask, Patient, PatientEn
         select(PatientEncounter).where(
             PatientEncounter.id == task.encounter_id,
             PatientEncounter.patient_id == task.patient_id,
-            PatientEncounter.encounter_status == "在院",
+            PatientEncounter.encounter_status == "在册",
             PatientEncounter.deleted == 0,
         )
     )
@@ -212,7 +212,7 @@ def consume_scan_token(
         raise AppError(ErrorCode.ERR_PATIENT_008)
     task = db.get(CareTask, payload.get("task_id"))
     encounter = db.get(PatientEncounter, payload.get("encounter_id"))
-    if task is None or encounter is None or encounter.encounter_status != "在院":
+    if task is None or encounter is None or encounter.encounter_status != "在册":
         raise AppError(ErrorCode.ERR_PATIENT_008)
     patient = db.get(Patient, task.patient_id)
     if patient is None or task.encounter_id != encounter.id or patient.deleted or task.deleted:

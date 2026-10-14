@@ -9,7 +9,7 @@ from pydantic import BaseModel, ConfigDict, Field
 
 
 class PatientTaskVerifyRequest(BaseModel):
-    """按任务编号和证件后四位核验当前在院患者。"""
+    """按任务编号和证件后四位核验当前在册学生。"""
 
     model_config = ConfigDict(extra="forbid")
 

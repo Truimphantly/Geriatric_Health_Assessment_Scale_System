@@ -34,7 +34,7 @@ const tabs: Array<{
 }> = [
   {
     id: 'education',
-    label: '宣教材料',
+    label: '科普材料',
     description: '学生可见与播报内容',
     icon: BookOpenIcon,
   },
@@ -187,7 +187,7 @@ export default function NurseConfigPage() {
         items.map((item) => (item.id === saved.id ? saved : item))
       );
       setMaterialDraft(saved);
-      setMessage('宣教材料已保存，新触发的宣教将立即使用该内容。');
+      setMessage('科普材料已保存，新触发的科普将立即使用该内容。');
     } catch (reason) {
       setError(errorMessage(reason));
     } finally {
@@ -358,7 +358,7 @@ export default function NurseConfigPage() {
           {activeTab === 'education' && materialDraft && (
             <div className="grid gap-5 xl:grid-cols-[22rem_minmax(0,1fr)]">
               <Card padding="sm">
-                <h2 className="mb-3 px-1 text-lg">宣教材料列表</h2>
+                <h2 className="mb-3 px-1 text-lg">科普材料列表</h2>
                 <div className="space-y-2">
                   {materials.map((item) => (
                     <button
@@ -386,7 +386,7 @@ export default function NurseConfigPage() {
                 <form onSubmit={saveMaterial} className="space-y-5">
                   <div className="flex flex-wrap items-start justify-between gap-3">
                     <div>
-                      <h2 className="text-xl">编辑宣教材料</h2>
+                      <h2 className="text-xl">编辑科普材料</h2>
                       <p className="mt-1 text-sm text-foreground-muted">
                         分类编码 {materialDraft.category} 不允许修改。
                       </p>
@@ -472,7 +472,7 @@ export default function NurseConfigPage() {
                     </label>
                   </div>
                   {[
-                    ['originalContent', '医学宣教原文', 7],
+                    ['originalContent', '医学科普原文', 7],
                     ['patientContent', '学生易懂文本', 5],
                     ['spokenContent', '语音播报文本', 5],
                   ].map(([field, label, rows]) => (

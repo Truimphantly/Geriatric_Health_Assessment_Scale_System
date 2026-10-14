@@ -57,8 +57,8 @@ describe('患者 API 演示身份', () => {
     expect(patientDemoAccounts).toHaveLength(10);
     expect(new Set(patientDemoAccounts.map((item) => item.idCardNo)).size).toBe(10);
     expect(new Set(patientDemoAccounts.map((item) => item.phone)).size).toBe(10);
-    expect(patientDemoAccounts.find((item) => item.name === '周海燕')).toEqual({
-      name: '周海燕',
+    expect(patientDemoAccounts.find((item) => item.name === '郑小满')).toEqual({
+      name: '郑小满',
       idCardNo: '110101197206150028',
       phone: '13800000006',
     });

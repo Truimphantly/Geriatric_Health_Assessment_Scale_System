@@ -44,7 +44,7 @@ def test_only_required_structured_answers_can_complete_dialogue(
             encounter_no=_no("ENC"),
             patient_id=patient.id,
             admission_time=now,
-            encounter_status="在院",
+            encounter_status="在册",
             creator="pytest",
             updator="pytest",
         )

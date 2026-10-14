@@ -11,7 +11,7 @@ from pydantic import BaseModel, Field
 
 from app.schemas.task import BackendTaskDto
 
-EncounterStatus = Literal["待入院", "在院", "已出院", "取消"]
+EncounterStatus = Literal["待入院", "在册", "已出院", "取消"]
 
 
 class PatientDto(BaseModel):
@@ -72,7 +72,7 @@ class PatientRecordDto(BaseModel):
 
 
 class InHospitalPatientDto(PatientRecordDto):
-    """兼容原在院患者列表契约。"""
+    """兼容原在册学生列表契约。"""
 
 
 class PatientCreatePayload(BaseModel):
@@ -100,7 +100,7 @@ class PatientEncounterCreatePayload(BaseModel):
     bed_no: str = Field(..., min_length=1, max_length=32)
     admission_time: datetime
     discharge_time: datetime | None = None
-    encounter_status: EncounterStatus = "在院"
+    encounter_status: EncounterStatus = "在册"
     diagnosis_snapshot: dict | None = None
     admission_source: str | None = Field(default=None, max_length=32)
     nursing_level: str | None = Field(default=None, max_length=32)

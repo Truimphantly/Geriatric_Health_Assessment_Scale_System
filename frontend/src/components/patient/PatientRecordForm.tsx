@@ -193,7 +193,7 @@ export default function PatientRecordForm({
             }
           />
           <Input
-            label="HIS 学生 ID"
+            label="外部学籍编号"
             value={form.hisPatientId}
             onChange={(event) => update('hisPatientId', event.target.value)}
           />

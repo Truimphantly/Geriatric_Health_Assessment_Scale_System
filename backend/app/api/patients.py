@@ -1,5 +1,5 @@
 """患者路由
-作用：提供在院患者查询接口。
+作用：提供在册学生查询接口。
 """
 
 from __future__ import annotations
@@ -40,7 +40,7 @@ def list_patients(
     encounter_status: Annotated[
         str | None,
         Query(alias="status", max_length=32),
-    ] = "在院",
+    ] = "在册",
     department_name: Annotated[str | None, Query(max_length=128)] = None,
     ward_name: Annotated[str | None, Query(max_length=128)] = None,
 ) -> dict:
@@ -79,18 +79,18 @@ def create_patient(
 @router.get(
     "/in-hospital",
     response_model=ApiResponse[list[InHospitalPatientDto]],
-    summary="查询在院患者列表",
+    summary="查询在册学生列表",
 )
 def list_in_hospital_patients(
     db: Annotated[Session, Depends(get_db)],
     _: Annotated[StaffAccount, Depends(require_staff)],
 ) -> dict:
-    """查询在院患者列表
-    作用：返回 encounter_status="在院" 的患者及其住院记录。
+    """查询在册学生列表
+    作用：返回 encounter_status="在册" 的患者及其住院记录。
     Args:
         - db: 数据库会话
     Return:
-        - 在院患者列表（患者 + 住院记录）
+        - 在册学生列表（患者 + 住院记录）
     """
     return ok(patient_service.list_in_hospital_patients(db))
 

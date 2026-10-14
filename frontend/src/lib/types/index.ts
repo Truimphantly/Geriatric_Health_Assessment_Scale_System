@@ -35,7 +35,7 @@ export interface Patient {
   address?: string;
 }
 
-// 住院记录
+// 在册档案
 export interface PatientEncounter {
   id: string;
   patientId: string;
@@ -395,7 +395,7 @@ export interface AssessmentScore {
   riskLevel: 'low' | 'medium' | 'high' | 'very_high';
 }
 
-// 宣教内容卡片
+// 科普内容卡片
 export interface EducationCard {
   id: string;
   taskId: string;

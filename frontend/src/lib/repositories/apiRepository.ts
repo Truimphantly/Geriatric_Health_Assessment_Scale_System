@@ -158,9 +158,9 @@ function mapConsentSnapshot(dto: ConsentSnapshotDto): ConsentSnapshot {
 
 function toBackendEncounterStatus(
   status: PatientRecordInput['encounter']['encounterStatus']
-): '待建档' | '在院' | '已出院' | '取消' {
+): '待建档' | '在册' | '已出院' | '取消' {
   if (status === 'pending_admission') return '待建档';
-  if (status === 'in_hospital') return '在院';
+  if (status === 'in_hospital') return '在册';
   if (status === 'cancelled') return '取消';
   return '已出院';
 }

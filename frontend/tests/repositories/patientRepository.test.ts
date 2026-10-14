@@ -50,7 +50,7 @@ describe('patient management repository', () => {
     vi.unstubAllGlobals();
   });
 
-  it('完整映射患者、住院、安全信息和任务摘要', () => {
+  it('完整映射患者、在册档案、安全信息和任务摘要', () => {
     const record = mapPatientRecord({
       patient: {
         id: 9,
@@ -76,7 +76,7 @@ describe('patient management repository', () => {
         ward_name: '心内病区A',
         bed_no: '99-1',
         admission_time: '2026-08-20T08:00:00Z',
-        encounter_status: '在院',
+        encounter_status: '在册',
         diagnosis_snapshot: { primary: '冠心病' },
         nursing_level: '一级护理',
         allergy_summary: '青霉素过敏',
@@ -128,7 +128,7 @@ describe('patient management repository', () => {
         ward_name: '心内病区A',
         bed_no: '99-1',
         admission_time: '2026-08-20T08:00:00Z',
-        encounter_status: '在院',
+        encounter_status: '在册',
         diagnosis_snapshot: { primary: '冠心病' },
       },
     };
@@ -186,7 +186,7 @@ describe('patient management repository', () => {
     const created = await repository.createPatient(patientInput);
     const listed = await repository.listPatients({
       keyword: created.patient.patientNo,
-      status: '在院',
+      status: '在册',
     });
     const updated = await repository.updatePatient(created.patient.id, {
       ...patientInput,

@@ -417,7 +417,16 @@ export const useChatStore = create<ChatStore>()(
     }),
     {
       name: 'medical-evaluate-chat-storage',
+      version: 2,
       storage: createJSONStorage(() => sessionStorage),
+      // v2：清理心理版改造前遗留的提醒历史（旧演示数据不再回显）
+      migrate: (persistedState, version) => {
+        const state = persistedState as Partial<ChatStore>;
+        if (version < 2) {
+          return { ...state, nurseAssistanceRequests: {} } as ChatStore;
+        }
+        return state as ChatStore;
+      },
       partialize: (state) => ({
         ...state,
         streamingTaskId: null,

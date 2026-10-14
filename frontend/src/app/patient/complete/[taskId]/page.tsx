@@ -48,7 +48,7 @@ export default function PatientCompletePage() {
             {
               icon: 'bell' as const,
               title: '身体不适请按铃',
-              detail: '如您感到不适或需要帮助，请立即按床旁呼叫铃。',
+              detail: '如您感到不适或需要帮助，请立即按床旁求助方式。',
               tone: 'bg-[#fff0e7] text-primary',
             },
           ].map((item) => (

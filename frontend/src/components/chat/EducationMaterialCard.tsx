@@ -85,7 +85,7 @@ export default function EducationMaterialCard({
   return (
     <section
       className="mb-4 overflow-hidden rounded-2xl border border-sky-200 bg-sky-50"
-      aria-label={`医学宣教：${card.title}`}
+      aria-label={`医学科普：${card.title}`}
     >
       <div className="flex flex-wrap items-start justify-between gap-3 border-b border-sky-200 px-4 py-3">
         <div>
@@ -94,7 +94,7 @@ export default function EducationMaterialCard({
               variant={card.priority === 'high' ? 'danger' : 'info'}
               size="sm"
             >
-              医学宣教
+              医学科普
             </Badge>
             <span className="text-xs text-foreground-muted">
               v{card.documentVersion}
@@ -124,7 +124,7 @@ export default function EducationMaterialCard({
 
       <div className="space-y-3 p-4">
         <div className="rounded-xl border border-sky-100 bg-white p-4">
-          <p className="mb-2 text-xs font-medium text-sky-800">宣教原文</p>
+          <p className="mb-2 text-xs font-medium text-sky-800">科普原文</p>
           <p className="whitespace-pre-wrap text-sm leading-7">
             {card.originalContent}
           </p>
@@ -140,7 +140,7 @@ export default function EducationMaterialCard({
           )}
         {speechUnavailable && (
           <p className="text-xs text-amber-700">
-            当前浏览器未能自动播报，请直接阅读宣教原文。
+            当前浏览器未能自动播报，请直接阅读科普原文。
           </p>
         )}
         {card.requiresAcknowledgement && !readOnly && (

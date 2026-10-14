@@ -29,7 +29,7 @@ export default function ToolResultHistoryCard(
         <div className="min-w-0 flex-1">
           <div className="flex flex-wrap items-center gap-2">
             <p className="font-semibold">
-              {isEducation ? 'AI工具结果 · 医学宣教' : 'AI工具结果 · 知情同意'}
+              {isEducation ? 'AI工具结果 · 医学科普' : 'AI工具结果 · 知情同意'}
             </p>
             <span className="rounded-full bg-sky-100 px-2 py-0.5 text-xs text-sky-700">
               已执行
@@ -45,7 +45,7 @@ export default function ToolResultHistoryCard(
           {isEducation ? (
             <div className="mt-3 space-y-3">
               <div className="rounded-xl border border-sky-100 bg-white p-4">
-                <p className="mb-2 text-xs font-medium text-sky-800">宣教原文</p>
+                <p className="mb-2 text-xs font-medium text-sky-800">科普原文</p>
                 <p className="whitespace-pre-wrap text-sm leading-7">
                   {props.item.originalContent || props.item.patientContent}
                 </p>

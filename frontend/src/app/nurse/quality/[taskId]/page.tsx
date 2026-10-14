@@ -20,7 +20,7 @@ import {
   StarIcon,
 } from '@heroicons/react/24/outline';
 
-const dialogueDimensions = ['CICARE规范性', '信息准确性', '问询完整性', '追问合理性', '宣教适宜性', '沟通友好度', '安全性'];
+const dialogueDimensions = ['CICARE规范性', '信息准确性', '问询完整性', '追问合理性', '科普适宜性', '沟通友好度', '安全性'];
 const assessmentDimensions = ['答案抽取准确性', '答案完整性', '临床计分正确性', '风险识别正确性', '支持建议匹配度'];
 const defaultDialogueScores = Object.fromEntries(
   dialogueDimensions.map((item) => [item, 4])

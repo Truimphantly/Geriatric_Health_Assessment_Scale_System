@@ -51,7 +51,7 @@ def _seed_domain_chain(session_factory) -> dict:
             patient_id=patient.id,
             inpatient_no=_uid("INP"),
             admission_time=now,
-            encounter_status="在院",
+            encounter_status="在册",
             creator="pytest",
             updator="pytest",
         )

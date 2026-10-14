@@ -53,7 +53,7 @@ def test_verify_task_identity_success_clears_rate_limit(monkeypatch):
         patient_name="患者",
         id_card_ciphertext="ciphertext",
     )
-    encounter = SimpleNamespace(id=22, encounter_status="在院")
+    encounter = SimpleNamespace(id=22, encounter_status="在册")
     task = SimpleNamespace(id=33, task_no="TASK-001")
     monkeypatch.setattr(portal, "_check_verify_limit", lambda *_args: "rate-key")
     monkeypatch.setattr(portal, "_task_by_no", lambda *_args: (task, patient, encounter))
@@ -78,7 +78,7 @@ def test_verify_task_identity_success_clears_rate_limit(monkeypatch):
 
 def test_verify_task_identity_rejects_suffix(monkeypatch):
     patient = SimpleNamespace(id=11, id_card_ciphertext="ciphertext")
-    encounter = SimpleNamespace(id=22, encounter_status="在院")
+    encounter = SimpleNamespace(id=22, encounter_status="在册")
     task = SimpleNamespace(id=33, task_no="TASK-001")
     monkeypatch.setattr(portal, "_check_verify_limit", lambda *_args: "rate-key")
     monkeypatch.setattr(portal, "_task_by_no", lambda *_args: (task, patient, encounter))
@@ -113,7 +113,7 @@ def test_scan_token_is_single_use(monkeypatch):
                     deleted=0,
                 )
             if value == 22:
-                return SimpleNamespace(id=22, patient_id=11, encounter_status="在院", deleted=0)
+                return SimpleNamespace(id=22, patient_id=11, encounter_status="在册", deleted=0)
             if value == 11:
                 return SimpleNamespace(id=11, deleted=0, patient_name="患者")
             return None

@@ -431,7 +431,7 @@ export function mapInHospitalPatient(dto: InHospitalPatientDto): {
       encounterStatus:
         dto.encounter.encounter_status === '待建档'
           ? 'pending_admission'
-          : dto.encounter.encounter_status === '在院'
+          : dto.encounter.encounter_status === '在册'
             ? 'in_hospital'
             : dto.encounter.encounter_status === '取消'
               ? 'cancelled'

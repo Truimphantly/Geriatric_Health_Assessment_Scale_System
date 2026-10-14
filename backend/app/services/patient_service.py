@@ -177,10 +177,10 @@ def list_patients(
 
 
 def list_in_hospital_patients(db: Session) -> list[InHospitalPatientDto]:
-    """兼容原在院患者列表接口。"""
+    """兼容原在册学生列表接口。"""
     return [
         InHospitalPatientDto.model_validate(item.model_dump())
-        for item in list_patients(db, encounter_status="在院")
+        for item in list_patients(db, encounter_status="在册")
     ]
 
 
@@ -397,12 +397,12 @@ def update_patient_record(
 
 
 def _active_encounter(db: Session, patient_id: int) -> PatientEncounter | None:
-    """查询患者当前在院记录。"""
+    """查询患者当前在册记录。"""
     return db.scalar(
         select(PatientEncounter)
         .where(
             PatientEncounter.patient_id == patient_id,
-            PatientEncounter.encounter_status == "在院",
+            PatientEncounter.encounter_status == "在册",
             PatientEncounter.deleted == 0,
         )
         .order_by(PatientEncounter.admission_time.desc(), PatientEncounter.id.desc())
@@ -500,7 +500,7 @@ def get_patient_context(
         select(PatientEncounter).where(
             PatientEncounter.id == payload.get("encounter_id"),
             PatientEncounter.patient_id == payload.get("patient_id"),
-            PatientEncounter.encounter_status == "在院",
+            PatientEncounter.encounter_status == "在册",
             PatientEncounter.deleted == 0,
         )
     )

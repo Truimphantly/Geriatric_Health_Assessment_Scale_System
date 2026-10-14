@@ -37,7 +37,7 @@ def test_staff_can_create_search_view_and_update_patient() -> None:
             "ward_name": "心内病区A",
             "bed_no": "99-1",
             "admission_time": "2026-08-20T08:00:00+08:00",
-            "encounter_status": "在院",
+            "encounter_status": "在册",
             "diagnosis_snapshot": {
                 "primary": "冠心病",
                 "secondary": ["高血压"],
@@ -70,7 +70,7 @@ def test_staff_can_create_search_view_and_update_patient() -> None:
 
             listed = client.get(
                 "/api/patients",
-                params={"keyword": f"HIS-CODEX-{suffix}", "status": "在院"},
+                params={"keyword": f"HIS-CODEX-{suffix}", "status": "在册"},
             )
             assert listed.status_code == 200, listed.text
             assert [item["patient"]["id"] for item in listed.json()["data"]] == [

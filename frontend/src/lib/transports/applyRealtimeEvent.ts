@@ -368,7 +368,7 @@ export function applyRealtimeEvent(event: SseEnvelope): void {
         taskId: event.task_id,
         materialId,
         category: value(event.payload, 'category', ''),
-        title: value(event.payload, 'title', '医学宣教'),
+        title: value(event.payload, 'title', '医学科普'),
         documentVersion: value(event.payload, 'document_version', ''),
         originalContent: value(event.payload, 'original_content', ''),
         patientContent: value(event.payload, 'patient_content', ''),
@@ -397,7 +397,7 @@ export function applyRealtimeEvent(event: SseEnvelope): void {
         taskId: event.task_id,
         messageId: event.message_id,
         eventType: 'education',
-        title: value(event.payload, 'title', '医学宣教'),
+        title: value(event.payload, 'title', '医学科普'),
         description: value(
           event.payload,
           'patient_content',

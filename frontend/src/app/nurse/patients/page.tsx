@@ -29,7 +29,7 @@ function encounterStatusLabel(
   status: PatientWithEncounter['encounter']['encounterStatus']
 ) {
   if (status === 'pending_admission') return '待建档';
-  if (status === 'in_hospital') return '在院';
+  if (status === 'in_hospital') return '在册';
   if (status === 'cancelled') return '取消';
   return '已出院';
 }
@@ -46,7 +46,7 @@ export default function NursePatientsPage() {
   const isAuthenticated = useUserStore((state) => state.isAuthenticated);
   const [keyword, setKeyword] = useState('');
   const [status, setStatus] =
-    useState<NonNullable<PatientListFilters['status']>>('在院');
+    useState<NonNullable<PatientListFilters['status']>>('在册');
   const [departmentName, setDepartmentName] = useState('');
   const [wardName, setWardName] = useState('');
   const [records, setRecords] = useState<PatientWithEncounter[]>([]);
@@ -116,7 +116,7 @@ export default function NursePatientsPage() {
             学生<span className="italic text-primary">管理</span>
           </h1>
           <p className="mt-1 text-foreground-muted">
-            管理学生主档、住院过程、临床安全信息和任务
+            管理学生档案、在册状态、重要健康信息与评估任务
           </p>
         </div>
         <Link href="/nurse/patients/new">
@@ -132,19 +132,19 @@ export default function NursePatientsPage() {
           <Input
             value={keyword}
             onChange={(event) => setKeyword(event.target.value)}
-            placeholder="姓名 / 学生号 / HIS ID / 住院号 / 床号"
+            placeholder="姓名 / 学生号 / 学籍编号 / 档案编号"
           />
           <select
-            aria-label="住院状态"
+            aria-label="在册状态"
             value={status}
             onChange={(event) =>
               setStatus(event.target.value as typeof status)
             }
             className={selectClassName}
           >
-            <option value="">全部住院状态</option>
+            <option value="">全部在册状态</option>
             <option value="待建档">待建档</option>
-            <option value="在院">在院</option>
+            <option value="在册">在册</option>
             <option value="已出院">已出院</option>
             <option value="取消">取消</option>
           </select>
@@ -247,7 +247,7 @@ export default function NursePatientsPage() {
 
                     <div className="mt-4 grid grid-cols-2 gap-3 text-sm lg:grid-cols-4">
                       <div className="rounded-xl bg-surface-secondary p-3">
-                        <p className="text-xs text-foreground-muted">住院号</p>
+                        <p className="text-xs text-foreground-muted">档案编号</p>
                         <p className="mt-1 truncate font-medium">
                           {encounter.inpatientNo}
                         </p>
@@ -259,7 +259,7 @@ export default function NursePatientsPage() {
                         </p>
                       </div>
                       <div className="col-span-2 rounded-xl bg-surface-secondary p-3">
-                        <p className="text-xs text-foreground-muted">诊断快照</p>
+                        <p className="text-xs text-foreground-muted">内部备注</p>
                         <p className="mt-1 truncate font-medium">
                           {encounter.diagnosis || '未记录'}
                         </p>
@@ -270,7 +270,7 @@ export default function NursePatientsPage() {
                       <p>
                         学生号 {patient.patientNo}
                         {patient.hisPatientId
-                          ? ` · HIS ${patient.hisPatientId}`
+                          ? ` · 学籍 ${patient.hisPatientId}`
                           : ''}
                       </p>
                       <p>
