@@ -189,25 +189,19 @@ export default function TaskDetailPage() {
                     </p>
                   </div>
                   <div>
-                    <label className="text-xs text-foreground-muted">床号</label>
+                    <label className="text-xs text-foreground-muted">房间 / 座位</label>
                     <p className="text-sm font-medium text-foreground mt-1">{task.bedNo}</p>
                   </div>
                   <div>
-                    <label className="text-xs text-foreground-muted">住院号</label>
+                    <label className="text-xs text-foreground-muted">档案编号</label>
                     <p className="text-sm font-medium text-foreground mt-1">
                       {task.encounterNo}
                     </p>
                   </div>
-                  <div>
-                    <label className="text-xs text-foreground-muted">科室</label>
-                    <p className="text-sm font-medium text-foreground mt-1">
-                      {task.department}
-                    </p>
-                  </div>
                   <div className="col-span-2">
-                    <label className="text-xs text-foreground-muted">中心</label>
+                    <label className="text-xs text-foreground-muted">归属中心</label>
                     <p className="text-sm font-medium text-foreground mt-1">
-                      {task.wardName}
+                      {task.wardName ?? task.department}
                     </p>
                   </div>
                 </div>
@@ -226,7 +220,9 @@ export default function TaskDetailPage() {
                     <div className="flex-1">
                       <label className="text-xs text-foreground-muted">任务类型</label>
                       <p className="text-sm font-medium text-foreground mt-1">
-                        {task.taskType}
+                        {task.collectionMode === 'ai_dialogue'
+                          ? '心理状态对话评估'
+                          : '心理状态问卷评估'}
                       </p>
                     </div>
                   </div>
@@ -251,7 +247,9 @@ export default function TaskDetailPage() {
                       <label className="text-xs text-foreground-muted">量表信息</label>
                       <p className="text-sm font-medium text-foreground mt-1">
                         {scaleName}
-                        {task.scaleVersion ? ` (${task.scaleVersion})` : ''}
+                        {task.scaleVersion && !task.scaleVersion.startsWith('draft-')
+                          ? ` (${task.scaleVersion})`
+                          : ''}
                       </p>
                     </div>
                   </div>

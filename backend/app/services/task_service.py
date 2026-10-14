@@ -387,6 +387,18 @@ def retry_task_preparation(
     return _to_backend_task_dto(db, task)
 
 
+def _assigned_staff_name(db: Session, staff_id: int | None) -> str | None:
+    """读取负责老师姓名（供任务详情展示）。"""
+    if staff_id is None:
+        return None
+    return db.scalar(
+        select(StaffAccount.staff_name).where(
+            StaffAccount.id == staff_id,
+            StaffAccount.deleted == 0,
+        )
+    )
+
+
 def _to_backend_task_dto(db: Session, task: CareTask) -> BackendTaskDto:
     """将任务及关联数据转换为详情DTO。"""
     patient = db.get(Patient, task.patient_id)
@@ -558,6 +570,7 @@ def _to_backend_task_dto(db: Session, task: CareTask) -> BackendTaskDto:
         task_status=task.task_status,
         preparation=preparation_payload(task),
         assigned_nurse_id=task.assigned_nurse_id,
+        assigned_nurse_name=_assigned_staff_name(db, task.assigned_nurse_id),
         scale_ids=[scale.id for _, scale, _ in scale_rows],
         scale_names=[scale.scale_name for _, scale, _ in scale_rows],
         scale_progress=scale_progress,
