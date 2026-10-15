@@ -32,7 +32,7 @@ from app.schemas.quality import (
 )
 
 AI_DIALOGUE_DIMENSIONS: tuple[tuple[str, str], ...] = (
-    ("cicare", "CICARE规范性"),
+    ("cicare", "面谈规范遵循"),
     ("information_accuracy", "信息准确性"),
     ("inquiry_completeness", "问询完整性"),
     ("follow_up_reasonableness", "追问合理性"),

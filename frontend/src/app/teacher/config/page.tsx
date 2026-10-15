@@ -472,7 +472,7 @@ export default function NurseConfigPage() {
                     </label>
                   </div>
                   {[
-                    ['originalContent', '医学科普原文', 7],
+                    ['originalContent', '专业科普原文', 7],
                     ['patientContent', '学生易懂文本', 5],
                     ['spokenContent', '语音播报文本', 5],
                   ].map(([field, label, rows]) => (

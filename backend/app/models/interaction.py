@@ -167,7 +167,7 @@ class InteractionEvent(BusinessBaseMixin, Base):
 
 
 class DialogueScript(BusinessBaseMixin, Base):
-    """CICARE、追问、宣教和确认话术。"""
+    """面谈规范、追问、科普和确认话术。"""
 
     __tablename__ = "dialogue_script"
 
