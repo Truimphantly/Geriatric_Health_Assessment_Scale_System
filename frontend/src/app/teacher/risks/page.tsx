@@ -13,11 +13,17 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Badge } from '@/components/shared/Badge';
 import { runtimeConfig } from '@/lib/runtime/config';
 import {
+  REFERRAL_STATUS_LABEL,
+  REFERRAL_TARGET_LABEL,
   RISK_LEVEL_LABEL,
   RISK_SOURCE_LABEL,
   RISK_STATUS_LABEL,
+  completeReferral,
+  createReferral,
   listRisks,
+  listRiskReferrals,
   updateRisk,
+  type ReferralItem,
   type RiskItem,
   type RiskLevel,
   type RiskListData,
@@ -81,6 +87,31 @@ export default function TeacherRisksPage() {
   const [statusFilter, setStatusFilter] = useState<RiskStatus | ''>('');
   const apiMode = runtimeConfig.dataMode === 'api';
 
+  // 转介相关状态
+  const [referralFormFor, setReferralFormFor] = useState<number | null>(null);
+  const [referralDraft, setReferralDraft] = useState({
+    targetType: 'school_counseling',
+    targetName: '',
+    contact: '',
+    suggestion: '',
+  });
+  const [referralLists, setReferralLists] = useState<Record<number, ReferralItem[]>>(
+    {}
+  );
+  const [referralError, setReferralError] = useState<string | null>(null);
+
+  const loadReferrals = useCallback((riskId: number) => {
+    listRiskReferrals(riskId)
+      .then((rows) =>
+        setReferralLists((prev) => ({ ...prev, [riskId]: rows }))
+      )
+      .catch((cause) =>
+        setReferralError(
+          cause instanceof Error ? cause.message : '转介单加载失败'
+        )
+      );
+  }, []);
+
   const refresh = useCallback(
     (signal: AbortSignal) => {
       fetchRisks(
@@ -127,6 +158,65 @@ export default function TeacherRisksPage() {
 
   const items = data?.items ?? [];
   const stats = data?.stats;
+
+  const submitReferral = async (item: RiskItem) => {
+    if (!referralDraft.targetName.trim()) {
+      setReferralError('请填写转介去向名称');
+      return;
+    }
+    setBusyId(item.id);
+    setReferralError(null);
+    try {
+      await createReferral(item.id, {
+        targetType: referralDraft.targetType,
+        targetName: referralDraft.targetName.trim(),
+        contact: referralDraft.contact.trim(),
+        suggestion: referralDraft.suggestion.trim(),
+      });
+      setReferralFormFor(null);
+      setReferralDraft({
+        targetType: 'school_counseling',
+        targetName: '',
+        contact: '',
+        suggestion: '',
+      });
+      loadReferrals(item.id);
+      refresh(new AbortController().signal);
+    } catch (cause) {
+      setReferralError(cause instanceof Error ? cause.message : '转介失败');
+    } finally {
+      setBusyId(null);
+    }
+  };
+
+  const finishReferral = async (item: RiskItem, referral: ReferralItem) => {
+    setBusyId(item.id);
+    setReferralError(null);
+    try {
+      await completeReferral(referral.id);
+      loadReferrals(item.id);
+      refresh(new AbortController().signal);
+    } catch (cause) {
+      setReferralError(cause instanceof Error ? cause.message : '完成失败');
+    } finally {
+      setBusyId(null);
+    }
+  };
+
+  const toggleReferralForm = (item: RiskItem) => {
+    if (referralFormFor === item.id) {
+      setReferralFormFor(null);
+      return;
+    }
+    setReferralDraft({
+      targetType: 'school_counseling',
+      targetName: '',
+      contact: '',
+      suggestion: '',
+    });
+    setReferralFormFor(item.id);
+    loadReferrals(item.id);
+  };
 
   return (
     <NurseLayout>
@@ -188,9 +278,9 @@ export default function TeacherRisksPage() {
             风险台账需要后端数据（API 模式），当前为演示原型模式
           </p>
         </Card>
-      ) : error ? (
+      ) : error || referralError ? (
         <Card padding="lg">
-          <p className="text-danger text-center py-8">{error}</p>
+          <p className="text-danger text-center py-8">{error ?? referralError}</p>
           <div className="text-center">
             <button
               type="button"
@@ -285,6 +375,20 @@ export default function TeacherRisksPage() {
                     )}
 
                     <div className="mt-4 flex flex-wrap items-center gap-2">
+                      {item.status !== 'closed' && (
+                        <button
+                          type="button"
+                          disabled={busyId === item.id}
+                          onClick={() => toggleReferralForm(item)}
+                          className={`rounded-full px-4 py-1.5 text-sm font-semibold ${
+                            referralFormFor === item.id
+                              ? 'bg-primary text-white'
+                              : 'border border-primary text-primary'
+                          } disabled:opacity-50`}
+                        >
+                          发起转介
+                        </button>
+                      )}
                       {NEXT_STATUS_OPTIONS[item.status].map((next) => (
                         <button
                           key={next}
@@ -311,6 +415,149 @@ export default function TeacherRisksPage() {
                         </button>
                       )}
                     </div>
+
+                    {referralFormFor === item.id && (
+                      <div className="mt-3 space-y-2 rounded-2xl border border-primary/30 bg-primary-tint/40 p-4">
+                        <p className="text-sm font-bold text-foreground">
+                          发起转介（家长端会同步展示并可确认知悉）
+                        </p>
+                        <div className="flex flex-wrap gap-2">
+                          {Object.entries(REFERRAL_TARGET_LABEL).map(
+                            ([value, label]) => (
+                              <button
+                                key={value}
+                                type="button"
+                                onClick={() =>
+                                  setReferralDraft((prev) => ({
+                                    ...prev,
+                                    targetType: value,
+                                  }))
+                                }
+                                className={`rounded-full px-3 py-1.5 text-xs font-semibold ${
+                                  referralDraft.targetType === value
+                                    ? 'bg-primary text-white'
+                                    : 'bg-surface border border-border text-foreground-muted'
+                                }`}
+                              >
+                                {label}
+                              </button>
+                            )
+                          )}
+                        </div>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
+                          <input
+                            value={referralDraft.targetName}
+                            onChange={(event) =>
+                              setReferralDraft((prev) => ({
+                                ...prev,
+                                targetName: event.target.value,
+                              }))
+                            }
+                            placeholder="去向名称，例如：校心理辅导室（周一至周五）"
+                            className="rounded-xl border border-border bg-surface px-3 py-2 text-sm text-foreground outline-none focus:ring-2 focus:ring-primary/30"
+                          />
+                          <input
+                            value={referralDraft.contact}
+                            onChange={(event) =>
+                              setReferralDraft((prev) => ({
+                                ...prev,
+                                contact: event.target.value,
+                              }))
+                            }
+                            placeholder="联系方式（选填）"
+                            className="rounded-xl border border-border bg-surface px-3 py-2 text-sm text-foreground outline-none focus:ring-2 focus:ring-primary/30"
+                          />
+                        </div>
+                        <textarea
+                          value={referralDraft.suggestion}
+                          onChange={(event) =>
+                            setReferralDraft((prev) => ({
+                              ...prev,
+                              suggestion: event.target.value,
+                            }))
+                          }
+                          rows={2}
+                          placeholder="给家长的建议，例如：建议一周两次谈话，先从睡眠聊起"
+                          className="w-full rounded-xl border border-border bg-surface px-3 py-2 text-sm text-foreground outline-none focus:ring-2 focus:ring-primary/30"
+                        />
+                        <div className="flex items-center gap-2">
+                          <button
+                            type="button"
+                            disabled={
+                              busyId === item.id ||
+                              !referralDraft.targetName.trim()
+                            }
+                            onClick={() => void submitReferral(item)}
+                            className="rounded-full bg-primary px-5 py-2 text-sm font-semibold text-white disabled:opacity-50"
+                          >
+                            提交转介
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => setReferralFormFor(null)}
+                            className="rounded-full px-4 py-2 text-sm font-semibold text-foreground-muted"
+                          >
+                            取消
+                          </button>
+                        </div>
+                      </div>
+                    )}
+
+                    {(referralLists[item.id] ?? []).length > 0 && (
+                      <div className="mt-3 space-y-2">
+                        {(referralLists[item.id] ?? []).map((referral) => (
+                          <div
+                            key={referral.id}
+                            className="rounded-xl border border-border bg-surface-secondary p-3 text-sm"
+                          >
+                            <div className="flex flex-wrap items-center gap-2">
+                              <span className="font-semibold text-foreground">
+                                {REFERRAL_TARGET_LABEL[referral.targetType] ??
+                                  referral.targetType}
+                              </span>
+                              <span className="text-foreground-muted">
+                                {referral.targetName}
+                              </span>
+                              <Badge
+                                variant={
+                                  referral.status === 'completed'
+                                    ? 'success'
+                                    : referral.status === 'acknowledged'
+                                      ? 'info'
+                                      : 'warning'
+                                }
+                                size="sm"
+                              >
+                                {REFERRAL_STATUS_LABEL[referral.status]}
+                              </Badge>
+                              <span className="ml-auto text-[11px] text-foreground-muted">
+                                {(referral.createTime ?? '').slice(0, 16).replace('T', ' ')}
+                              </span>
+                            </div>
+                            {referral.suggestion && (
+                              <p className="mt-1 text-foreground-muted">
+                                建议：{referral.suggestion}
+                              </p>
+                            )}
+                            {referral.guardianFeedback && (
+                              <p className="mt-1 font-semibold text-foreground">
+                                家长回复：{referral.guardianFeedback}
+                              </p>
+                            )}
+                            {referral.status === 'acknowledged' && (
+                              <button
+                                type="button"
+                                disabled={busyId === item.id}
+                                onClick={() => void finishReferral(item, referral)}
+                                className="mt-2 rounded-full bg-primary px-4 py-1.5 text-xs font-semibold text-white disabled:opacity-50"
+                              >
+                                确认转介完成（档案结案）
+                              </button>
+                            )}
+                          </div>
+                        ))}
+                      </div>
+                    )}
 
                     <div className="mt-3 flex gap-2">
                       <input

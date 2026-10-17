@@ -195,8 +195,11 @@ def _summarize_reason(payload: dict) -> str:
 
 
 def build_guardian_portal(db: Session, patient: Patient) -> dict:
-    """组装家长端门户数据（学生摘要 + 通知 + 待签同意书）。"""
+    """组装家长端门户数据（学生摘要 + 通知 + 待签同意书 + 转介跟踪）。"""
     encounter = _active_encounter(db, patient.id)
+    from app.services import referral_service
+
+    referrals = referral_service.list_student_referrals(db, student_id=patient.id)
     return {
         "guardian": {
             "name": patient.emergency_contact_name or "监护人",
@@ -219,6 +222,9 @@ def build_guardian_portal(db: Session, patient: Patient) -> dict:
         if encounter
         else None,
         "notices": list_guardian_notices(db, patient_id=patient.id),
+        "referrals": [
+            referral_service.describe_referral(r, patient) for r in referrals
+        ],
     }
 
 def sign_guardian_consent(

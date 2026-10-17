@@ -3,15 +3,17 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import {
+  acknowledgeReferral,
   fetchGuardianPortal,
   guardianClauses,
   logoutGuardian,
   signGuardianConsent,
   type GuardianConsentClause,
   type GuardianPortal,
+  type GuardianReferral,
 } from '@/lib/guardian/api';
 
-/** 家长端门户：学生摘要 + 安全提醒 + 知情同意签署。 */
+/** 家长端门户：学生摘要 + 安全提醒 + 转介跟踪 + 知情同意签署。 */
 export default function GuardianHomePage() {
   const router = useRouter();
   const [portal, setPortal] = useState<GuardianPortal | null>(null);
@@ -21,6 +23,9 @@ export default function GuardianHomePage() {
   const [relation, setRelation] = useState('');
   const [consentState, setConsentState] = useState('');
   const [submitting, setSubmitting] = useState(false);
+  const [referralFeedback, setReferralFeedback] = useState<Record<number, string>>({});
+  const [referralBusy, setReferralBusy] = useState<number | null>(null);
+  const [referralState, setReferralState] = useState('');
 
   useEffect(() => {
     const load = async () => {
@@ -69,6 +74,34 @@ export default function GuardianHomePage() {
       );
     } finally {
       setSubmitting(false);
+    }
+  };
+
+  const submitReferralAck = async (referral: GuardianReferral) => {
+    setReferralBusy(referral.id);
+    setReferralState('');
+    try {
+      const updated = await acknowledgeReferral(
+        referral.id,
+        (referralFeedback[referral.id] ?? '').trim()
+      );
+      setPortal((prev) =>
+        prev
+          ? {
+              ...prev,
+              referrals: (prev.referrals ?? []).map((row) =>
+                row.id === updated.id ? updated : row
+              ),
+            }
+          : prev
+      );
+      setReferralState('已确认，老师会看到你的回复 ✓');
+    } catch (ackError) {
+      setReferralState(
+        ackError instanceof Error ? ackError.message : '确认失败，请重试'
+      );
+    } finally {
+      setReferralBusy(null);
     }
   };
 
@@ -163,6 +196,89 @@ export default function GuardianHomePage() {
                   </article>
                 ))}
               </div>
+            )}
+          </section>
+
+          <section className="space-y-3">
+            <h2 className="text-[17px] font-black">转介跟踪</h2>
+            {(portal.referrals ?? []).length === 0 ? (
+              <div className="patient-card-sticker p-5 text-center">
+                <p className="mt-2 font-black">暂时没有转介安排</p>
+                <p className="mt-1 text-xs font-semibold text-foreground-muted">
+                  若老师建议孩子接受校内辅导或校外专业支持，会在这里说明去向与原因
+                </p>
+              </div>
+            ) : (
+              (portal.referrals ?? []).map((referral) => (
+                <article key={referral.id} className="patient-card p-4">
+                  <div className="flex items-center gap-2">
+                    <span
+                      className={`rounded-full border-2 px-2.5 py-0.5 text-[11px] font-black ${
+                        referral.status === 'pending'
+                          ? 'border-[#ef6a63] bg-[#ffefee] text-[#a24c46]'
+                          : referral.status === 'acknowledged'
+                            ? 'border-[var(--ink)] bg-[var(--accent-sky)] text-foreground'
+                            : 'border-[var(--ink)] bg-[var(--accent-mint)] text-foreground'
+                      }`}
+                    >
+                      {referral.status === 'pending'
+                        ? '待你确认'
+                        : referral.status === 'acknowledged'
+                          ? '已确认·进行中'
+                          : '已完成'}
+                    </span>
+                    <span className="ml-auto text-[11px] font-semibold text-foreground-placeholder">
+                      {(referral.create_time ?? '').slice(0, 16).replace('T', ' ')}
+                    </span>
+                  </div>
+                  <p className="mt-2.5 text-[15px] font-black">
+                    转介建议：{referral.target_name}
+                  </p>
+                  {referral.suggestion && (
+                    <p className="mt-1.5 text-[13px] font-semibold leading-6 text-foreground-muted">
+                      {referral.suggestion}
+                    </p>
+                  )}
+                  {referral.contact && (
+                    <p className="mt-1 text-[13px] font-semibold text-foreground-muted">
+                      联系方式：{referral.contact}
+                    </p>
+                  )}
+                  {referral.guardian_feedback && (
+                    <p className="mt-2 rounded-xl bg-surface-secondary px-3 py-2 text-xs font-bold">
+                      我的回复：{referral.guardian_feedback}
+                    </p>
+                  )}
+                  {referral.status === 'pending' && (
+                    <div className="mt-3 space-y-2">
+                      <input
+                        value={referralFeedback[referral.id] ?? ''}
+                        onChange={(event) =>
+                          setReferralFeedback((prev) => ({
+                            ...prev,
+                            [referral.id]: event.target.value,
+                          }))
+                        }
+                        placeholder="可以留言，例如：已收到，这周带孩子去"
+                        className="patient-field w-full px-3 text-sm font-bold outline-none"
+                      />
+                      <button
+                        type="button"
+                        disabled={referralBusy === referral.id}
+                        onClick={() => void submitReferralAck(referral)}
+                        className="patient-primary-button w-full justify-center"
+                      >
+                        {referralBusy === referral.id ? '正在确认…' : '我已知晓 ✓'}
+                      </button>
+                    </div>
+                  )}
+                </article>
+              ))
+            )}
+            {referralState && (
+              <p className="rounded-xl border-2 border-dashed border-[var(--ink)] bg-[var(--accent-lemon)] px-3 py-2 text-xs font-black">
+                {referralState}
+              </p>
             )}
           </section>
 

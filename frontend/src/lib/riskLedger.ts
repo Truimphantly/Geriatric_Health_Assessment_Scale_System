@@ -155,3 +155,124 @@ export const RISK_SOURCE_LABEL: Record<string, string> = {
   teacher: '教师判定',
   scale_threshold: '量表阈值',
 };
+
+export const REFERRAL_TARGET_LABEL: Record<string, string> = {
+  school_counseling: '校心理辅导室',
+  professional_counseling: '校外专业机构',
+  family_support: '家庭支持',
+  other: '其他',
+};
+
+export type ReferralStatus = 'pending' | 'acknowledged' | 'completed';
+
+export const REFERRAL_STATUS_LABEL: Record<ReferralStatus, string> = {
+  pending: '待家长确认',
+  acknowledged: '已确认·进行中',
+  completed: '已完成',
+};
+
+export interface ReferralItem {
+  id: number;
+  riskId: number;
+  studentId: number;
+  studentName: string;
+  referralNo: string;
+  targetType: string;
+  targetName: string;
+  contact: string;
+  suggestion: string;
+  status: ReferralStatus;
+  guardianFeedback: string;
+  acknowledgedTime: string | null;
+  completedTime: string | null;
+  createTime: string | null;
+}
+
+interface ReferralItemDto {
+  id: number;
+  risk_id: number;
+  student_id: number;
+  student_name: string;
+  referral_no: string;
+  target_type: string;
+  target_name: string;
+  contact: string;
+  suggestion: string;
+  status: string;
+  guardian_feedback: string;
+  acknowledged_time: string | null;
+  completed_time: string | null;
+  create_time: string | null;
+}
+
+function mapReferral(dto: ReferralItemDto): ReferralItem {
+  return {
+    id: dto.id,
+    riskId: dto.risk_id,
+    studentId: dto.student_id,
+    studentName: dto.student_name,
+    referralNo: dto.referral_no,
+    targetType: dto.target_type,
+    targetName: dto.target_name,
+    contact: dto.contact ?? '',
+    suggestion: dto.suggestion ?? '',
+    status: (dto.status ?? 'pending') as ReferralStatus,
+    guardianFeedback: dto.guardian_feedback ?? '',
+    acknowledgedTime: dto.acknowledged_time,
+    completedTime: dto.completed_time,
+    createTime: dto.create_time,
+  };
+}
+
+export async function listRiskReferrals(
+  riskId: number,
+  signal?: AbortSignal
+): Promise<ReferralItem[]> {
+  const dto = await apiRequest<ReferralItemDto[]>(
+    `/api/risks/${riskId}/referrals`,
+    { signal }
+  );
+  return dto.map(mapReferral);
+}
+
+export async function createReferral(
+  riskId: number,
+  input: {
+    targetType: string;
+    targetName: string;
+    contact?: string;
+    suggestion?: string;
+  },
+  signal?: AbortSignal
+): Promise<ReferralItem> {
+  const dto = await apiRequest<ReferralItemDto>(
+    `/api/risks/${riskId}/referrals`,
+    {
+      method: 'POST',
+      body: {
+        target_type: input.targetType,
+        target_name: input.targetName,
+        contact: input.contact ?? '',
+        suggestion: input.suggestion ?? '',
+      },
+      signal,
+    }
+  );
+  return mapReferral(dto);
+}
+
+export async function completeReferral(
+  referralId: number,
+  note = '',
+  signal?: AbortSignal
+): Promise<ReferralItem> {
+  const dto = await apiRequest<ReferralItemDto>(
+    `/api/referrals/${referralId}/complete`,
+    {
+      method: 'POST',
+      body: { note },
+      signal,
+    }
+  );
+  return mapReferral(dto);
+}

@@ -26,7 +26,7 @@ from app.schemas.risk import (
     RiskStats,
     RiskUpdateRequest,
 )
-from app.services import risk_service
+from app.services import referral_service, risk_service
 
 router = APIRouter(tags=["risks"])
 DbSession = Annotated[Session, Depends(get_db)]
@@ -126,3 +126,64 @@ def update_risk(
     db.refresh(risk)
     patient = db.get(Patient, risk.student_id)
     return ok(_to_item(risk, patient))
+
+
+@router.post(
+    "/api/risks/{risk_id}/referrals",
+    response_model=ApiResponse[dict],
+    summary="发起风险转介",
+)
+def create_referral(
+    risk_id: int,
+    req: dict,
+    db: DbSession,
+    staff: StaffRequired,
+) -> dict:
+    """老师发起转介（校心理辅导室/校外专业支持等），风险档案流转为已转介。"""
+    referral = referral_service.create_referral(
+        db,
+        risk_id=risk_id,
+        staff_no=str(staff.staff_no or staff.id),
+        target_type=str(req.get("target_type") or ""),
+        target_name=str(req.get("target_name") or ""),
+        contact=str(req.get("contact") or ""),
+        suggestion=str(req.get("suggestion") or ""),
+    )
+    patient = db.get(Patient, referral.student_id)
+    return ok(referral_service.describe_referral(referral, patient))
+
+
+@router.get(
+    "/api/risks/{risk_id}/referrals",
+    response_model=ApiResponse[list[dict]],
+    summary="查看风险档案的转介单",
+)
+def list_risk_referrals(risk_id: int, db: DbSession, _: StaffRequired) -> dict:
+    risk = db.get(SystemRisk, risk_id)
+    if risk is None or risk.deleted:
+        raise AppError(ErrorCode.ERR_COMMON_002, "风险档案不存在")
+    rows = referral_service.list_risk_referrals(db, risk_id=risk_id)
+    patient = db.get(Patient, risk.student_id)
+    return ok([referral_service.describe_referral(r, patient) for r in rows])
+
+
+@router.post(
+    "/api/referrals/{referral_id}/complete",
+    response_model=ApiResponse[dict],
+    summary="确认转介完成",
+)
+def complete_referral(
+    referral_id: int,
+    req: dict,
+    db: DbSession,
+    staff: StaffRequired,
+) -> dict:
+    """老师确认转介完成（需家长已确认），风险档案随之结案。"""
+    referral = referral_service.complete_referral(
+        db,
+        referral_id=referral_id,
+        staff_no=str(staff.staff_no or staff.id),
+        note=str(req.get("note") or ""),
+    )
+    patient = db.get(Patient, referral.student_id)
+    return ok(referral_service.describe_referral(referral, patient))

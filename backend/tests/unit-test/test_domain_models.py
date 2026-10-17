@@ -55,6 +55,7 @@ EXPECTED_TABLES = {
     "content_delivery_item",
     "content_playback_event",
     "system_risk",
+    "risk_referral",
 }
 
 OBSOLETE_TABLES = {

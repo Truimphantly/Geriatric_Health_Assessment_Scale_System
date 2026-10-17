@@ -14,7 +14,7 @@ from sqlalchemy.orm import Session
 from app.configs.app_config import get_app_config
 from app.models.base import get_db
 from app.schemas.response import ApiResponse, ok
-from app.services import guardian_service
+from app.services import guardian_service, referral_service
 
 router = APIRouter(prefix="/api/guardian", tags=["guardian"])
 DbSession = Annotated[Session, Depends(get_db)]
@@ -94,3 +94,37 @@ def sign_consent(request: Request, req: dict, db: DbSession) -> dict:
             note=str(req.get("note") or ""),
         )
     )
+
+
+@router.get(
+    "/referrals",
+    response_model=ApiResponse[list[dict]],
+    summary="查看孩子的风险转介单",
+)
+def list_referrals(request: Request, db: DbSession) -> dict:
+    """返回当前监护学生的转介单列表（转介去向/建议/状态）。"""
+    patient, _ = guardian_service.get_guardian_context(db, request)
+    rows = referral_service.list_student_referrals(db, student_id=patient.id)
+    return ok([referral_service.describe_referral(r, patient) for r in rows])
+
+
+@router.post(
+    "/referrals/{referral_id}/acknowledge",
+    response_model=ApiResponse[dict],
+    summary="家长确认知悉转介单",
+)
+def acknowledge_referral(
+    referral_id: int,
+    req: dict,
+    request: Request,
+    db: DbSession,
+) -> dict:
+    """家长确认知悉（待知悉→已确认），可附反馈留言。"""
+    patient, _ = guardian_service.get_guardian_context(db, request)
+    referral = referral_service.guardian_acknowledge(
+        db,
+        referral_id=referral_id,
+        patient_id=patient.id,
+        feedback=str(req.get("feedback") or ""),
+    )
+    return ok(referral_service.describe_referral(referral, patient))

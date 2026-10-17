@@ -30,11 +30,27 @@ export interface GuardianNotice {
   action_label: string;
 }
 
+export interface GuardianReferral {
+  id: number;
+  risk_id: number;
+  referral_no: string;
+  target_type: string;
+  target_name: string;
+  contact: string;
+  suggestion: string;
+  status: 'pending' | 'acknowledged' | 'completed';
+  guardian_feedback: string;
+  acknowledged_time: string | null;
+  completed_time: string | null;
+  create_time: string | null;
+}
+
 export interface GuardianPortal {
   guardian: GuardianProfile;
   student: GuardianStudent;
   encounter: { department: string; status: string } | null;
   notices: GuardianNotice[];
+  referrals?: GuardianReferral[];
 }
 
 export interface GuardianConsentClause {
@@ -123,4 +139,18 @@ export async function signGuardianConsent(input: {
 
 export async function logoutGuardian(): Promise<void> {
   await apiRequest('/api/guardian/logout', { method: 'POST' });
+}
+
+/** 家长确认知悉转介单（可附反馈留言）。 */
+export async function acknowledgeReferral(
+  referralId: number,
+  feedback: string
+): Promise<GuardianReferral> {
+  return apiRequest<GuardianReferral>(
+    `/api/guardian/referrals/${referralId}/acknowledge`,
+    {
+      method: 'POST',
+      body: { feedback },
+    }
+  );
 }
