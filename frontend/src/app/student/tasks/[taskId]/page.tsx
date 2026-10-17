@@ -5,6 +5,7 @@ import PatientLayout from '@/components/layout/PatientLayout';
 import { PatientIcon } from '@/components/patient/PatientIcon';
 import { PatientState } from '@/components/patient/PatientState';
 import { isPatientTaskReadOnly } from '@/lib/patient/taskGroups';
+import { ClayIcon } from '@/components/patient/ClayIcon';
 import { useTaskStore } from '@/lib/stores/useTaskStore';
 
 /**
@@ -65,34 +66,32 @@ export default function PatientTaskDetailPage() {
                 像跟朋友聊天一样，大约 10 分钟
               </p>
             </div>
-            <span className="grid h-14 w-14 shrink-0 place-items-center rounded-2xl border-[2.5px] border-[var(--ink)] bg-[var(--accent-lemon)] text-[28px]">
-              💬
-            </span>
+            <ClayIcon name="chat" tone="lemon" size={54} className="shrink-0" />
           </div>
 
           <div className="mt-5 space-y-3">
             {[
               {
-                emoji: '🌙',
+                icon: 'moon' as const,
                 title: '小晴会先聊些轻松的话题',
                 detail: '比如最近的睡眠、心情、和同学朋友的小事，没有标准答案',
               },
               {
-                emoji: '✏️',
+                icon: 'edit' as const,
                 title: '说错了随时改，不想说就跳过',
                 detail: '语音、打字都可以；随时暂停，下次接着聊',
               },
               {
-                emoji: '📮',
+                icon: 'mail' as const,
                 title: '聊完你可以选择怎么处理这份记录',
                 detail: '需要时，小晴会帮你把求助信息递给心理老师',
               },
             ].map((item) => (
               <div
                 key={item.title}
-                className="flex items-start gap-3 rounded-2xl border-2 border-foreground bg-surface-secondary p-3.5"
+                className="flex items-start gap-3 rounded-2xl bg-surface-secondary p-3.5 shadow-[inset_0_2px_0_#fff,0_8px_16px_rgb(94_78_55_/_0.10)]"
               >
-                <span className="text-[22px] leading-7">{item.emoji}</span>
+                <ClayIcon name={item.icon} tone="sky" size={36} className="shrink-0" />
                 <div className="min-w-0">
                   <p className="text-[15px] font-black">{item.title}</p>
                   <p className="mt-0.5 text-xs leading-5 text-foreground-muted">
@@ -104,7 +103,7 @@ export default function PatientTaskDetailPage() {
           </div>
 
           {finished && (
-            <p className="mt-4 rounded-2xl border-2 border-dashed border-[var(--ink)] bg-[var(--accent-sky)] p-3 text-sm font-bold">
+            <p className="mt-4 rounded-2xl bg-[var(--accent-sky)] p-3 text-sm font-bold shadow-[inset_0_2px_0_rgb(255_255_255_/_65%),0_8px_16px_rgb(94_78_55_/_0.10)]">
               这次的聊天已经完成啦，记录已交给心理老师查看。
             </p>
           )}

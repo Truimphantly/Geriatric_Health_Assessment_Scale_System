@@ -130,35 +130,40 @@ h1, h2 {
   letter-spacing: -0.02em;
 }
 
-/* 患者端视觉系统：A 卡通治愈贴纸风（仅 PatientLayout 内覆盖，医护端不受影响）。 */
+/* 患者端视觉系统：黏土拟物风（Claymorphism）
+   仅 PatientLayout 内覆盖，医护端不受影响。
+   关键手法：无描边 + 多层柔影 + 顶部内高光 + 糖果色氛围底 + 3D 厚底按钮。 */
 .patient-app {
-  --background: #fff6ec;
-  --surface: #ffffff;
-  --surface-secondary: #fff9f2;
-  --foreground: #2a2320;
-  --foreground-muted: #6b5f53;
-  --foreground-placeholder: #b9ac9c;
-  --border: #eddfc9;
-  /* 贴纸风专色：主行动=薄荷底；强调色=蜜桃/柠檬/天蓝 */
-  --accent-mint: #7fdbb6;
-  --accent-peach: #ffb5a7;
-  --accent-lemon: #ffd66b;
-  --accent-sky: #a9c9de;
-  --ink: #2a2320;
-  --primary: #35a278;
-  --primary-hover: #2e8b6a;
-  --primary-tint: #e2f8ec;
-  --success: #3dad82;
-  --warning: #f0b94f;
-  --danger: #ef6a63;
-  --info: #6fa3d8;
+  --background: #f6f1e8;
+  --surface: #fffdf9;
+  --surface-secondary: #f9f4ea;
+  --foreground: #2e2a24;
+  --foreground-muted: #8a8175;
+  --foreground-placeholder: #bdb3a4;
+  --border: #ece2d2;
+  --accent-mint: #9adbc0;
+  --accent-peach: #ffc4b8;
+  --accent-lemon: #f8d874;
+  --accent-sky: #bfe0f0;
+  --accent-coral: #f2685a;
+  --ink: #2e2a24;
+  --primary: #2f8f6e;
+  --primary-hover: #267a5d;
+  --primary-tint: #e6f7ef;
+  --success: #6fb08a;
+  --warning: #e8b44a;
+  --danger: #e4574c;
+  --info: #6f9fc4;
+  --clay-shadow: 0 10px 22px rgb(94 78 55 / 10%), 0 28px 44px rgb(94 78 55 / 8%);
+  --clay-inset: inset 0 2px 0 rgb(255 255 255 / 88%), inset 0 -3px 0 rgb(46 42 36 / 4%);
   min-height: 100dvh;
   color: var(--foreground);
-  /* 奶油纸底 + 极淡波点纹理（纯色块规则，无铺底渐变） */
   background:
-    radial-gradient(circle at 3px 3px, rgb(213 180 138 / 18%) 1.7px, transparent 1.8px),
+    radial-gradient(900px 520px at 6% -8%, rgb(191 224 240 / 55%), transparent 62%),
+    radial-gradient(780px 480px at 98% 2%, rgb(248 216 116 / 32%), transparent 62%),
+    radial-gradient(820px 560px at 50% 112%, rgb(154 219 192 / 30%), transparent 64%),
     var(--background);
-  background-size: 28px 28px, auto;
+  background-attachment: fixed;
   font-family: 'Noto Sans SC', 'PingFang SC', 'Microsoft YaHei', system-ui, sans-serif;
 }
 
@@ -168,20 +173,16 @@ h1, h2 {
   letter-spacing: -0.035em;
 }
 
-/* 贴纸风基础件： Lovely 硬偏移投影 + 墨色描边 */
-.patient-ink {
-  border-color: #2a2320;
-}
-
+/* 页面外壳：桌面宽屏，移动满宽（不再是手机模型） */
 .patient-mobile-frame {
   position: relative;
   width: 100%;
-  max-width: 430px;
+  max-width: 1180px;
   min-height: 100dvh;
   margin-inline: auto;
   overflow-x: clip;
-  background: var(--background);
-  box-shadow: 10px 10px 0 rgb(42 35 32 / 10%);
+  background: transparent;
+  box-shadow: none;
 }
 
 .patient-page-content {
@@ -189,10 +190,77 @@ h1, h2 {
   min-height: auto;
 }
 
+@media (min-width: 900px) {
+  .patient-page-content {
+    max-width: 880px;
+    margin-inline: auto;
+  }
+}
+
 .patient-page-padding {
   padding: 20px 18px;
 }
 
+/* 桌面顶部胶囊导航（PatientLayout 内渲染） */
+.patient-desktop-nav {
+  display: none;
+}
+
+@media (min-width: 900px) {
+  .patient-desktop-nav {
+    position: sticky;
+    top: 14px;
+    z-index: 60;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    width: calc(100% - 48px);
+    max-width: 1100px;
+    margin: 18px auto 0;
+    padding: 8px 10px 8px 18px;
+    border-radius: 999px;
+    background: rgb(255 253 249 / 88%);
+    backdrop-filter: blur(10px);
+    box-shadow: var(--clay-inset), 0 12px 26px rgb(94 78 55 / 10%);
+  }
+}
+
+.patient-desktop-nav .brand {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  font-weight: 900;
+  font-size: 15px;
+  white-space: nowrap;
+}
+
+.patient-desktop-nav .links {
+  display: flex;
+  gap: 2px;
+  margin-left: 18px;
+}
+
+.patient-desktop-nav .links a {
+  padding: 8px 14px;
+  border-radius: 999px;
+  font-size: 13.5px;
+  font-weight: 700;
+  color: var(--foreground-muted);
+  text-decoration: none;
+  transition: background 160ms ease, color 160ms ease;
+}
+
+.patient-desktop-nav .links a[data-active='true'],
+.patient-desktop-nav .links a:hover {
+  background: var(--surface-secondary);
+  color: var(--foreground);
+}
+
+.patient-desktop-nav .spacer {
+  flex: 1;
+}
+
+/* 内页顶栏：黏土浮条 */
 .patient-topbar {
   position: sticky;
   top: 0;
@@ -202,9 +270,9 @@ h1, h2 {
   align-items: center;
   min-height: 64px;
   padding: max(env(safe-area-inset-top), 6px) 10px 0;
-  border-bottom: 2.5px solid #2a2320;
-  background: rgb(255 246 236 / 97%);
-  backdrop-filter: none;
+  border-bottom: none;
+  background: rgb(246 241 232 / 86%);
+  backdrop-filter: blur(10px);
 }
 
 .patient-topbar-with-right {
@@ -215,11 +283,24 @@ h1, h2 {
   overflow: hidden;
   color: var(--foreground);
   font-size: 21px;
-  font-weight: 800;
+  font-weight: 900;
   line-height: 1.2;
   text-align: center;
   text-overflow: ellipsis;
   white-space: nowrap;
+}
+
+@media (min-width: 900px) {
+  .patient-topbar {
+    position: static;
+    margin: 14px auto 0;
+    width: calc(100% - 48px);
+    max-width: 880px;
+    border-radius: 999px;
+    background: rgb(255 253 249 / 88%);
+    padding: 6px 10px;
+    box-shadow: var(--clay-inset), 0 10px 22px rgb(94 78 55 / 8%);
+  }
 }
 
 .patient-touch-button {
@@ -233,9 +314,10 @@ h1, h2 {
 }
 
 .patient-touch-button:active {
-  transform: scale(.96);
+  transform: scale(.94);
 }
 
+/* 移动底部导航（桌面隐藏） */
 .patient-bottom-nav {
   position: fixed;
   z-index: 50;
@@ -247,10 +329,17 @@ h1, h2 {
   min-height: calc(72px + env(safe-area-inset-bottom));
   margin-inline: auto;
   padding: 8px 16px max(8px, env(safe-area-inset-bottom));
-  border-top: 2.5px solid #2a2320;
-  background: rgb(255 255 255 / 97%);
-  box-shadow: none;
-  backdrop-filter: none;
+  border-top: none;
+  border-radius: 28px 28px 0 0;
+  background: rgb(255 253 249 / 92%);
+  backdrop-filter: blur(10px);
+  box-shadow: 0 -8px 24px rgb(94 78 55 / 10%);
+}
+
+@media (min-width: 900px) {
+  .patient-bottom-nav {
+    display: none;
+  }
 }
 
 .patient-nav-item {
@@ -260,138 +349,160 @@ h1, h2 {
   align-items: center;
   justify-content: center;
   gap: 3px;
-  border-radius: 16px;
-  color: #8a837e;
+  border-radius: 18px;
+  color: #9a9184;
   font-size: 12px;
-  font-weight: 600;
+  font-weight: 700;
   transition: color 160ms ease, background 160ms ease;
 }
 
 .patient-nav-item[data-active='true'] {
   color: var(--primary);
-  background: transparent;
+  background: var(--primary-tint);
 }
 
+/* 黏土卡片：无描边 + 柔影 + 内高光 */
 .patient-card {
-  border: 2.5px solid #2a2320;
-  border-radius: 22px;
-  background: var(--surface);
-  box-shadow: 6px 6px 0 #2a2320;
+  border: none;
+  border-radius: 28px;
+  background: linear-gradient(180deg, #fffdf9 0%, #fbf5ea 100%);
+  box-shadow: var(--clay-inset), var(--clay-shadow);
 }
 
 .patient-card-soft {
-  border: 2.5px solid #2a2320;
-  border-radius: 22px;
-  background: var(--surface);
-  box-shadow: 7px 7px 0 var(--accent-mint);
+  border: none;
+  border-radius: 30px;
+  background: linear-gradient(160deg, #fffdf9 0%, #fdf3e6 100%);
+  box-shadow: var(--clay-inset), 0 12px 26px rgb(203 148 82 / 16%), 0 30px 52px rgb(94 78 55 / 8%);
 }
 
-/* 贴纸便签：虚线插卡，当周记录/提示卡使用 */
 .patient-card-sticker {
-  border: 2.5px dashed #2a2320;
-  border-radius: 20px;
-  background: #fffbf4;
-  box-shadow: 5px 5px 0 var(--accent-lemon);
+  border: none;
+  border-radius: 26px;
+  background: linear-gradient(170deg, #fff8e6 0%, #fbeecd 100%);
+  box-shadow: inset 0 2px 0 rgb(255 255 255 / 90%), 0 12px 24px rgb(200 160 60 / 16%), 0 26px 40px rgb(94 78 55 / 6%);
 }
 
-/* 贴纸角标签：不透明色块 + 微倾，替代 eyebrow 小字 */
+/* 黏土小标签：糖果色圆片 */
 .patient-sticker-tag {
   display: inline-block;
-  border: 2.5px solid #2a2320;
-  border-radius: 12px;
-  padding: 4px 13px;
-  font-size: 12px;
+  border: none;
+  border-radius: 999px;
+  padding: 6px 15px;
+  font-size: 12.5px;
   font-weight: 900;
-  color: #2a2320;
+  color: var(--ink);
   background: var(--accent-peach);
-  box-shadow: 2.5px 2.5px 0 #2a2320;
-  transform: rotate(-2.5deg);
+  box-shadow: inset 0 2px 0 rgb(255 255 255 / 70%), 0 6px 14px rgb(94 78 55 / 14%);
 }
 
-/* 荧光笔强调：粗色块标记行内文字（非渐变，纸笔高亮语义） */
 .patient-highlight {
   background: linear-gradient(transparent 58%, var(--accent-lemon) 58%);
   font-weight: 800;
   padding: 0 2px;
 }
 
+/* 黏土 3D 按钮：厚底 + 高光，按下会真的“陷下去” */
 .patient-primary-button {
+  display: inline-flex;
+  min-height: 52px;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  border: none;
+  border-radius: 999px;
+  background: linear-gradient(180deg, #ff9486 0%, #ef6255 100%);
+  color: #fff;
+  font-size: 16.5px;
+  font-weight: 900;
+  text-shadow: 0 1px 0 rgb(160 50 40 / 35%);
+  box-shadow:
+    0 7px 0 #cf4f43,
+    0 16px 26px rgb(207 79 67 / 28%),
+    inset 0 2px 0 rgb(255 255 255 / 45%);
+  transform: translateY(0);
+  transition: transform 140ms ease, box-shadow 140ms ease, filter 140ms ease;
+}
+
+.patient-primary-button:hover {
+  filter: brightness(1.03);
+  transform: translateY(-1px);
+  box-shadow:
+    0 8px 0 #cf4f43,
+    0 18px 30px rgb(207 79 67 / 30%),
+    inset 0 2px 0 rgb(255 255 255 / 45%);
+}
+
+.patient-primary-button:active {
+  transform: translateY(5px);
+  box-shadow:
+    0 2px 0 #cf4f43,
+    0 8px 14px rgb(207 79 67 / 24%),
+    inset 0 2px 0 rgb(255 255 255 / 40%);
+}
+
+.patient-primary-button:disabled {
+  cursor: not-allowed;
+  filter: grayscale(.3) brightness(.98);
+  opacity: .7;
+}
+
+.patient-outline-button {
   display: inline-flex;
   min-height: 50px;
   align-items: center;
   justify-content: center;
   gap: 8px;
-  border: 2.5px solid #2a2320;
+  border: none;
   border-radius: 999px;
-  background: var(--accent-mint);
-  color: #2a2320;
-  font-size: 16.5px;
-  font-weight: 900;
-  box-shadow: 4px 4px 0 #2a2320;
-  transition: transform 160ms ease, box-shadow 160ms ease;
-}
-
-.patient-primary-button:hover {
-  transform: translate(-1px, -1px);
-  box-shadow: 5px 5px 0 #2a2320;
-}
-
-.patient-primary-button:active {
-  transform: translate(2px, 2px);
-  box-shadow: 1px 1px 0 #2a2320;
-}
-
-.patient-primary-button:disabled {
-  cursor: not-allowed;
-  filter: grayscale(.25);
-  opacity: .55;
-}
-
-.patient-outline-button {
-  display: inline-flex;
-  min-height: 48px;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  border: 2.5px solid #2a2320;
-  border-radius: 999px;
-  background: var(--surface);
-  color: #2a2320;
+  background: linear-gradient(180deg, #fffdf9 0%, #f6efe3 100%);
+  color: var(--foreground);
   font-size: 15.5px;
-  font-weight: 700;
-  transition: transform 160ms ease;
+  font-weight: 800;
+  box-shadow: inset 0 2px 0 #fff, 0 6px 14px rgb(94 78 55 / 14%);
+  transition: transform 140ms ease, box-shadow 140ms ease;
 }
 
 .patient-outline-button:hover {
-  transform: translate(-1px, -1px);
+  transform: translateY(-1px);
+  box-shadow: inset 0 2px 0 #fff, 0 9px 18px rgb(94 78 55 / 16%);
 }
 
+.patient-outline-button:active {
+  transform: translateY(3px);
+  box-shadow: inset 0 2px 0 #fff, 0 3px 8px rgb(94 78 55 / 12%);
+}
+
+/* 黏土进度条：内凹轨道 + 糖果色填充 */
 .patient-progress-track {
-  height: 14px;
+  height: 16px;
   overflow: hidden;
-  border: 2.5px solid #2a2320;
+  border: none;
   border-radius: 999px;
-  background: #ffffff;
+  background: #efe5d6;
+  box-shadow: inset 0 3px 8px rgb(94 78 55 / 14%), inset 0 -2px 0 rgb(255 255 255 / 80%);
 }
 
 .patient-progress-value {
   height: 100%;
   border-radius: inherit;
-  background: var(--accent-mint);
-  transition: width 300ms ease;
+  background: linear-gradient(90deg, #a5e3c9 0%, #5fbb92 100%);
+  box-shadow: inset 0 2px 0 rgb(255 255 255 / 55%);
+  transition: width 320ms ease;
 }
 
+/* 黏土输入框：内凹质感 */
 .patient-field {
   min-height: 56px;
-  border: 2.5px solid #2a2320;
-  border-radius: 14px;
-  background: var(--surface);
+  border: none;
+  border-radius: 20px;
+  background: #f6efe3;
+  box-shadow: inset 0 3px 8px rgb(94 78 55 / 11%), inset 0 -2px 0 rgb(255 255 255 / 85%);
 }
 
 .patient-field:focus-within {
-  border-color: var(--primary);
-  background: var(--surface-secondary);
-  box-shadow: none;
+  background: #fffdf9;
+  box-shadow: inset 0 3px 8px rgb(94 78 55 / 8%), 0 0 0 3px rgb(242 104 90 / 20%);
 }
 
 .patient-orb {
@@ -556,24 +667,6 @@ h1, h2 {
   .patient-orb::before,
   .patient-orb-wave {
     animation: none !important;
-  }
-}
-
-@media (min-width: 520px) {
-  .patient-mobile-frame {
-    min-height: calc(100dvh - 32px);
-    margin-block: 16px;
-    border: 2.5px solid #2a2320;
-    border-radius: 34px;
-  }
-
-  .patient-mobile-frame:has(.patient-bottom-nav) {
-    padding-bottom: 0;
-  }
-
-  .patient-bottom-nav {
-    bottom: 16px;
-    border-radius: 0 0 34px 34px;
   }
 }
 

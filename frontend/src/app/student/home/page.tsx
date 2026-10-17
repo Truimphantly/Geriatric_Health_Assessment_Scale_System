@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import PatientLayout from '@/components/layout/PatientLayout';
 import { NurseCallButton } from '@/components/patient/NurseCallButton';
+import { ClayIcon } from '@/components/patient/ClayIcon';
 import {
   PatientBrandMark,
   PatientIcon,
@@ -142,9 +143,7 @@ export default function PatientHomePage() {
         </section>
 
         <section className="patient-card mt-4 flex items-center gap-3 overflow-hidden px-4 py-3">
-          <span className="grid h-14 w-14 shrink-0 place-items-center rounded-2xl border-[2.5px] border-[var(--ink)] bg-[var(--accent-sky)] text-[26px]">
-            🏫
-          </span>
+          <ClayIcon name="school" tone="sky" size={54} className="shrink-0" />
           <div className="min-w-0 flex-1">
             <p className="truncate text-[17px] font-bold">
               {activeTask?.department ?? user?.department ?? '心理护航中心'}
@@ -181,12 +180,12 @@ export default function PatientHomePage() {
               <div
                 className="relative grid h-[82px] w-[82px] place-items-center rounded-full"
                 style={{
-                  background: `conic-gradient(#7fdbb6 ${progress}%, #f5e9d8 ${progress}% 100%)`,
+                  background: `conic-gradient(#8FD5B5 ${progress}%, #f0e6d6 ${progress}% 100%)`,
                 }}
                 aria-label={`任务完成进度 ${progress}%`}
               >
-                <span className="grid h-[62px] w-[62px] place-items-center rounded-full border-2 border-[var(--ink)] bg-[#fffaf4] text-[26px]">
-                  💬
+                <span className="grid h-[62px] w-[62px] place-items-center rounded-full bg-[#fffaf4] shadow-[inset_0_2px_0_#fff,0_6px_14px_rgb(94_78_55_/_0.14%)]">
+                  <ClayIcon name="chat" tone="mint" size={42} />
                 </span>
               </div>
             </div>
@@ -205,9 +204,7 @@ export default function PatientHomePage() {
           </section>
         ) : (
           <section className="patient-card mt-4 p-5 text-center">
-            <span className="mx-auto grid h-[72px] w-[72px] place-items-center rounded-3xl border-[2.5px] border-[var(--ink)] bg-[var(--accent-mint)] text-[34px]">
-              🌱
-            </span>
+            <ClayIcon name="leaf" tone="mint" size={64} className="mx-auto" />
             <h2 className="mt-3 text-lg font-black">现在没有要完成的任务</h2>
             <p className="mt-1 text-sm text-foreground-muted">
               老师准备好了就会出现
@@ -216,9 +213,7 @@ export default function PatientHomePage() {
         )}
 
         <section className="patient-card-sticker mt-4 flex min-h-[96px] items-center gap-3 px-4">
-          <span className="grid h-14 w-14 shrink-0 place-items-center rounded-2xl border-[2.5px] border-[var(--ink)] bg-[var(--accent-peach)] text-[26px]">
-            🫂
-          </span>
+          <ClayIcon name="heart" tone="peach" size={54} className="shrink-0" />
           <div className="min-w-0 flex-1">
             <p className="text-lg font-black text-foreground">需要人陪？</p>
             <p className="text-sm font-bold text-foreground-muted">叫心理老师来聊聊</p>
@@ -255,7 +250,7 @@ export default function PatientHomePage() {
             <Link
               key={item.title}
               href={item.href}
-              className={`flex min-h-[110px] flex-col items-center justify-center gap-2 rounded-[20px] border-[2.5px] border-[var(--ink)] ${item.tone} shadow-[3px_3px_0_var(--ink)]`}
+              className={`flex min-h-[110px] flex-col items-center justify-center gap-2 rounded-[24px] ${item.tone} shadow-[inset_0_2px_0_rgb(255_255_255_/_65%),0_10px_22px_rgb(94_78_55_/_0.12)] transition-transform duration-200 hover:-translate-y-0.5`}
             >
               <PatientIcon name={item.icon} className="h-9 w-9" />
               <span className="text-sm font-black text-foreground">

@@ -77,6 +77,36 @@ export default function PatientLayout({
           </header>
         )}
 
+        {showNavigation && (
+          <nav className="patient-desktop-nav" aria-label="学生端桌面导航">
+            <Link href="/" className="brand">
+              <span className="grid h-7 w-7 place-items-center rounded-full bg-[var(--accent-mint)] text-[13px] font-black">
+                晴
+              </span>
+              心晴伙伴
+            </Link>
+            <div className="links">
+              {[
+                { href: '/student/home', label: '首页' },
+                { href: '/student/tasks', label: '任务' },
+                { href: '/student/assistant', label: '小晴助手' },
+              ].map((item) => (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  data-active={pathname.startsWith(item.href)}
+                >
+                  {item.label}
+                </Link>
+              ))}
+            </div>
+            <div className="spacer" />
+            <span className="pr-3 text-xs font-bold text-foreground-muted">
+              青少年心理护航
+            </span>
+          </nav>
+        )}
+
         <main
           className={cn(
             'patient-page-content',

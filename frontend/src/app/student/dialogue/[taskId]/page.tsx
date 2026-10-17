@@ -979,7 +979,7 @@ export default function PatientDialoguePage() {
       }
     >
       <div className="relative flex h-[calc(100dvh-64px)] flex-col overflow-hidden">
-        <section className="shrink-0 border-b border-border bg-[#fffaf6]/90 px-[18px] py-3">
+        <section className="shrink-0 bg-[#fdf8ef]/85 px-[18px] py-3 shadow-[0_10px_24px_rgb(94_78_55_/_0.06)]">
           <div className="flex items-center gap-3">
             <span className="font-black text-primary">{progressValue}</span>
             <span className="-ml-2 text-sm text-foreground-muted">
@@ -1218,7 +1218,7 @@ export default function PatientDialoguePage() {
               aria-live="polite"
               aria-label="语音状态"
             >
-              <div className="pointer-events-auto flex w-full max-w-[360px] flex-col items-center rounded-[28px] border border-white/80 bg-[#fffaf6]/92 px-4 py-5 shadow-[0_18px_60px_rgba(94,67,48,.18)] backdrop-blur-md">
+              <div className="pointer-events-auto flex w-full max-w-[360px] flex-col items-center rounded-[32px] bg-[#fffdf9]/95 px-4 py-5 shadow-[inset_0_2px_0_#fff,0_20px_60px_rgb(94_78_55_/_0.20)] backdrop-blur-md">
                 <VoiceOrb state={visualVoiceState} />
                 {(voiceState === 'listening' || isRecording) && (
                   <button
@@ -1233,7 +1233,7 @@ export default function PatientDialoguePage() {
             </div>
           )}
 
-        <footer className="shrink-0 border-t border-border bg-[#fffaf6] px-[14px] pb-[max(10px,env(safe-area-inset-bottom))] pt-3 shadow-[0_-12px_28px_rgba(94,67,48,.08)]">
+        <footer className="shrink-0 bg-[#fdf8ef] px-[14px] pb-[max(10px,env(safe-area-inset-bottom))] pt-3 shadow-[0_-14px_30px_rgb(94_78_55_/_0.10)]">
           {readOnly ? (
             <div className="flex items-center gap-3">
               <PatientIcon
@@ -1313,7 +1313,7 @@ export default function PatientDialoguePage() {
                     voiceState === 'transcribing' ||
                     voiceState === 'thinking'
                   }
-                  className="mx-auto grid h-20 w-20 place-items-center rounded-full border-[7px] border-white bg-gradient-to-br from-[#ff7557] to-[#ff5032] text-white shadow-[0_10px_26px_rgba(255,86,52,.28)] disabled:opacity-50"
+                  className="mx-auto grid h-20 w-20 place-items-center rounded-full bg-gradient-to-b from-[#ff9486] to-[#ef6255] text-white shadow-[inset_0_3px_0_rgb(255_255_255_/_45%),0_8px_0_#cf4f43,0_20px_30px_rgb(207_79_67_/_28%)] transition-transform active:translate-y-1 active:shadow-[inset_0_3px_0_rgb(255_255_255_/_40%),0_3px_0_#cf4f43,0_10px_16px_rgb(207_79_67_/_24%)] disabled:opacity-50"
                   aria-label={isRecording ? '结束回答' : '开始语音回答'}
                 >
                   <PatientIcon

@@ -6,6 +6,7 @@ import { useRouter } from 'next/navigation';
 import PatientLayout from '@/components/layout/PatientLayout';
 import { PatientIcon } from '@/components/patient/PatientIcon';
 import { PatientState } from '@/components/patient/PatientState';
+import { ClayIcon } from '@/components/patient/ClayIcon';
 import { abortRequest, isRequestCancelled } from '@/lib/api/httpClient';
 import { groupPatientTasks } from '@/lib/patient/taskGroups';
 import { careRepository } from '@/lib/repositories';
@@ -72,13 +73,16 @@ export default function PatientTasksPage() {
     return (
       <article key={task.id} className="patient-card-soft relative p-4">
         <div className="flex items-start gap-3">
-          <span className="grid h-12 w-12 shrink-0 place-items-center rounded-2xl border-[2.5px] border-[var(--ink)] bg-[var(--accent-sky)] text-[22px]">
-            {task.collectionMode === 'ai_dialogue' ? '💬' : '📝'}
-          </span>
+          <ClayIcon
+            name={task.collectionMode === 'ai_dialogue' ? 'chat' : 'tasks'}
+            tone="sky"
+            size={48}
+            className="shrink-0"
+          />
           <div className="min-w-0 flex-1">
             <div className="flex flex-wrap items-center gap-2">
               <h2 className="text-[20px] font-black">和小晴聊聊近况</h2>
-              <span className="rounded-full border-2 border-[var(--ink)] bg-[var(--accent-lemon)] px-2 py-0.5 text-xs font-black">
+              <span className="rounded-full bg-[var(--accent-lemon)] px-2.5 py-1 text-xs font-black shadow-[inset_0_2px_0_rgb(255_255_255_/_70%),0_4px_10px_rgb(94_78_55_/_0.12)]">
                 {task.collectionMode === 'ai_dialogue' ? '聊天式' : '填表式'}
               </span>
             </div>
@@ -92,8 +96,9 @@ export default function PatientTasksPage() {
         </div>
 
         {task.handoffRequired && (
-          <div className="mt-3 border-2 border-dashed border-[#ef6a63] bg-[#ffefee] p-3 text-sm font-semibold leading-6 text-[#a24c46]">
-            🧑‍🏫 心理老师正在处理一个重要的提醒（今天）。可以先休息，有事随时呼叫。
+          <div className="mt-3 flex items-start gap-2.5 rounded-2xl bg-[#ffefee] p-3 text-sm font-semibold leading-6 text-[#a24c46] shadow-[inset_0_2px_0_rgb(255_255_255_/_60%),0_8px_18px_rgb(228_87_76_/_12%)]">
+            <ClayIcon name="teacher" tone="peach" size={26} className="shrink-0" />
+            心理老师正在处理一个重要的提醒（今天）。可以先休息，有事随时呼叫。
           </div>
         )}
 
@@ -104,7 +109,7 @@ export default function PatientTasksPage() {
               <span className="mx-1 text-foreground-muted">/</span>
               {total}
             </p>
-            <span className="rounded-full border-2 border-[var(--ink)] bg-[var(--accent-sky)] px-3 py-1 text-xs font-black">
+            <span className="rounded-full bg-[var(--accent-sky)] px-3 py-1.5 text-xs font-black shadow-[inset_0_2px_0_rgb(255_255_255_/_70%),0_4px_10px_rgb(94_78_55_/_0.12)]">
               {statusLabels[task.taskStatus]}
             </span>
           </div>
@@ -137,9 +142,7 @@ export default function PatientTasksPage() {
       href={`/student/tasks/${task.id}`}
       className="flex min-h-16 items-center gap-3 border-b-2 border-dashed border-[#eadfd0] px-4 last:border-b-0"
     >
-      <span className="grid h-8 w-8 shrink-0 place-items-center rounded-full border-2 border-[var(--ink)] bg-[var(--accent-peach)] text-sm">
-        ✓
-      </span>
+      <ClayIcon name="check" tone="peach" size={32} className="shrink-0" />
       <span className="min-w-0 flex-1 truncate text-[16px] font-bold">
         和小晴的聊天
       </span>
@@ -161,9 +164,7 @@ export default function PatientTasksPage() {
         </div>
 
         <section className="patient-card mt-8 flex items-center gap-4 px-4 py-4">
-          <span className="grid h-14 w-14 shrink-0 place-items-center rounded-2xl border-[2.5px] border-[var(--ink)] bg-[var(--accent-lemon)] text-[26px]">
-            ☀️
-          </span>
+          <ClayIcon name="leaf" tone="lemon" size={54} className="shrink-0" />
           <p className="text-lg font-black">
             今天还有
             <span className="mx-2 text-[32px] text-primary">

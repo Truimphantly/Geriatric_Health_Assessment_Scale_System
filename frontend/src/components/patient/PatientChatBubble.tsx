@@ -17,12 +17,12 @@ export function PatientChatBubble({
 
   return (
     <div
-      className={`mb-4 flex items-start gap-2.5 ${
+      className={`mb-5 flex items-start gap-2.5 ${
         isPatient ? 'flex-row-reverse' : ''
       }`}
     >
       {isPatient ? (
-        <span className="grid h-9 w-9 shrink-0 place-items-center rounded-full bg-[#ffe7dc] text-primary">
+        <span className="grid h-9 w-9 shrink-0 place-items-center rounded-full bg-[var(--accent-peach)] text-[#5a4038] shadow-[inset_0_2px_0_rgb(255_255_255_/_65%),0_6px_12px_rgb(94_78_55_/_0.14)]">
           <PatientIcon name="user" className="h-5 w-5" />
         </span>
       ) : (
@@ -31,23 +31,23 @@ export function PatientChatBubble({
           alt="小晴"
           width={40}
           height={40}
-          className="h-10 w-10 shrink-0 rounded-full border border-[#bce6e2] bg-[#ecf9f7] object-contain"
+          className="h-10 w-10 shrink-0 rounded-full bg-[#fdf6e8] object-contain shadow-[inset_0_2px_0_#fff,0_6px_14px_rgb(94_78_55_/_0.14)]"
         />
       )}
 
       <div className={`max-w-[82%] ${isPatient ? 'text-right' : ''}`}>
         <p
-          className={`mb-1 text-xs font-bold ${
-            isPatient ? 'text-primary' : 'text-[#2e9893]'
+          className={`mb-1 px-1 text-xs font-black ${
+            isPatient ? 'text-primary' : 'text-[#a08a6b]'
           }`}
         >
           {isPatient ? '我' : '小晴'}
         </p>
         <div
-          className={`rounded-[18px] px-4 py-3 text-left text-[15px] leading-7 ${
+          className={`rounded-[22px] px-4 py-3 text-left text-[15px] leading-7 ${
             isPatient
-              ? 'rounded-tr-md bg-gradient-to-br from-[#ff7557] to-[#ff5435] text-white'
-              : 'rounded-tl-md border border-[#dcebea] bg-[#eff8f7] text-foreground'
+              ? 'rounded-tr-md bg-gradient-to-br from-[#a9e4cb] to-[#7ccfae] text-[#234234] shadow-[inset_0_2px_0_rgb(255_255_255_/_55%),0_10px_20px_rgb(96_165_132_/_22%)]'
+              : 'rounded-tl-md bg-[#fffdf9] text-foreground shadow-[inset_0_2px_0_#fff,0_10px_22px_rgb(94_78_55_/_0.12),0_26px_40px_rgb(94_78_55_/_0.06)]'
           }`}
         >
           {message.contentText && (
@@ -56,7 +56,7 @@ export function PatientChatBubble({
           {audioSrc && (
             <div
               className={`mt-2 border-t pt-2 ${
-                isPatient ? 'border-white/20' : 'border-[#cde2e0]'
+                isPatient ? 'border-white/35' : 'border-[#efe4d3]'
               }`}
             >
               <audio
