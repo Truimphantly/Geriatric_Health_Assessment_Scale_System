@@ -1,21 +1,27 @@
 'use client';
 
+import { useEffect, useState } from 'react';
+import Link from 'next/link';
 import NurseLayout from '@/components/layout/NurseLayout';
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/components/shared/Card';
 import { Badge } from '@/components/shared/Badge';
 import TaskCard from '@/components/task/TaskCard';
 import { useUserStore } from '@/lib/stores/useUserStore';
 import { useTaskStore } from '@/lib/stores/useTaskStore';
+import { runtimeConfig } from '@/lib/runtime/config';
+import { listRisks } from '@/lib/riskLedger';
 import {
   ClipboardDocumentListIcon,
   ClockIcon,
   CheckCircleIcon,
   ExclamationCircleIcon,
+  FlagIcon,
 } from '@heroicons/react/24/outline';
 
 export default function NurseDashboardPage() {
   const { user } = useUserStore();
   const tasks = useTaskStore((state) => state.tasks);
+  const [riskSummary, setRiskSummary] = useState({ open: 0, highOrAbove: 0 });
 
   // 统计数据
   const stats = {
@@ -28,6 +34,21 @@ export default function NurseDashboardPage() {
 
   // 我的任务（分配给当前心理老师的）
   const myTasks = tasks.filter((t) => t.assignedNurseId === user?.id);
+
+  // 风险台账摘要（API 模式下拉取未结案数量）
+  useEffect(() => {
+    if (runtimeConfig.dataMode !== 'api') return;
+    const controller = new AbortController();
+    listRisks({ status: 'open' }, controller.signal)
+      .then((result) => {
+        setRiskSummary({
+          open: result.stats.open,
+          highOrAbove: result.stats.highOrAbove,
+        });
+      })
+      .catch(() => undefined);
+    return () => controller.abort();
+  }, []);
 
   return (
     <NurseLayout>
@@ -100,7 +121,19 @@ export default function NurseDashboardPage() {
               <CardTitle>我的任务</CardTitle>
               <CardDescription>分配给我的心理评估任务</CardDescription>
             </div>
-            <Badge variant="primary">{myTasks.length} 项</Badge>
+            <div className="flex items-center gap-3">
+              {riskSummary.open > 0 && (
+                <Link
+                  href="/teacher/risks"
+                  className="flex items-center gap-1.5 rounded-full bg-amber-50 px-3 py-1.5 text-sm font-semibold text-warning hover:shadow-sm transition-shadow"
+                >
+                  <FlagIcon className="w-4 h-4" />
+                  {riskSummary.open} 条风险待跟进
+                  {riskSummary.highOrAbove > 0 && `（含高及以上 ${riskSummary.highOrAbove} 条）`}
+                </Link>
+              )}
+              <Badge variant="primary">{myTasks.length} 项</Badge>
+            </div>
           </div>
         </CardHeader>
         <CardContent>

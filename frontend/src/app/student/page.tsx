@@ -1,6 +1,6 @@
 'use client';
 
-import { Suspense, useEffect, useState } from 'react';
+import { Suspense, useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import PatientLayout from '@/components/layout/PatientLayout';
 import { PatientIcon } from '@/components/patient/PatientIcon';

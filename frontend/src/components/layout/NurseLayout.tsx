@@ -25,6 +25,7 @@ import {
   CpuChipIcon,
   UserIcon,
   XMarkIcon,
+  FlagIcon,
 } from '@heroicons/react/24/outline';
 
 interface NurseLayoutProps {
@@ -37,6 +38,7 @@ const navigation = [
   { name: '学生管理', href: '/teacher/patients', icon: UserGroupIcon },
   { name: '任务管理', href: '/teacher/tasks', icon: ClipboardDocumentListIcon },
   { name: '实时监控', href: '/teacher/monitor', icon: ComputerDesktopIcon },
+  { name: '风险台账', href: '/teacher/risks', icon: FlagIcon },
   { name: 'AI质评', href: '/teacher/quality', icon: StarIcon },
   { name: '系统配置', href: '/teacher/config', icon: Cog6ToothIcon },
 ];

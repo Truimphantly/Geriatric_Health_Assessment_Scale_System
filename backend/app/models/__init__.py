@@ -36,6 +36,7 @@ from app.models.nursing_plan import (
     PatientProfileSnapshot,
 )
 from app.models.patient_task import CareTask, Patient, PatientEncounter
+from app.models.risk import SystemRisk
 from app.models.patient_portal import (
     ConsentAuthorization,
     ConsentClause,

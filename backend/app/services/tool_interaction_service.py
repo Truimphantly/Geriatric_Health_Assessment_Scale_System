@@ -45,6 +45,7 @@ from app.schemas.interaction_tools import (
     HandoffRequest,
     HandoffResolveRequest,
 )
+from app.services import risk_service
 from app.workers.event_publisher import DialogEventPublisher, NurseEventPublisher
 
 logger = logging.getLogger(__name__)
@@ -150,12 +151,12 @@ def _handoff_event(
         task_id=task.id,
         message_id=message_no,
         request_id=str(result.get("request_id") or f"SUPPORT-{uuid.uuid4()}"),
-        reason=str(result.get("reason") or "患者需要护士协助"),
+        reason=str(result.get("reason") or "学生需要老师协助"),
         requested_action=str(result.get("requested_action") or "other"),
         action_label=str(result.get("action_label") or "人工支持协助"),
         urgency=str(result.get("urgency") or "routine"),
         priority=str(result.get("priority") or "high"),
-        title=str(result.get("title") or "请求护士协助"),
+        title=str(result.get("title") or "请求老师协助"),
         description=str(result.get("description") or result.get("reason") or ""),
         patient_name=patient.patient_name if patient else "",
         bed_no=encounter.bed_no if encounter else None,
@@ -303,6 +304,17 @@ def publish_tool_result(
             session.handoff_reason = str(result.get("reason") or "")
             task.need_manual_intervention = True
             task.intervention_reason = session.handoff_reason
+            risk_service.report_risk(
+                db,
+                student_id=session.patient_id,
+                encounter_id=encounter.id if encounter else None,
+                level=risk_service.urgency_to_level(
+                    str(result.get("urgency"))
+                ),
+                source="agent",
+                reason=str(result.get("reason") or ""),
+                creator="agent",
+            )
 
         _persist_event(
             db,
@@ -365,10 +377,10 @@ def request_handoff(
     *,
     patient_id: int,
 ) -> dict[str, Any]:
-    """患者端主动呼叫护士并推送责任护士全局提醒。"""
+    """学生端主动呼叫老师并推送责任老师全局提醒。"""
     task, session, patient, encounter = _load_task_context(db, task_ref)
     if session.patient_id != patient_id:
-        raise AppError(ErrorCode.ERR_DIALOG_004, "当前患者无权呼叫该任务护士")
+        raise AppError(ErrorCode.ERR_DIALOG_004, "当前学生无权呼叫该任务老师")
     source_key = (
         f"patient:{request.client_invocation_id}"
         if request.client_invocation_id
@@ -384,7 +396,7 @@ def request_handoff(
         )
         if existing is not None:
             logger.info(
-                "复用患者主动呼叫事件: session=%s invocation=%s",
+                "复用学生主动呼叫事件: session=%s invocation=%s",
                 session.session_no,
                 request.client_invocation_id,
             )
@@ -414,19 +426,29 @@ def request_handoff(
         creator="patient",
         source_invocation_id=source_key,
     )
+    is_keyword_fallback = (request.client_invocation_id or "").startswith("keyword:")
     db.add(
         PatientNotification(
             notification_no=f"PN-{uuid.uuid4().hex.upper()}",
             patient_id=patient.id,
             encounter_id=encounter.id if encounter else None,
             notification_type="handoff",
-            title="护士协助请求已提交",
-            content="护士已收到您的请求，请在床旁等待处理。",
+            title="老师协助请求已提交",
+            content="老师已收到你的请求，会尽快回复你。",
             priority="high" if request.urgency == "urgent" else "normal",
             payload={"request_id": event.request_id, "task_id": task.id},
             creator="patient",
             updator="patient",
         )
+    )
+    risk_service.report_risk(
+        db,
+        student_id=patient.id,
+        encounter_id=encounter.id if encounter else None,
+        level=risk_service.urgency_to_level(request.urgency),
+        source="keyword_fallback" if is_keyword_fallback else "student",
+        reason=request.reason,
+        creator="system" if is_keyword_fallback else "patient",
     )
     db.commit()
     publisher = DialogEventPublisher(session.session_no)
@@ -484,7 +506,7 @@ def resolve_handoff(
     staff_no: str,
     staff_name: str,
 ) -> dict[str, Any]:
-    """医护处理当前任务全部未完成呼叫，并通知患者端。"""
+    """老师处理当前任务全部未完成呼叫，并通知学生端。"""
     task, session, _, _ = _load_task_context(db, task_ref)
     requested_rows = list(
         db.scalars(
@@ -526,6 +548,13 @@ def resolve_handoff(
     )
     task.need_manual_intervention = remaining_pending
     task.intervention_reason = session.handoff_reason
+    if request_ids:
+        risk_service.on_handoff_resolved(
+            db,
+            student_id=session.patient_id,
+            resolution=request.resolution,
+            by=str(staff_no or staff_id),
+        )
 
     event = HandoffResolvedEvent(
         event_id=f"HANDOFF-RESOLVED-{uuid.uuid4().hex.upper()}",
@@ -656,7 +685,7 @@ def submit_consent(
     )
     if request.decision == "needs_explanation":
         session.handoff_required = True
-        session.handoff_reason = "患者对知情同意内容需要护士人工解释"
+        session.handoff_reason = "学生对知情同意内容需要老师人工解释"
         task.need_manual_intervention = True
         task.intervention_reason = session.handoff_reason
     db.commit()

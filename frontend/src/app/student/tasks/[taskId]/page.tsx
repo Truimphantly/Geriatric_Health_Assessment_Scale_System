@@ -2,7 +2,6 @@
 
 import { useParams, useRouter } from 'next/navigation';
 import PatientLayout from '@/components/layout/PatientLayout';
-import { PatientIcon } from '@/components/patient/PatientIcon';
 import { PatientState } from '@/components/patient/PatientState';
 import { isPatientTaskReadOnly } from '@/lib/patient/taskGroups';
 import { ClayIcon } from '@/components/patient/ClayIcon';
