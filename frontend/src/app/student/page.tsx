@@ -6,6 +6,7 @@ import PatientLayout from '@/components/layout/PatientLayout';
 import { PatientIcon } from '@/components/patient/PatientIcon';
 import { careRepository } from '@/lib/repositories';
 import { runtimeConfig } from '@/lib/runtime/config';
+import XiaoQingArt from '@/components/patient/XiaoQingArt';
 import { useTaskStore } from '@/lib/stores/useTaskStore';
 import { useUserStore } from '@/lib/stores/useUserStore';
 import { mockPatients } from '@/lib/mock/data';
@@ -23,8 +24,9 @@ function VerifyFallback() {
     <PatientLayout>
       <div className="flex min-h-screen items-center justify-center p-6">
         <div className="text-center">
-          {/* 小晴头像：占位 SVG，后续替换官方卡通形象素材 */}
-          <XiaoQingFace size={80} />
+          <div className="flex justify-center">
+            <XiaoQingFace size={80} />
+          </div>
           <p className="mt-4 font-medium text-foreground-muted">
             正在打开小晴的门…
           </p>
@@ -34,24 +36,9 @@ function VerifyFallback() {
   );
 }
 
-/** 小晴头像（贴纸风占位 SVG，金色圆头机器人 + 腮红 + 天线） */
+/** 小晴头像：官方立绘（捧心默认姿势，轻浮动可关） */
 function XiaoQingFace({ size = 96 }: { size?: number }) {
-  return (
-    <svg viewBox="0 0 200 200" width={size} height={size} aria-label="小晴" role="img">
-      <circle cx="100" cy="100" r="96" fill="#FFF9F2" stroke="#2A2320" strokeWidth="4" />
-      <g>
-        <circle cx="70" cy="90" r="9" fill="#2A2320" />
-        <circle cx="130" cy="90" r="9" fill="#2A2320" />
-        <circle cx="73" cy="86" r="3" fill="#FFF9F2" />
-        <circle cx="133" cy="86" r="3" fill="#FFF9F2" />
-      </g>
-      <ellipse cx="52" cy="114" rx="10" ry="6.5" fill="#FFB5A7" />
-      <ellipse cx="148" cy="114" rx="10" ry="6.5" fill="#FFB5A7" />
-      <path d="M84 110 q16 13 32 2" fill="none" stroke="#2A2320" strokeWidth="4" strokeLinecap="round" />
-      <circle cx="100" cy="34" r="9" fill="#7FDBB6" stroke="#2A2320" strokeWidth="3" />
-      <line x1="100" y1="43" x2="100" y2="56" stroke="#2A2320" strokeWidth="3" />
-    </svg>
-  );
+  return <XiaoQingArt expression="default" size={size} float={false} />;
 }
 
 function PatientVerifyContent() {
@@ -173,7 +160,9 @@ function PatientVerifyContent() {
     <PatientLayout>
       <div className="relative min-h-screen px-[18px] pb-8 pt-9">
         <div className="relative z-10 pt-1 text-center">
-          <XiaoQingFace size={92} />
+          <div className="flex justify-center">
+            <XiaoQingFace size={92} />
+          </div>
           <h1 className="mt-4 text-[32px] font-black leading-tight text-foreground">
             心晴伙伴
           </h1>

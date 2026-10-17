@@ -685,3 +685,44 @@ h1, h2 {
     height: 0;
   }
 }
+
+/* ---------- 小晴官方立绘（ComfyUI 生成 → 清洗裁边） ---------- */
+
+.xq-art {
+  height: auto;
+  user-select: none;
+  filter: drop-shadow(0 12px 16px rgb(94 78 55 / 0.14));
+}
+
+/* hero 场景中的定位：占容器宽 62%，底部落在草地内 */
+.xq-hero {
+  position: absolute;
+  left: 50%;
+  bottom: 9.5%;
+  width: 62%;
+  transform: translateX(-50%);
+  will-change: transform;
+}
+
+.xq-float {
+  animation: xq-float 4.6s ease-in-out infinite;
+}
+
+@keyframes xq-float {
+  0%,
+  100% {
+    transform: translateX(-50%) translateY(0) rotate(0deg);
+  }
+  35% {
+    transform: translateX(-50%) translateY(-11px) rotate(-1.3deg);
+  }
+  68% {
+    transform: translateX(-50%) translateY(-3px) rotate(0.9deg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .xq-float {
+    animation: none;
+  }
+}

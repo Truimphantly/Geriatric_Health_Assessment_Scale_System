@@ -27,11 +27,11 @@ export function PatientChatBubble({
         </span>
       ) : (
         <Image
-          src="/assets/patient/illustrations/assistant-avatar.webp"
+          src="/xiaoqing/xq-01-default.png"
           alt="小晴"
           width={40}
           height={40}
-          className="h-10 w-10 shrink-0 rounded-full bg-[#fdf6e8] object-contain shadow-[inset_0_2px_0_#fff,0_6px_14px_rgb(94_78_55_/_0.14)]"
+          className="h-10 w-10 shrink-0 object-contain drop-shadow-[0_6px_14px_rgb(94_78_55_/_0.14)]"
         />
       )}
 

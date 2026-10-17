@@ -2,6 +2,7 @@
 
 import Link from 'next/link';
 import { ClayIcon, type ClayIconName } from '@/components/patient/ClayIcon';
+import XiaoQingArt from '@/components/patient/XiaoQingArt';
 
 /**
  * 三端门厅（黏土拟物风 · 宽屏落地页）。
@@ -49,112 +50,65 @@ const portals: Array<{
   },
 ];
 
-function XiaoQingClay() {
+function XiaoQingScene() {
   return (
-    <svg
-      viewBox="0 0 520 420"
-      className="mx-auto w-full max-w-[520px]"
-      role="img"
-      aria-label="黏土小晴"
-    >
-      <defs>
-        <radialGradient id="cloudBody" cx="46%" cy="26%" r="82%">
-          <stop offset="0%" stopColor="#FFFEFB" />
-          <stop offset="62%" stopColor="#FCF7EC" />
-          <stop offset="100%" stopColor="#EFE3D1" />
-        </radialGradient>
-        <radialGradient id="heartGrad" cx="35%" cy="28%" r="80%">
-          <stop offset="0%" stopColor="#FF9C8E" />
-          <stop offset="100%" stopColor="#E95445" />
-        </radialGradient>
-        <radialGradient id="sunGrad" cx="35%" cy="30%" r="80%">
-          <stop offset="0%" stopColor="#FFE9A6" />
-          <stop offset="100%" stopColor="#F5CD55" />
-        </radialGradient>
-        <filter id="claySoft" x="-30%" y="-30%" width="160%" height="170%">
-          <feDropShadow dx="0" dy="12" stdDeviation="14" floodColor="#8A6F4D" floodOpacity="0.16" />
-        </filter>
-        <filter id="clayTiny" x="-40%" y="-40%" width="180%" height="180%">
-          <feDropShadow dx="0" dy="5" stdDeviation="6" floodColor="#8A6F4D" floodOpacity="0.18" />
-        </filter>
-      </defs>
+    <div className="xq-scene relative mx-auto w-full max-w-[520px]">
+      {/* 场景装饰：草地/太阳/小云/小花（小晴立绘居中叠加） */}
+      <svg
+        viewBox="0 0 520 420"
+        className="w-full"
+        role="img"
+        aria-label="小晴站在草地上的场景"
+      >
+        <defs>
+          <radialGradient id="sunGrad" cx="35%" cy="30%" r="80%">
+            <stop offset="0%" stopColor="#FFE9A6" />
+            <stop offset="100%" stopColor="#F5CD55" />
+          </radialGradient>
+          <filter id="clayTiny" x="-40%" y="-40%" width="180%" height="180%">
+            <feDropShadow dx="0" dy="5" stdDeviation="6" floodColor="#8A6F4D" floodOpacity="0.18" />
+          </filter>
+        </defs>
 
-      {/* 地面草地 */}
-      <path d="M28 352 Q260 306 492 352 L492 404 Q260 424 28 404 Z" fill="#B7D6A0" />
-      <ellipse cx="260" cy="352" rx="212" ry="26" fill="#A9CB93" opacity="0.55" />
+        {/* 地面草地 */}
+        <path d="M28 352 Q260 306 492 352 L492 404 Q260 424 28 404 Z" fill="#B7D6A0" />
+        <ellipse cx="260" cy="352" rx="212" ry="26" fill="#A9CB93" opacity="0.55" />
+        {/* 云底投出软影 */}
+        <ellipse cx="258" cy="344" rx="120" ry="16" fill="#88B273" opacity="0.35" />
 
-      {/* 太阳 */}
-      <g filter="url(#clayTiny)">
-        <circle cx="452" cy="86" r="30" fill="url(#sunGrad)" />
-        <g stroke="#F5CD55" strokeWidth="6" strokeLinecap="round">
-          <line x1="452" y1="30" x2="452" y2="16" />
-          <line x1="508" y1="86" x2="522" y2="86" />
-          <line x1="404" y1="60" x2="394" y2="50" />
-          <line x1="500" y1="60" x2="510" y2="50" />
+        {/* 太阳 */}
+        <g filter="url(#clayTiny)">
+          <circle cx="452" cy="86" r="30" fill="url(#sunGrad)" />
+          <g stroke="#F5CD55" strokeWidth="6" strokeLinecap="round">
+            <line x1="452" y1="30" x2="452" y2="16" />
+            <line x1="508" y1="86" x2="522" y2="86" />
+            <line x1="404" y1="60" x2="394" y2="50" />
+            <line x1="500" y1="60" x2="510" y2="50" />
+          </g>
         </g>
-      </g>
 
-      {/* 小云 */}
-      <g filter="url(#clayTiny)" opacity="0.95">
-        <ellipse cx="88" cy="96" rx="44" ry="22" fill="#FFFDF9" />
-        <ellipse cx="118" cy="86" rx="26" ry="18" fill="#FFFDF9" />
-      </g>
+        {/* 小云 */}
+        <g filter="url(#clayTiny)" opacity="0.95">
+          <ellipse cx="88" cy="96" rx="44" ry="22" fill="#FFFDF9" />
+          <ellipse cx="118" cy="86" rx="26" ry="18" fill="#FFFDF9" />
+        </g>
 
-      {/* 云朵小晴 */}
-      <g filter="url(#claySoft)">
-        <circle cx="152" cy="244" r="62" fill="url(#cloudBody)" />
-        <circle cx="300" cy="248" r="58" fill="url(#cloudBody)" />
-        <circle cx="228" cy="202" r="82" fill="url(#cloudBody)" />
-        <circle cx="180" cy="205" r="52" fill="url(#cloudBody)" />
-        <rect x="128" y="228" width="216" height="96" rx="48" fill="url(#cloudBody)" />
-      </g>
+        {/* 小花 */}
+        <g filter="url(#clayTiny)">
+          <circle cx="86" cy="340" r="7" fill="#F8D874" />
+          <circle cx="74" cy="332" r="6" fill="#FFC4B8" />
+          <circle cx="98" cy="332" r="6" fill="#FFC4B8" />
+          <circle cx="74" cy="348" r="6" fill="#FFC4B8" />
+          <circle cx="98" cy="348" r="6" fill="#FFC4B8" />
+        </g>
+      </svg>
 
-      {/* 眼睛 */}
-      <ellipse cx="206" cy="212" rx="9.5" ry="12" fill="#39322A" />
-      <ellipse cx="258" cy="212" rx="9.5" ry="12" fill="#39322A" />
-      <circle cx="209.5" cy="207" r="3.2" fill="#FFFDF9" />
-      <circle cx="261.5" cy="207" r="3.2" fill="#FFFDF9" />
-
-      {/* 腮红 */}
-      <ellipse cx="184" cy="238" rx="14" ry="8.5" fill="#F7B1A4" opacity="0.9" />
-      <ellipse cx="282" cy="238" rx="14" ry="8.5" fill="#F7B1A4" opacity="0.9" />
-
-      {/* 微笑 */}
-      <path d="M220 238 q11 11 22 0" fill="none" stroke="#39322A" strokeWidth="4" strokeLinecap="round" />
-
-      {/* 手 */}
-      <circle cx="162" cy="300" r="17" fill="url(#cloudBody)" filter="url(#clayTiny)" />
-      <circle cx="292" cy="300" r="17" fill="url(#cloudBody)" filter="url(#clayTiny)" />
-
-      {/* 爱心 */}
-      <path
-        d="M227 312 c-20 -18 -44 5 -20 26 l20 18 20 -18 c24 -21 0 -44 -20 -26 z"
-        fill="url(#heartGrad)"
-        filter="url(#clayTiny)"
+      {/* 官方立绘：双手捧心，轻浮动 */}
+      <XiaoQingArt
+        expression="default"
+        className="xq-hero"
       />
-
-      {/* 木牌 */}
-      <g filter="url(#clayTiny)">
-        <rect x="352" y="258" width="118" height="74" rx="14" fill="#F4DFC0" />
-        <rect x="360" y="266" width="102" height="58" rx="10" fill="#FBEFD9" />
-        <line x1="411" y1="332" x2="411" y2="372" stroke="#C9A976" strokeWidth="9" strokeLinecap="round" />
-        <text x="411" y="291" textAnchor="middle" fontSize="15" fontWeight="900" fill="#8A6F4D">
-          慢慢来
-        </text>
-        <text x="411" y="311" textAnchor="middle" fontSize="13" fontWeight="800" fill="#A98B60">
-          也算数
-        </text>
-      </g>
-
-      {/* 小花 */}
-      <g filter="url(#clayTiny)">
-        <circle cx="86" cy="340" r="7" fill="#F8D874" />
-        <circle cx="74" cy="332" r="6" fill="#FFC4B8" />
-        <circle cx="98" cy="332" r="6" fill="#FFC4B8" />
-        <circle cx="74" cy="348" r="6" fill="#FFC4B8" />
-        <circle cx="98" cy="348" r="6" fill="#FFC4B8" />
-      </g>
-    </svg>
+    </div>
   );
 }
 
@@ -224,7 +178,7 @@ export default function Home() {
             </div>
             <div className="relative">
               <div className="pointer-events-none absolute inset-x-6 top-6 -z-10 h-[78%] rounded-[48px] bg-[var(--accent-sky)] opacity-30 blur-2xl" />
-              <XiaoQingClay />
+              <XiaoQingScene />
             </div>
           </section>
 

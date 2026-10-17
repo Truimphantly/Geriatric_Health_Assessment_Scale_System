@@ -169,11 +169,11 @@ export default function PatientAssistantPage() {
             >
               {message.role === 'assistant' ? (
                 <Image
-                  src="/assets/patient/illustrations/assistant-avatar.webp"
+                  src="/xiaoqing/xq-01-default.png"
                   alt="小晴助手"
                   width={58}
                   height={58}
-                  className="h-14 w-14 shrink-0 rounded-full border border-[#f3ceb3] bg-[#fff5ed] object-contain"
+                  className="h-14 w-14 shrink-0 object-contain drop-shadow-[0_6px_14px_rgb(94_78_55/0.14)]"
                 />
               ) : (
                 <span className="grid h-10 w-10 shrink-0 place-items-center rounded-full bg-[#ffe8da] text-primary">
