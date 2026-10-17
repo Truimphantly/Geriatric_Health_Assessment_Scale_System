@@ -56,9 +56,11 @@ export default function PatientTasksPage() {
       }
     };
     void loadTasks();
+    // 轮询降频：3s -> 10s，且后台标签页暂停，避免多标签时占满浏览器连接数
     const timer = window.setInterval(() => {
+      if (document.hidden) return;
       void loadTasks();
-    }, 3000);
+    }, 10000);
     return () => {
       window.clearInterval(timer);
       abortRequest(controller);
