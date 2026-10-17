@@ -567,10 +567,10 @@ export default function TaskDetailPage() {
                       </Button>
                       <Button
                         variant="outline"
-                        onClick={() => router.push(`/teacher/tasks/${task.id}/review`)}
+                        onClick={() => router.push(`/teacher/tasks/${task.id}/report`)}
                         className="w-full"
                       >
-                        查看评估报告
+                        查看护航报告
                       </Button>
                       <Button
                         variant="outline"

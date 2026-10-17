@@ -50,7 +50,16 @@ export interface GuardianPortal {
   student: GuardianStudent;
   encounter: { department: string; status: string } | null;
   notices: GuardianNotice[];
+  report?: GuardianReportSummary | null;
   referrals?: GuardianReferral[];
+}
+
+export interface GuardianReportSummary {
+  report_no: string;
+  overall_risk_label: string;
+  suggestions: string;
+  reviewed_by: string;
+  reviewed_at: string | null;
 }
 
 export interface GuardianConsentClause {

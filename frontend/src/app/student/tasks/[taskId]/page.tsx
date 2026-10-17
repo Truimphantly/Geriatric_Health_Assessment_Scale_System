@@ -1,11 +1,20 @@
 'use client';
 
 import { useParams, useRouter } from 'next/navigation';
+import { useEffect, useState } from 'react';
 import PatientLayout from '@/components/layout/PatientLayout';
 import { PatientState } from '@/components/patient/PatientState';
 import { isPatientTaskReadOnly } from '@/lib/patient/taskGroups';
 import { ClayIcon } from '@/components/patient/ClayIcon';
 import { useTaskStore } from '@/lib/stores/useTaskStore';
+import { apiRequest } from '@/lib/api/httpClient';
+import { runtimeConfig } from '@/lib/runtime/config';
+
+interface StudentReport {
+  suggestions: string;
+  reviewed_by: string;
+  overall_risk_label: string;
+}
 
 /**
  * 学生端任务详情：只呈现"接下来会发生什么"，
@@ -17,6 +26,22 @@ export default function PatientTaskDetailPage() {
   const task = useTaskStore((state) =>
     state.tasks.find((item) => item.id === taskId)
   );
+  const [report, setReport] = useState<StudentReport | null>(null);
+
+  useEffect(() => {
+    if (runtimeConfig.dataMode !== 'api') return;
+    if (!task || task.taskStatus !== 'completed') return;
+    const controller = new AbortController();
+    apiRequest<StudentReport | null>(
+      `/api/students/tasks/${encodeURIComponent(taskId)}/report`,
+      { signal: controller.signal }
+    )
+      .then((data) => {
+        if (!controller.signal.aborted) setReport(data);
+      })
+      .catch(() => undefined);
+    return () => controller.abort();
+  }, [task, taskId]);
 
   if (!task) {
     return (
@@ -126,6 +151,20 @@ export default function PatientTaskDetailPage() {
           </section>
         ) : task.taskStatus === 'completed' ? (
           <div className="space-y-3">
+            {report && (
+              <section className="patient-card p-4">
+                <div className="flex items-center gap-2">
+                  <ClayIcon name="heart" tone="peach" size={34} />
+                  <p className="text-[15px] font-black">老师想说的话</p>
+                </div>
+                <p className="mt-2 text-sm font-semibold leading-6 text-foreground-muted">
+                  {report.suggestions}
+                </p>
+                <p className="mt-1.5 text-xs font-bold text-foreground-placeholder">
+                  —— {report.reviewed_by}
+                </p>
+              </section>
+            )}
             <button
               className="patient-primary-button w-full"
               onClick={() => router.push(`/student/complete/${task.id}`)}

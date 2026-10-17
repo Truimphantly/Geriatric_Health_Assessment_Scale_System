@@ -100,6 +100,7 @@ def create_app() -> FastAPI:
         patients,
         patient_portal,
         quality,
+        reports,
         risks,
         scales,
         sse,
@@ -122,6 +123,7 @@ def create_app() -> FastAPI:
     app.include_router(guardian.router)
     app.include_router(voice_dialog.router)
     app.include_router(risks.router)
+    app.include_router(reports.router)
 
     # 健康检查
     @app.get("/health", tags=["system"])

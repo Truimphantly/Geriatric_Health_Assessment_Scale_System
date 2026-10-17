@@ -194,6 +194,35 @@ def _summarize_reason(payload: dict) -> str:
     return "评估对话中出现了需要监护人知晓的情况，学校心理老师已介入跟进。"
 
 
+def _latest_guardian_report(db: Session, patient: Patient) -> dict | None:
+    """家长端报告摘要（仅 guardian_visible 的最新一份）。"""
+    from app.models.report import AssessmentReport
+    from app.services import report_service
+
+    report = db.scalar(
+        select(AssessmentReport)
+        .where(
+            AssessmentReport.student_id == patient.id,
+            AssessmentReport.deleted == 0,
+            AssessmentReport.guardian_visible.is_(True),
+        )
+        .order_by(AssessmentReport.id.desc())
+    )
+    if report is None:
+        return None
+    return {
+        "report_no": report.report_no,
+        "overall_risk_label": report_service.describe_report(report, patient)[
+            "overall_risk_label"
+        ],
+        "suggestions": report.suggestions,
+        "reviewed_by": report.reviewed_by,
+        "reviewed_at": report.reviewed_at.isoformat()
+        if report.reviewed_at
+        else None,
+    }
+
+
 def build_guardian_portal(db: Session, patient: Patient) -> dict:
     """组装家长端门户数据（学生摘要 + 通知 + 待签同意书 + 转介跟踪）。"""
     encounter = _active_encounter(db, patient.id)
@@ -222,6 +251,7 @@ def build_guardian_portal(db: Session, patient: Patient) -> dict:
         if encounter
         else None,
         "notices": list_guardian_notices(db, patient_id=patient.id),
+        "report": _latest_guardian_report(db, patient),
         "referrals": [
             referral_service.describe_referral(r, patient) for r in referrals
         ],

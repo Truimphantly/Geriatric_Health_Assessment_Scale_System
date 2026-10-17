@@ -199,6 +199,19 @@ def submit_assessment_review(
         task.task_status = "completed"
         task.completed_at = datetime.now(UTC)
         task.updator = str(staff_id)
+    if request.status == "confirmed":
+        try:
+            from app.services import report_service
+
+            report_service.ensure_report(
+                db,
+                task,
+                staff_id=staff_id,
+                conclusion=request.supplementary_inquiry or "",
+            )
+        except Exception:
+            # 报告快照失败不阻塞复核提交；教师查看时按需临时组装。
+            logger.exception("护航报告生成失败: task=%s", task.id)
     db.commit()
     if request.status == "confirmed":
         try:

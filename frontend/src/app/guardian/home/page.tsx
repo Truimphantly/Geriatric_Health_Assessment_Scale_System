@@ -200,6 +200,36 @@ export default function GuardianHomePage() {
           </section>
 
           <section className="space-y-3">
+            <h2 className="text-[17px] font-black">报告摘要</h2>
+            {portal.report ? (
+              <article className="patient-card p-4">
+                <div className="flex items-center gap-2">
+                  <span className="rounded-full border-2 border-[var(--ink)] bg-[var(--accent-mint)] px-2.5 py-0.5 text-[11px] font-black">
+                    风险{portal.report.overall_risk_label}
+                  </span>
+                  <span className="ml-auto text-[11px] font-semibold text-foreground-placeholder">
+                    {portal.student.name} ·{' '}
+                    {(portal.report.reviewed_at ?? '').slice(0, 16).replace('T', ' ')}
+                  </span>
+                </div>
+                <p className="mt-2.5 text-[13px] font-semibold leading-6 text-foreground-muted">
+                  {portal.report.suggestions}
+                </p>
+                <p className="mt-2 text-xs font-bold text-foreground-muted">
+                  复核老师：{portal.report.reviewed_by} · 完整报告可咨询心理老师
+                </p>
+              </article>
+            ) : (
+              <div className="patient-card-sticker p-5 text-center">
+                <p className="font-black">评估完成后会生成护航报告摘要</p>
+                <p className="mt-1 text-xs font-semibold text-foreground-muted">
+                  老师复核结束后，你会在这里看到温和的结果与建议
+                </p>
+              </div>
+            )}
+          </section>
+
+          <section className="space-y-3">
             <h2 className="text-[17px] font-black">转介跟踪</h2>
             {(portal.referrals ?? []).length === 0 ? (
               <div className="patient-card-sticker p-5 text-center">

@@ -37,6 +37,7 @@ from app.models.nursing_plan import (
 )
 from app.models.patient_task import CareTask, Patient, PatientEncounter
 from app.models.risk import RiskReferral, SystemRisk
+from app.models.report import AssessmentReport
 from app.models.patient_portal import (
     ConsentAuthorization,
     ConsentClause,
