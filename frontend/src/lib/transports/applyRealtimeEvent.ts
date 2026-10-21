@@ -684,7 +684,7 @@ export function applyRealtimeEvent(event: SseEnvelope): void {
           interventionReason:
             typeof event.payload.intervention_reason === 'string'
               ? event.payload.intervention_reason
-              : '字段抽取需要医护人工处理',
+              : '字段抽取需要老师人工处理',
         });
       }
       chatStore.setStreaming(null);

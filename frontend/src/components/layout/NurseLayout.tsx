@@ -97,7 +97,7 @@ export default function NurseLayout({
           setTasks(latestTasks);
         } catch (error) {
           if (!isRequestCancelled(error)) {
-            console.error('医护任务列表加载失败', error);
+            console.error('任务列表加载失败', error);
           }
         }
       })
@@ -147,7 +147,7 @@ export default function NurseLayout({
   if (!hydrated || !sessionChecked || !isAuthenticated) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-background">
-        <p className="text-sm text-foreground-muted">正在验证医护身份...</p>
+        <p className="text-sm text-foreground-muted">正在验证老师身份...</p>
       </div>
     );
   }

@@ -303,7 +303,7 @@ export default function NurseConfigPage() {
           系统<span className="text-primary italic">配置</span>
         </h1>
         <p className="mt-1 text-foreground-muted">
-          登录医护可直接查看和修改，保存后立即生效。
+          登录老师可直接查看和修改，保存后立即生效。
         </p>
       </div>
 

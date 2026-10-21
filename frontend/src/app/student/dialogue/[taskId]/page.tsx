@@ -379,7 +379,7 @@ export default function PatientDialoguePage() {
           .setStructuredAnswers(taskId, snapshot.answers);
         setManualInterventionReason(
           snapshot.manualIntervention
-            ? snapshot.interventionReason ?? '部分字段需要医护人工确认'
+            ? snapshot.interventionReason ?? '部分字段需要老师人工确认'
             : ''
         );
         snapshot.events.forEach(applyRealtimeEvent);

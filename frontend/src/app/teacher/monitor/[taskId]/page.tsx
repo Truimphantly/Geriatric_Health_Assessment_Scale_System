@@ -566,7 +566,7 @@ export default function NurseMonitorDetailPage() {
             <Card padding="md" className="border-red-300 bg-red-50">
               <div className="flex items-center gap-2 text-red-800">
                 <UserPlusIcon className="h-5 w-5" />
-                <h2 className="font-semibold">学生正在呼叫医护</h2>
+                <h2 className="font-semibold">学生正在呼叫老师</h2>
               </div>
               <dl className="mt-3 space-y-2 text-sm">
                 <div>
